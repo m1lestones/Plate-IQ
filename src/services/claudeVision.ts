@@ -1,53 +1,23 @@
-import type { MealAnalysis, ClaudeVisionError } from '../types'
-import { stripDataUrlPrefix, getMediaTypeFromDataUrl } from '../utils/imageUtils'
-import { getRandomDemoMeal } from './demoData'
+/**
+ * Claude Vision API Integration
+ * Analyzes meal photos and identifies foods with portions
+ */
+
+import type { MealData } from '../types'
 
 const BACKEND_API_URL = 'http://localhost:3001/api/analyze'
-const API_TIMEOUT_MS = 10000 // 10 seconds
 
 /**
- * Checks if demo mode is enabled
- * Returns true if:
- * - VITE_DEMO_MODE is explicitly set to 'true'
- * - VITE_CLAUDE_API_KEY is missing or empty
+ * Analyze meal image with Claude Vision API
+ * @param imageDataUrl - Base64 data URL of meal photo
+ * @returns Meal analysis with identified foods
  */
-function isDemoMode(): boolean {
-  const demoMode = import.meta.env.VITE_DEMO_MODE
-  const apiKey = import.meta.env.VITE_CLAUDE_API_KEY
+export async function analyzeMealWithClaude(imageDataUrl: string): Promise<MealData> {
+  // Extract base64 data
+  const base64Data = imageDataUrl.split(',')[1] || imageDataUrl
+  const mediaType = imageDataUrl.match(/data:(image\/[^;]+)/)?.[1] || 'image/jpeg'
 
-  return demoMode === 'true' || !apiKey || apiKey.trim() === ''
-}
-
-/**
- * Demo mode meal analysis
- * Returns a random pre-cached meal after simulated delay
- */
-export async function analyzeMealImageDemo(
-  _imageDataUrl: string
-): Promise<MealAnalysis> {
-  // Simulate 2-second API delay for realistic UX
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  return getRandomDemoMeal()
-}
-
-/**
- * Main API call via backend proxy
- * Analyzes a meal image and returns structured food data
- *
- * @param imageDataUrl - Base64 data URL of the meal image
- * @returns Promise<MealAnalysis> - Structured meal data
- * @throws Error on API, network, or validation failures
- */
-async function analyzeMealImageAPI(
-  imageDataUrl: string
-): Promise<MealAnalysis> {
-  // Extract base64 data and media type
-  const base64Data = stripDataUrlPrefix(imageDataUrl)
-  const mediaType = getMediaTypeFromDataUrl(imageDataUrl)
-
-  // Set up abort controller for timeout
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+  console.log('Calling backend proxy for Claude Vision...')
 
   try {
     const response = await fetch(BACKEND_API_URL, {
@@ -57,59 +27,64 @@ async function analyzeMealImageAPI(
       },
       body: JSON.stringify({
         imageData: base64Data,
-        mediaType: mediaType
-      }),
-      signal: controller.signal
+        mediaType
+      })
     })
 
-    clearTimeout(timeoutId)
-
-    const data = await response.json()
-
     if (!response.ok) {
-      // Backend returned an error
-      throw new Error(data.error || `API error: ${response.status}`)
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Backend error:', errorData)
+      throw new Error(`Backend error: ${response.status}`)
     }
 
-    // Backend returns the analysis directly
-    return data
-  } catch (error) {
-    clearTimeout(timeoutId)
+    const parsed = await response.json()
+    console.log('Claude Vision response:', parsed)
 
-    if (error instanceof Error) {
-      if (error.name === 'AbortError') {
-        throw new Error(
-          `Request timeout after ${API_TIMEOUT_MS / 1000} seconds`
-        )
+    if (!parsed.foods || !Array.isArray(parsed.foods)) {
+      throw new Error('Invalid response structure from Claude')
+    }
+
+    // Add placeholder nutrients (will be filled by USDA)
+    const foods = parsed.foods.map((food: any) => ({
+      name: food.name,
+      estimated_grams: food.estimated_grams,
+      nova_level: food.nova_level || 1,
+      confidence: 0.85, // Default confidence
+      category: food.category || 'other',
+      nutrients: {
+        // Placeholder - will be replaced by USDA
+        calories: 0,
+        protein_g: 0,
+        carbs_g: 0,
+        fat_g: 0,
+        fiber_g: 0,
+        vitamin_a_dv: 0,
+        vitamin_c_dv: 0,
+        vitamin_d_dv: 0,
+        calcium_dv: 0,
+        iron_dv: 0,
+        potassium_dv: 0
       }
-      throw error
+    }))
+
+    // Calculate rough calorie estimate (will be refined by USDA)
+    const estimatedCalories = foods.reduce((sum: number, f: any) => sum + f.estimated_grams * 2, 0)
+
+    const mealData: MealData = {
+      meal_id: `claude-${Date.now()}`,
+      meal_type: parsed.meal_type || 'dinner',
+      primary_cuisine: parsed.primary_cuisine || 'Mixed',
+      estimated_calories_low: Math.round(estimatedCalories * 0.8),
+      estimated_calories_high: Math.round(estimatedCalories * 1.2),
+      foods,
+      timestamp: new Date().toISOString()
     }
 
-    throw new Error('Unknown error during API call')
-  }
-}
+    console.log('Claude Vision analysis complete:', mealData)
+    return mealData
 
-/**
- * Main entry point for meal image analysis
- * Automatically routes to demo mode or API based on configuration
- * Falls back to demo mode on API errors
- *
- * @param imageDataUrl - Base64 data URL of the meal image
- * @returns Promise<MealAnalysis> - Structured meal data
- */
-export async function analyzeMealImage(
-  imageDataUrl: string
-): Promise<MealAnalysis> {
-  // Use demo mode if configured or no API key
-  if (isDemoMode()) {
-    return analyzeMealImageDemo(imageDataUrl)
-  }
-
-  // Try API, fall back to demo on error
-  try {
-    return await analyzeMealImageAPI(imageDataUrl)
   } catch (error) {
-    console.warn('API call failed, falling back to demo mode:', error)
-    return analyzeMealImageDemo(imageDataUrl)
+    console.error('Claude Vision API failed:', error)
+    throw error
   }
 }

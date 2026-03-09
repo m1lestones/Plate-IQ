@@ -1,0 +1,127 @@
+import { Link, useLocation } from 'react-router-dom'
+
+export function NavBar() {
+  const location = useLocation()
+
+  const isActive = (path: string) => location.pathname === path
+
+  return (
+    <>
+      {/* Desktop Navbar - Top */}
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 bg-neutral-950/95 backdrop-blur-sm border-b border-white/10 z-50">
+        <div className="max-w-7xl mx-auto w-full px-6 py-4 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <span className="font-bold text-xl tracking-tight text-white">PlateIQ</span>
+          </Link>
+
+          {/* Nav Links */}
+          <div className="flex items-center gap-6">
+            <Link
+              to="/"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                isActive('/')
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/60 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span className="font-medium">Home</span>
+            </Link>
+
+            <Link
+              to="/scan"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                isActive('/scan')
+                  ? 'bg-green-500 text-white'
+                  : 'text-white/60 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="font-medium">Scan</span>
+            </Link>
+
+            <Link
+              to="/neighborhood"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                isActive('/neighborhood')
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/60 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="font-medium">Neighborhood</span>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navbar - Bottom */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur-sm border-t border-white/10 z-50">
+        <div className="flex items-center justify-around px-6 py-3">
+          <Link
+            to="/"
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
+              isActive('/')
+                ? 'text-white'
+                : 'text-white/50'
+            }`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span className="text-xs font-medium">Home</span>
+          </Link>
+
+          <Link
+            to="/scan"
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
+              isActive('/scan')
+                ? 'text-green-400'
+                : 'text-white/50'
+            }`}
+          >
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center -mt-6 ${
+              isActive('/scan') ? 'bg-green-500' : 'bg-white/10'
+            }`}>
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <span className="text-xs font-medium">Scan</span>
+          </Link>
+
+          <Link
+            to="/neighborhood"
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
+              isActive('/neighborhood')
+                ? 'text-white'
+                : 'text-white/50'
+            }`}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span className="text-xs font-medium">Neighborhood</span>
+          </Link>
+        </div>
+      </nav>
+    </>
+  )
+}
