@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { NavBar } from './components/NavBar'
 import { LandingPage } from './pages/LandingPage'
 import { ScanPage } from './pages/ScanPage'
+import { DashboardPage } from './pages/DashboardPage'
 import { NeighborhoodPage } from './pages/NeighborhoodPage'
 
 export default function App() {
@@ -15,9 +16,9 @@ export default function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/scan" element={<ScanPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/neighborhood" element={<NeighborhoodPage />} />
-          </Routes>
-        </main>
+          </Routes>        </main>
       </div>
     </BrowserRouter>
   )

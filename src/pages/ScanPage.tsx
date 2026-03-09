@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Scanner } from '../components/Scanner'
 import { Preview } from '../components/Preview'
 import { LoadingState } from '../components/LoadingState'
@@ -6,6 +7,7 @@ import { getRandomDemoMeal } from '../data/demoMeals'
 import type { CapturedImage, ScanStep, MealData } from '../types'
 
 export function ScanPage() {
+  const navigate = useNavigate()
   const [step, setStep] = useState<ScanStep>('capture')
   const [image, setImage] = useState<CapturedImage | null>(null)
   const [mealData, setMealData] = useState<MealData | null>(null)
@@ -16,13 +18,21 @@ export function ScanPage() {
   }
 
   const handleConfirm = async () => {
+    if (!image) return
+
     setStep('loading')
 
     // Simulate API call with demo data
     setTimeout(() => {
       const demoMeal = getRandomDemoMeal()
-      setMealData(demoMeal)
-      setStep('done')
+
+      // Navigate to dashboard with meal data and image
+      navigate('/dashboard', {
+        state: {
+          mealData: demoMeal,
+          image: image.dataUrl
+        }
+      })
     }, 2000)
   }
 
