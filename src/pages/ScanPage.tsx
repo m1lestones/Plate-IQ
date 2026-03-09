@@ -4,6 +4,7 @@ import { Scanner } from '../components/Scanner'
 import { Preview } from '../components/Preview'
 import { LoadingState } from '../components/LoadingState'
 import { getRandomDemoMeal } from '../data/demoMeals'
+import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import type { CapturedImage, ScanStep, MealData } from '../types'
 
 export function ScanPage() {
@@ -22,14 +23,27 @@ export function ScanPage() {
 
     setStep('loading')
 
-    // Simulate API call with demo data
-    setTimeout(() => {
-      const demoMeal = getRandomDemoMeal()
+    // Get demo meal data
+    const demoMeal = getRandomDemoMeal()
 
-      // Navigate to dashboard with meal data and image
+    // Enhance with USDA data if API key is configured
+    let finalMeal = demoMeal
+    if (isUSDAConfigured()) {
+      try {
+        console.log('USDA API detected - enhancing meal with real nutrition data...')
+        finalMeal = await enhanceMealWithUSDA(demoMeal)
+      } catch (error) {
+        console.warn('USDA enhancement failed, using demo data:', error)
+      }
+    } else {
+      console.log('USDA API not configured - using demo nutrition data')
+    }
+
+    // Ensure minimum 2 second loading for UX
+    setTimeout(() => {
       navigate('/dashboard', {
         state: {
-          mealData: demoMeal,
+          mealData: finalMeal,
           image: image.dataUrl
         }
       })
