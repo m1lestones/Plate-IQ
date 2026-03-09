@@ -2,25 +2,40 @@ import { useState } from 'react'
 import { Scanner } from './components/Scanner'
 import { Preview } from './components/Preview'
 import { LoadingState } from './components/LoadingState'
-import type { CapturedImage, ScanStep } from './types'
+import { analyzeMealImage } from './services/claudeVision'
+import type { CapturedImage, ScanStep, MealAnalysis } from './types'
 
 export default function App() {
   const [step, setStep] = useState<ScanStep>('capture')
   const [image, setImage] = useState<CapturedImage | null>(null)
+  const [mealAnalysis, setMealAnalysis] = useState<MealAnalysis | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleCapture = (img: CapturedImage) => {
     setImage(img)
     setStep('preview')
   }
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    if (!image) return
+
     setStep('loading')
-    // Claude Vision API call will go here
-    setTimeout(() => setStep('done'), 7000)
+    setError(null)
+
+    try {
+      const analysis = await analyzeMealImage(image.dataUrl)
+      setMealAnalysis(analysis)
+      setStep('done')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Analysis failed')
+      setStep('preview')
+    }
   }
 
   const handleRetake = () => {
     setImage(null)
+    setMealAnalysis(null)
+    setError(null)
     setStep('capture')
   }
 
@@ -55,6 +70,11 @@ export default function App() {
               <h1 className="text-2xl font-bold">Looks good?</h1>
               <p className="text-white/50 text-sm mt-1">Confirm to start analysis</p>
             </div>
+            {error && (
+              <div className="mb-4 px-4 py-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-200 text-sm">
+                {error}
+              </div>
+            )}
             <Preview image={image} onConfirm={handleConfirm} onRetake={handleRetake} />
           </>
         )}
