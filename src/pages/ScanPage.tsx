@@ -4,6 +4,7 @@ import { Scanner } from '../components/Scanner'
 import { Preview } from '../components/Preview'
 import { LoadingState } from '../components/LoadingState'
 import { getRandomDemoMeal } from '../data/demoMeals'
+import { analyzeMealWithClaude } from '../services/claudeVision'
 import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import type { CapturedImage, ScanStep, MealData } from '../types'
 
@@ -23,31 +24,52 @@ export function ScanPage() {
 
     setStep('loading')
 
-    // Get demo meal data
-    const demoMeal = getRandomDemoMeal()
+    let mealData: MealData
 
-    // Enhance with USDA data if API key is configured
-    let finalMeal = demoMeal
-    if (isUSDAConfigured()) {
-      try {
-        console.log('USDA API detected - enhancing meal with real nutrition data...')
-        finalMeal = await enhanceMealWithUSDA(demoMeal)
-      } catch (error) {
-        console.warn('USDA enhancement failed, using demo data:', error)
+    try {
+      // Check if we should use Claude Vision API or demo mode
+      const useDemoMode = import.meta.env.VITE_DEMO_MODE === 'true'
+      const hasClaudeKey = import.meta.env.VITE_CLAUDE_API_KEY?.trim()
+
+      if (!useDemoMode && hasClaudeKey) {
+        // REAL FOOD RECOGNITION with Claude Vision API
+        console.log('🤖 Using Claude Vision API for real food recognition...')
+        mealData = await analyzeMealWithClaude(image.dataUrl)
+        console.log('✅ Claude Vision identified foods:', mealData.foods.map(f => f.name))
+      } else {
+        // Demo mode - use pre-cached meals
+        console.log('📦 Demo mode - using pre-cached meal data')
+        mealData = getRandomDemoMeal()
       }
-    } else {
-      console.log('USDA API not configured - using demo nutrition data')
-    }
 
-    // Ensure minimum 2 second loading for UX
-    setTimeout(() => {
+      // Enhance with USDA nutrition data if configured
+      if (isUSDAConfigured()) {
+        console.log('🥗 Enhancing with USDA nutrition data...')
+        mealData = await enhanceMealWithUSDA(mealData)
+        console.log('✅ USDA enhancement complete')
+      }
+
+      // Navigate to dashboard
       navigate('/dashboard', {
         state: {
-          mealData: finalMeal,
+          mealData,
           image: image.dataUrl
         }
       })
-    }, 2000)
+
+    } catch (error) {
+      console.error('❌ Analysis failed:', error)
+      alert(`Analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nFalling back to demo mode.`)
+
+      // Fallback to demo mode
+      const demoMeal = getRandomDemoMeal()
+      navigate('/dashboard', {
+        state: {
+          mealData: demoMeal,
+          image: image.dataUrl
+        }
+      })
+    }
   }
 
   const handleRetake = () => {
