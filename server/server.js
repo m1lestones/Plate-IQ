@@ -78,7 +78,22 @@ Return ONLY valid JSON (no markdown):
 PORTION ESTIMATION GUIDELINES:
 - WITH reference object: Measure food area relative to known object size, apply food density
 - WITHOUT reference object: Use visual cues (plate coverage, typical serving sizes)
-- Food densities: rice/grains ~0.8g/cm³, meat ~1.0g/cm³, vegetables ~0.6g/cm³
+
+RESEARCH-BACKED FOOD DENSITIES (g/cm³):
+Grains: white rice 0.85, brown rice 0.80, pasta 0.90, quinoa 0.75, bread 0.25
+Proteins: chicken 1.05, beef 1.10, fish 1.00, tofu 0.95, eggs 1.03
+Vegetables (cooked): broccoli 0.60, carrots 0.70, spinach 0.55, peas 0.80, corn 0.75
+Vegetables (raw): salad 0.30, cucumber 0.40
+Fruits: apple 0.65, banana 0.60, berries 0.55, avocado 0.70
+Fats: nuts 0.65, cheese 1.15, butter 0.91
+Sauces: tomato sauce 1.00, hummus 1.05, soup 1.00
+
+VOLUMETRIC CALCULATION:
+1. Measure food area in pixels relative to reference object
+2. Convert to cm² using reference object's known size
+3. Multiply by assumed height (~1.5cm for flat foods, ~3cm for piled foods)
+4. Multiply by food-specific density
+5. Result = estimated grams
 
 IDENTIFICATION TIPS:
 - Be SPECIFIC: "Jasmine Rice" not "Rice", "Grilled Chicken Breast" not "Chicken"

@@ -6,6 +6,7 @@ import { LoadingState } from '../components/LoadingState'
 import { getRandomDemoMeal } from '../data/demoMeals'
 import { analyzeMealWithClaude } from '../services/claudeVision'
 import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
+import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
@@ -35,6 +36,10 @@ export function ScanPage() {
       } else {
         mealData = getRandomDemoMeal()
       }
+
+      // Apply NYU density-based portion refinement
+      mealData.foods = refineMealPortions(mealData.foods)
+      logDensityInfo(mealData.foods)
 
       if (isUSDAConfigured()) {
         mealData = await enhanceMealWithUSDA(mealData)
