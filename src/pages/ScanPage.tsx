@@ -9,6 +9,7 @@ import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
 import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
 import { validateMeal } from '../utils/smartValidation'
+import { mergeFoodsFromAngles, ANGLE_INSTRUCTIONS, type AngleCapture, type CaptureAngle } from '../utils/multiAngleAnalysis'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
@@ -17,10 +18,36 @@ export function ScanPage() {
   const navigate = useNavigate()
   const [step, setStep] = useState<ScanStep>('capture')
   const [image, setImage] = useState<CapturedImage | null>(null)
+  const [multiAngleMode, setMultiAngleMode] = useState(false)
+  const [angleCaptures, setAngleCaptures] = useState<AngleCapture[]>([])
+  const [currentAngle, setCurrentAngle] = useState<CaptureAngle>('top_down')
 
   const handleCapture = (img: CapturedImage) => {
-    setImage(img)
-    setStep('preview')
+    if (multiAngleMode) {
+      // Multi-angle mode: collect multiple photos
+      const newCapture: AngleCapture = {
+        angle: currentAngle,
+        imageData: img.dataUrl
+      }
+
+      const updatedCaptures = [...angleCaptures, newCapture]
+      setAngleCaptures(updatedCaptures)
+
+      // Move to next angle or preview
+      if (currentAngle === 'top_down') {
+        setCurrentAngle('angle_45')
+        setImage(null) // Reset for next capture
+        // Stay on capture screen for next photo
+      } else {
+        // Done capturing, go to preview
+        setImage(img)
+        setStep('preview')
+      }
+    } else {
+      // Single photo mode (original behavior)
+      setImage(img)
+      setStep('preview')
+    }
   }
 
   const handleConfirm = async () => {
