@@ -37,6 +37,8 @@ export function Scanner({ onCapture }: ScannerProps) {
   }, [])
 
   useEffect(() => {
+    // Initialize camera on mount - this is intentional sync state update
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     startCamera()
     return () => {
       streamRef.current?.getTracks().forEach(t => t.stop())

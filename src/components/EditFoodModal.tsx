@@ -77,7 +77,7 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
             </label>
             <select
               value={editedFood.category}
-              onChange={(e) => setEditedFood({ ...editedFood, category: e.target.value as any })}
+              onChange={(e) => setEditedFood({ ...editedFood, category: e.target.value })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
             >
               <option value="protein">Protein</option>
@@ -97,7 +97,7 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
             </label>
             <select
               value={editedFood.nova_level}
-              onChange={(e) => setEditedFood({ ...editedFood, nova_level: parseInt(e.target.value) as any })}
+              onChange={(e) => setEditedFood({ ...editedFood, nova_level: parseInt(e.target.value) })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
             >
               <option value={1}>1 - Unprocessed (fresh vegetables, plain meat)</option>
