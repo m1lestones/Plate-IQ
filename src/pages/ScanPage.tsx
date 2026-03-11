@@ -8,6 +8,7 @@ import { analyzeMealWithClaude } from '../services/claudeVision'
 import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
 import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
+import { validateMeal } from '../utils/smartValidation'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
@@ -44,6 +45,10 @@ export function ScanPage() {
 
       // Apply NYU confidence filtering (removes <50% confidence)
       mealData = applyConfidenceFiltering(mealData)
+
+      // Run smart validation checks
+      const validationWarnings = validateMeal(mealData)
+      mealData = { ...mealData, validation_warnings: validationWarnings }
 
       if (isUSDAConfigured()) {
         mealData = await enhanceMealWithUSDA(mealData)
