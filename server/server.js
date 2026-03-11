@@ -20,6 +20,9 @@ app.get('/health', (req, res) => {
 app.post('/api/analyze', async (req, res) => {
   try {
     const { imageData, mediaType } = req.body
+    console.log('Received mediaType:', mediaType, '| imageData length:', imageData?.length)
+    const validMediaTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    const safeMediaType = validMediaTypes.includes(mediaType) ? mediaType : 'image/jpeg'
     const apiKey = process.env.VITE_CLAUDE_API_KEY
 
     if (!apiKey) {
@@ -41,7 +44,7 @@ app.post('/api/analyze', async (req, res) => {
           content: [
             {
               type: 'image',
-              source: { type: 'base64', media_type: mediaType, data: imageData }
+              source: { type: 'base64', media_type: safeMediaType, data: imageData }
             },
             {
               type: 'text',

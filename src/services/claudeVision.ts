@@ -67,8 +67,8 @@ export async function analyzeMealWithClaude(imageDataUrl: string): Promise<MealD
       }
     }))
 
-    // Calculate rough calorie estimate (will be refined by USDA)
-    const estimatedCalories = foods.reduce((sum: number, f: any) => sum + f.estimated_grams * 2, 0)
+    // Rough estimate using ~1.5 cal/g average until USDA refines it
+    const estimatedCalories = foods.reduce((sum: number, f: any) => sum + f.estimated_grams * 1.5, 0)
 
     const mealData: MealData = {
       meal_id: `claude-${Date.now()}`,
