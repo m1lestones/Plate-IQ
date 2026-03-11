@@ -201,6 +201,19 @@ export function DashboardPage() {
         />
       </div>
 
+      {/* Reference Object Detection Badge */}
+      {mealData.reference_object_detected && mealData.reference_object_detected !== 'none' && (
+        <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 flex items-center gap-3">
+          <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1">
+            <p className="font-semibold text-blue-100">Reference Object Detected: {mealData.reference_object_detected.replace('_', ' ')}</p>
+            <p className="text-sm text-blue-200/80">Portion estimates are more accurate! (NYU research-backed)</p>
+          </div>
+        </div>
+      )}
+
       {/* Calorie Summary */}
       <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl p-6 border border-green-500/30">
         <div className="flex items-center justify-between">
