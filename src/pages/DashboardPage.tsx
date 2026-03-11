@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MacroDonut } from '../components/charts/MacroDonut'
 import { NovaGauge } from '../components/charts/NovaGauge'
@@ -6,6 +6,8 @@ import { MicronutrientBars } from '../components/charts/MicronutrientBars'
 import { IngredientQuality } from '../components/charts/IngredientQuality'
 import { AIInsights } from '../components/AIInsights'
 import { VerdictCard } from '../components/VerdictCard'
+import { EditFoodModal } from '../components/EditFoodModal'
+import { saveMealCorrection } from '../lib/correctionTracking'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
@@ -15,6 +17,17 @@ export function DashboardPage() {
   const image = location.state?.image as string | undefined
 
   const [mealData, setMealData] = useState<MealData | null>(initialMealData || null)
+  const [originalMealData, setOriginalMealData] = useState<MealData | null>(initialMealData || null)
+  const [editingFood, setEditingFood] = useState<{ food: FoodItem; index: number } | null>(null)
+  const [hasEdits, setHasEdits] = useState(false)
+
+  // Track if meal has been edited
+  useEffect(() => {
+    if (mealData && originalMealData) {
+      const edited = JSON.stringify(mealData.foods) !== JSON.stringify(originalMealData.foods)
+      setHasEdits(edited)
+    }
+  }, [mealData, originalMealData])
 
   if (!mealData || !image) {
     return (
@@ -56,6 +69,61 @@ export function DashboardPage() {
     if (size === 'S') return Math.round(currentGrams * 0.7)
     if (size === 'L') return Math.round(currentGrams * 1.3)
     return currentGrams
+  }
+
+  // Edit food handler
+  const handleEditFood = (index: number, updatedFood: FoodItem) => {
+    if (!mealData) return
+    const updatedFoods = [...mealData.foods]
+    updatedFoods[index] = updatedFood
+
+    const totalCalories = updatedFoods.reduce(
+      (sum, food) => sum + (food.nutrients.calories * food.estimated_grams) / 100,
+      0
+    )
+
+    setMealData({
+      ...mealData,
+      foods: updatedFoods,
+      estimated_calories_low: Math.round(totalCalories * 0.9),
+      estimated_calories_high: Math.round(totalCalories * 1.1)
+    })
+  }
+
+  // Delete food handler
+  const handleDeleteFood = (index: number) => {
+    if (!mealData) return
+    const updatedFoods = mealData.foods.filter((_, i) => i !== index)
+
+    const totalCalories = updatedFoods.reduce(
+      (sum, food) => sum + (food.nutrients.calories * food.estimated_grams) / 100,
+      0
+    )
+
+    setMealData({
+      ...mealData,
+      foods: updatedFoods,
+      estimated_calories_low: Math.round(totalCalories * 0.9),
+      estimated_calories_high: Math.round(totalCalories * 1.1)
+    })
+  }
+
+  // Save corrections
+  const handleSaveCorrections = () => {
+    if (!mealData || !originalMealData) return
+
+    saveMealCorrection(
+      mealData.meal_id,
+      originalMealData.foods,
+      mealData.foods,
+      image
+    )
+
+    setOriginalMealData(mealData) // Update baseline
+    setHasEdits(false)
+
+    // Show success message
+    alert('✅ Corrections saved! Your feedback helps improve accuracy.')
   }
 
   return (
@@ -100,18 +168,42 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Food Items with Portion Adjusters */}
+      {/* Food Items with Edit & Portion Adjusters */}
       <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-        <h3 className="text-lg font-semibold mb-4">Foods Identified</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">Foods Identified</h3>
+          {hasEdits && (
+            <button
+              onClick={handleSaveCorrections}
+              className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-400 text-white text-sm font-semibold transition-all flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Save Corrections
+            </button>
+          )}
+        </div>
         <div className="space-y-3">
           {mealData.foods.map((food, index) => (
-            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-white/5 gap-3">
               <div className="flex-1">
                 <p className="font-medium text-white">{food.name}</p>
                 <p className="text-sm text-white/50">
                   {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
                 </p>
               </div>
+
+              {/* Edit Button */}
+              <button
+                onClick={() => setEditingFood({ food, index })}
+                className="px-3 py-1.5 rounded-lg border border-white/20 hover:bg-white/10 text-white/60 hover:text-white text-sm transition-all flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit
+              </button>
 
               {/* Portion Adjuster */}
               <div className="flex items-center gap-2">
@@ -152,6 +244,17 @@ export function DashboardPage() {
 
       {/* AI Insights */}
       <AIInsights mealData={mealData} />
+
+      {/* Edit Food Modal */}
+      {editingFood && (
+        <EditFoodModal
+          food={editingFood.food}
+          index={editingFood.index}
+          onSave={handleEditFood}
+          onDelete={handleDeleteFood}
+          onClose={() => setEditingFood(null)}
+        />
+      )}
     </div>
   )
 }
