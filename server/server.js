@@ -23,7 +23,8 @@ app.post('/api/analyze', async (req, res) => {
     console.log('Received mediaType:', mediaType, '| imageData length:', imageData?.length)
     const validMediaTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
     const safeMediaType = validMediaTypes.includes(mediaType) ? mediaType : 'image/jpeg'
-    const apiKey = process.env.VITE_CLAUDE_API_KEY
+    // Check for API key in both production (CLAUDE_API_KEY) and dev (VITE_CLAUDE_API_KEY)
+    const apiKey = process.env.CLAUDE_API_KEY || process.env.VITE_CLAUDE_API_KEY
 
     if (!apiKey) {
       return res.status(500).json({ error: 'Claude API key not configured' })
@@ -131,6 +132,7 @@ NOVA LEVELS:
 })
 
 app.listen(PORT, () => {
+  const apiKey = process.env.CLAUDE_API_KEY || process.env.VITE_CLAUDE_API_KEY
   console.log(`\n🚀 PlateIQ Backend running on http://localhost:${PORT}`)
-  console.log(`🔑 Claude API Key: ${process.env.VITE_CLAUDE_API_KEY ? 'Configured ✅' : 'Missing ❌'}\n`)
+  console.log(`🔑 Claude API Key: ${apiKey ? 'Configured ✅' : 'Missing ❌'}\n`)
 })

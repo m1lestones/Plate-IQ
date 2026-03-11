@@ -142,15 +142,15 @@ export function getFoodDensity(foodName: string): number {
   }
 
   // Check aliases
-  for (const [key, entry] of Object.entries(FOOD_DENSITIES)) {
+  for (const [, entry] of Object.entries(FOOD_DENSITIES)) {
     if (entry.aliases.some(alias => normalized.includes(alias) || alias.includes(normalized))) {
       return entry.density
     }
   }
 
   // Partial match (e.g., "grilled salmon" matches "salmon")
-  for (const [key, entry] of Object.entries(FOOD_DENSITIES)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
+  for (const [foodKey, entry] of Object.entries(FOOD_DENSITIES)) {
+    if (normalized.includes(foodKey) || foodKey.includes(normalized)) {
       return entry.density
     }
   }

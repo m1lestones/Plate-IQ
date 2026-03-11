@@ -1,4 +1,4 @@
-import type { MealData, FoodItem } from '../types'
+import type { FoodItem } from '../types'
 
 export interface MealCorrection {
   meal_id: string
