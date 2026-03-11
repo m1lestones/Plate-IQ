@@ -3,36 +3,9 @@
  * Following PRD data structure requirements
  */
 
-export interface FoodItem {
-  name: string
-  estimated_grams: number
-  nova_level: 1 | 2 | 3 | 4
-  confidence: number
-  category: 'protein' | 'carb' | 'fat' | 'vegetable' | 'fruit' | 'dairy' | 'other'
-  nutrients: {
-    calories: number
-    protein_g: number
-    carbs_g: number
-    fat_g: number
-    fiber_g: number
-    vitamin_a_dv: number
-    vitamin_c_dv: number
-    vitamin_d_dv: number
-    calcium_dv: number
-    iron_dv: number
-    potassium_dv: number
-  }
-}
+import type { FoodItem, MealData } from '../types'
 
-export interface DemoMeal {
-  meal_id: string
-  meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
-  primary_cuisine: string
-  estimated_calories_low: number
-  estimated_calories_high: number
-  foods: FoodItem[]
-  timestamp: string
-}
+export type DemoMeal = MealData
 
 export const demoMeals: DemoMeal[] = [
   // Meal 1: Grilled Chicken + Brown Rice + Broccoli (NOVA 1: Unprocessed)
