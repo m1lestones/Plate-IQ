@@ -12,6 +12,14 @@ export function Scanner({ onCapture }: ScannerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [cameraError, setCameraError] = useState(false)
   const [cameraReady, setCameraReady] = useState(false)
+  const [showTip, setShowTip] = useState(() => {
+    return localStorage.getItem('hideReferenceTip') !== 'true'
+  })
+
+  const dismissTip = () => {
+    setShowTip(false)
+    localStorage.setItem('hideReferenceTip', 'true')
+  }
 
   const startCamera = useCallback(async () => {
     try {
@@ -29,6 +37,8 @@ export function Scanner({ onCapture }: ScannerProps) {
   }, [])
 
   useEffect(() => {
+    // Initialize camera on mount - this is intentional sync state update
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     startCamera()
     return () => {
       streamRef.current?.getTracks().forEach(t => t.stop())
@@ -70,6 +80,27 @@ export function Scanner({ onCapture }: ScannerProps) {
 
   return (
     <div className="flex flex-col items-center gap-6">
+      {/* NYU-Inspired Reference Object Tip */}
+      {showTip && (
+        <div className="w-full max-w-md px-4 py-3 bg-blue-500/20 border border-blue-500/30 rounded-xl flex items-start gap-3">
+          <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div className="flex-1 text-sm text-blue-100">
+            <strong className="font-semibold">Pro tip:</strong> Include a credit card, fork, or phone next to your plate for more accurate portion estimates! (NYU research-backed)
+          </div>
+          <button
+            onClick={dismissTip}
+            className="text-blue-300 hover:text-blue-100 flex-shrink-0"
+            aria-label="Dismiss tip"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       <div className="relative w-full max-w-md aspect-[4/3] bg-black rounded-2xl overflow-hidden shadow-2xl">
         {!cameraError ? (
           <>

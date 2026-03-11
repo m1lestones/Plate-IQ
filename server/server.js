@@ -48,20 +48,64 @@ app.post('/api/analyze', async (req, res) => {
             },
             {
               type: 'text',
-              text: `Analyze this meal photo and identify ALL visible foods.
+              text: `You are an expert food identification system trained on NYU Tandon research. Analyze this meal image and identify ALL visible foods with accurate portion estimates.
 
-For each food item, provide:
-- Exact name of the food
-- Estimated portion size in grams
-- NOVA processing level (1=unprocessed, 2=processed ingredients, 3=processed, 4=ultra-processed)
-- Food category (protein, carb, vegetable, fruit, dairy, fat, other)
+🔍 CRITICAL: First check for REFERENCE OBJECTS for scale measurement:
+- Credit card (85.6mm × 53.98mm)
+- Fork/Spoon (~200mm length)
+- Knife (~220mm length)
+- Dinner plate (~250-280mm diameter)
+- Coin (quarter: 24.26mm)
+- Phone (~150mm height)
+
+If found, use these known sizes to calculate accurate portion sizes!
 
 Return ONLY valid JSON (no markdown):
 {
-  "foods": [{"name": "Food Name", "estimated_grams": 150, "nova_level": 1, "category": "protein"}],
+  "foods": [
+    {
+      "name": "Specific food name (e.g. 'Brown Rice' not 'Rice')",
+      "estimated_grams": weight_in_grams,
+      "nova_level": 1_to_4_processing_level,
+      "category": "protein|carb|vegetable|fruit|dairy|fat|other"
+    }
+  ],
+  "reference_object_detected": "credit_card|fork|spoon|plate|coin|phone|none",
   "meal_type": "breakfast|lunch|dinner|snack",
-  "primary_cuisine": "American|Italian|etc"
-}`
+  "primary_cuisine": "American|Italian|Mexican|etc"
+}
+
+PORTION ESTIMATION GUIDELINES:
+- WITH reference object: Measure food area relative to known object size, apply food density
+- WITHOUT reference object: Use visual cues (plate coverage, typical serving sizes)
+
+RESEARCH-BACKED FOOD DENSITIES (g/cm³):
+Grains: white rice 0.85, brown rice 0.80, pasta 0.90, quinoa 0.75, bread 0.25
+Proteins: chicken 1.05, beef 1.10, fish 1.00, tofu 0.95, eggs 1.03
+Vegetables (cooked): broccoli 0.60, carrots 0.70, spinach 0.55, peas 0.80, corn 0.75
+Vegetables (raw): salad 0.30, cucumber 0.40
+Fruits: apple 0.65, banana 0.60, berries 0.55, avocado 0.70
+Fats: nuts 0.65, cheese 1.15, butter 0.91
+Sauces: tomato sauce 1.00, hummus 1.05, soup 1.00
+
+VOLUMETRIC CALCULATION:
+1. Measure food area in pixels relative to reference object
+2. Convert to cm² using reference object's known size
+3. Multiply by assumed height (~1.5cm for flat foods, ~3cm for piled foods)
+4. Multiply by food-specific density
+5. Result = estimated grams
+
+IDENTIFICATION TIPS:
+- Be SPECIFIC: "Jasmine Rice" not "Rice", "Grilled Chicken Breast" not "Chicken"
+- Don't miss small items: sauces, garnishes, condiments, herbs
+- Distinguish similar foods: quinoa (ring-shaped) vs couscous (tiny round), brown rice vs white rice (color)
+- Look for partially hidden foods behind/under other items
+
+NOVA LEVELS:
+1 = Unprocessed (fresh vegetables, plain meat, eggs, rice)
+2 = Processed ingredients (oils, butter, sugar, salt)
+3 = Processed foods (canned vegetables, cheese, bread)
+4 = Ultra-processed (packaged snacks, fast food, processed meats)`
             }
           ]
         }]
