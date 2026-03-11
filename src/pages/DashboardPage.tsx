@@ -159,6 +159,11 @@ export function DashboardPage() {
         carbs_g: 0,
         fat_g: 0,
         fiber_g: 0,
+        sodium_mg: 0,
+        saturated_fat_g: 0,
+        cholesterol_mg: 0,
+        added_sugar_g: 0,
+        potassium_mg: 0,
         vitamin_a_dv: 0,
         vitamin_c_dv: 0,
         vitamin_d_dv: 0,
@@ -173,7 +178,7 @@ export function DashboardPage() {
   }
 
   // Save new food (called from modal)
-  const handleSaveNewFood = (index: number, newFood: FoodItem) => {
+  const handleSaveNewFood = (_index: number, newFood: FoodItem) => {
     if (!mealData) return
 
     // Add to foods array

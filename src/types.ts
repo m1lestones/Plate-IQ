@@ -58,7 +58,7 @@ export interface MealData {
   foods: FoodItem[]
   timestamp: string
   verdict?: MealVerdict
-  reference_object_detected?: boolean
+  reference_object_detected?: string
   filtered_foods?: FoodItem[]
   validation_warnings?: ValidationWarning[]
 }

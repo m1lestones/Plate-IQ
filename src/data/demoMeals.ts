@@ -3,7 +3,7 @@
  * Following PRD data structure requirements
  */
 
-import type { FoodItem, MealData } from '../types'
+import type { MealData } from '../types'
 
 export type DemoMeal = MealData
 
