@@ -107,7 +107,7 @@ export function validateFoodPortion(food: FoodItem): ValidationWarning[] {
 export function validateMealCalories(mealData: MealData): ValidationWarning[] {
   const warnings: ValidationWarning[] = []
   const avgCalories = (mealData.estimated_calories_low + mealData.estimated_calories_high) / 2
-  const mealType = mealData.meal_type || 'dinner'
+  const mealType = (mealData.meal_type || 'dinner') as keyof typeof MEAL_CALORIE_RANGES
   const range = MEAL_CALORIE_RANGES[mealType]
 
   if (avgCalories < range.min) {

@@ -38,6 +38,7 @@ export interface FoodItem {
   confidence: number
   category: string
   nutrients: FoodNutrients
+  metadata?: Record<string, unknown>
 }
 
 export interface MealData {
@@ -78,4 +79,10 @@ export interface JournalEntry {
 export interface ClaudeVisionError {
   type: 'api_error' | 'network_error' | 'validation_error'
   message: string
+}
+
+export interface MealAnalysis {
+  foods: FoodItem[]
+  total_calories: number
+  timestamp: string
 }
