@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Rectangle } from 'recharts'
 import type { MealData } from '../../types'
 
 interface MicronutrientBarsProps {
@@ -35,7 +35,7 @@ export function MicronutrientBars({ mealData }: MicronutrientBarsProps) {
       <p className="text-xs text-white/50 mb-4">% of Daily Value per serving</p>
 
       <ResponsiveContainer width="100%" height={250}>
-        <BarChart data={data} layout="horizontal">
+        <BarChart data={data} layout="vertical">
           <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
           <XAxis type="number" stroke="#ffffff60" tick={{ fill: '#ffffff80', fontSize: 12 }} />
           <YAxis
@@ -54,11 +54,11 @@ export function MicronutrientBars({ mealData }: MicronutrientBarsProps) {
             labelStyle={{ color: '#fff' }}
             formatter={(value: any) => [`${value}% DV`, '']}
           />
-          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(entry.value)} />
-            ))}
-          </Bar>
+          <Bar
+            dataKey="value"
+            radius={[0, 4, 4, 0]}
+            shape={(props: any) => <Rectangle {...props} fill={getColor(props.value)} />}
+          />
         </BarChart>
       </ResponsiveContainer>
 
