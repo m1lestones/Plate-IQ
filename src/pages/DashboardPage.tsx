@@ -23,6 +23,18 @@ export function DashboardPage() {
   const [originalMealData, setOriginalMealData] = useState<MealData | null>(initialMealData || null)
   const [editingFood, setEditingFood] = useState<{ food: FoodItem; index: number } | null>(null)
   const [hasEdits, setHasEdits] = useState(false)
+  const [portionSizes, setPortionSizes] = useState<Record<number, 'S' | 'M' | 'L'>>({})
+
+  // Initialize all portion sizes to 'M' on mount
+  useEffect(() => {
+    if (mealData && Object.keys(portionSizes).length === 0) {
+      const initialSizes: Record<number, 'S' | 'M' | 'L'> = {}
+      mealData.foods.forEach((_, index) => {
+        initialSizes[index] = 'M'
+      })
+      setPortionSizes(initialSizes)
+    }
+  }, [mealData, portionSizes])
 
   // Track if meal has been edited
   useEffect(() => {
@@ -49,7 +61,7 @@ export function DashboardPage() {
   }
 
   // Update portion size
-  const updatePortion = (index: number, newGrams: number) => {
+  const updatePortion = (index: number, newGrams: number, size: 'S' | 'M' | 'L') => {
     const updatedFoods = [...mealData.foods]
     updatedFoods[index] = { ...updatedFoods[index], estimated_grams: newGrams }
 
@@ -65,13 +77,17 @@ export function DashboardPage() {
       estimated_calories_low: Math.round(totalCalories * 0.9),
       estimated_calories_high: Math.round(totalCalories * 1.1)
     })
+
+    // Update portion size tracking
+    setPortionSizes(prev => ({ ...prev, [index]: size }))
   }
 
-  // Portion size presets
-  const getPortionPreset = (currentGrams: number, size: 'S' | 'M' | 'L') => {
-    if (size === 'S') return Math.round(currentGrams * 0.7)
-    if (size === 'L') return Math.round(currentGrams * 1.3)
-    return currentGrams
+  // Portion size presets - always calculate from original grams
+  const getPortionPreset = (index: number, size: 'S' | 'M' | 'L') => {
+    const originalGrams = originalMealData?.foods[index]?.estimated_grams || mealData.foods[index].estimated_grams
+    if (size === 'S') return Math.round(originalGrams * 0.7)
+    if (size === 'L') return Math.round(originalGrams * 1.3)
+    return originalGrams
   }
 
   // Edit food handler
@@ -91,6 +107,9 @@ export function DashboardPage() {
       estimated_calories_low: Math.round(totalCalories * 0.9),
       estimated_calories_high: Math.round(totalCalories * 1.1)
     })
+
+    // Reset portion size to M after manual edit
+    setPortionSizes(prev => ({ ...prev, [index]: 'M' }))
   }
 
   // Delete food handler
@@ -109,6 +128,18 @@ export function DashboardPage() {
       estimated_calories_low: Math.round(totalCalories * 0.9),
       estimated_calories_high: Math.round(totalCalories * 1.1)
     })
+
+    // Rebuild portion sizes map with updated indices
+    const newPortionSizes: Record<number, 'S' | 'M' | 'L'> = {}
+    let newIndex = 0
+    Object.keys(portionSizes).forEach(key => {
+      const oldIndex = parseInt(key)
+      if (oldIndex !== index) {
+        newPortionSizes[newIndex] = portionSizes[oldIndex]
+        newIndex++
+      }
+    })
+    setPortionSizes(newPortionSizes)
   }
 
   // Add new food handler
@@ -159,6 +190,9 @@ export function DashboardPage() {
       estimated_calories_low: Math.round(totalCalories * 0.9),
       estimated_calories_high: Math.round(totalCalories * 1.1)
     })
+
+    // Set new food portion size to M
+    setPortionSizes(prev => ({ ...prev, [updatedFoods.length - 1]: 'M' }))
   }
 
   // Save corrections
@@ -350,20 +384,32 @@ export function DashboardPage() {
               {/* Portion Adjuster */}
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => updatePortion(index, getPortionPreset(food.estimated_grams, 'S'))}
-                  className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 text-sm transition-all"
+                  onClick={() => updatePortion(index, getPortionPreset(index, 'S'), 'S')}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                    portionSizes[index] === 'S'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-white/10 hover:bg-white/20 text-white/80'
+                  }`}
                 >
                   S
                 </button>
                 <button
-                  onClick={() => updatePortion(index, food.estimated_grams)}
-                  className="px-3 py-1.5 rounded-lg bg-green-500/20 text-green-400 text-sm transition-all"
+                  onClick={() => updatePortion(index, getPortionPreset(index, 'M'), 'M')}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                    portionSizes[index] === 'M'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-white/10 hover:bg-white/20 text-white/80'
+                  }`}
                 >
                   M
                 </button>
                 <button
-                  onClick={() => updatePortion(index, getPortionPreset(food.estimated_grams, 'L'))}
-                  className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 text-sm transition-all"
+                  onClick={() => updatePortion(index, getPortionPreset(index, 'L'), 'L')}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                    portionSizes[index] === 'L'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-white/10 hover:bg-white/20 text-white/80'
+                  }`}
                 >
                   L
                 </button>
