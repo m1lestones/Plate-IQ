@@ -53,13 +53,19 @@ export function Scanner({ onCapture }: ScannerProps) {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const reader = new FileReader()
-    reader.onload = ev => {
-      const dataUrl = ev.target?.result as string
+    const objectUrl = URL.createObjectURL(file)
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      canvas.getContext('2d')?.drawImage(img, 0, 0)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+      URL.revokeObjectURL(objectUrl)
       streamRef.current?.getTracks().forEach(t => t.stop())
-      onCapture({ dataUrl, file })
+      onCapture({ dataUrl })
     }
-    reader.readAsDataURL(file)
+    img.src = objectUrl
   }, [onCapture])
 
   return (

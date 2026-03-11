@@ -5,40 +5,74 @@ export interface CapturedImage {
   file?: File
 }
 
-// API Response types
+export type HealthCondition = 'hypertension' | 'high_cholesterol' | 'type2_diabetes' | 'stroke_risk'
+
+export interface HealthProfile {
+  conditions: HealthCondition[]
+  setupComplete: boolean
+}
+
+export interface FoodNutrients {
+  calories: number
+  protein_g: number
+  carbs_g: number
+  fat_g: number
+  fiber_g: number
+  sodium_mg: number
+  saturated_fat_g: number
+  cholesterol_mg: number
+  added_sugar_g: number
+  potassium_mg: number
+  vitamin_a_dv: number
+  vitamin_c_dv: number
+  vitamin_d_dv: number
+  calcium_dv: number
+  iron_dv: number
+  potassium_dv: number
+}
+
 export interface FoodItem {
   name: string
-  portion_grams: number
-  estimated_calories: number
-  confidence?: number
-  nova_level?: 1 | 2 | 3 | 4
-  category?: 'protein' | 'carb' | 'vegetable' | 'fruit' | 'dairy' | 'fat' | 'other'
+  estimated_grams: number
+  nova_level: number
+  confidence: number
+  category: string
+  nutrients: FoodNutrients
 }
 
-export interface MealAnalysis {
-  foods: FoodItem[]
-  total_calories: number
-  reference_object_detected?: 'credit_card' | 'fork' | 'spoon' | 'plate' | 'none'
-  meal_type?: 'breakfast' | 'lunch' | 'dinner' | 'snack'
-  primary_cuisine?: string
-  timestamp: string
-}
-
-// User correction tracking
-export interface FoodCorrection {
-  original: FoodItem
-  corrected: FoodItem
-  correction_type: 'name' | 'portion' | 'added' | 'removed' | 'category' | 'nova_level'
-}
-
-export interface MealCorrection {
+export interface MealData {
   meal_id: string
-  original_analysis: MealAnalysis
-  corrected_analysis: MealAnalysis
-  corrections: FoodCorrection[]
-  image_data: string
+  meal_type: string
+  primary_cuisine: string
+  estimated_calories_low: number
+  estimated_calories_high: number
+  foods: FoodItem[]
   timestamp: string
-  user_notes?: string
+  verdict?: MealVerdict
+}
+
+export type VerdictLevel = 'safe' | 'caution' | 'avoid'
+
+export interface ConditionVerdict {
+  condition: HealthCondition
+  verdict: VerdictLevel
+  flags: string[]
+}
+
+export interface MealVerdict {
+  overall: VerdictLevel
+  byCondition: ConditionVerdict[]
+  aiInsight: string
+}
+
+export interface JournalEntry {
+  meal_id: string
+  timestamp: string
+  meal_type: string
+  estimated_calories_low: number
+  estimated_calories_high: number
+  verdict?: MealVerdict
+  foods: { name: string; estimated_grams: number }[]
 }
 
 export interface ClaudeVisionError {
