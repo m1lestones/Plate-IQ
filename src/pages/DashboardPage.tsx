@@ -8,6 +8,7 @@ import { AIInsights } from '../components/AIInsights'
 import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { saveMealCorrection } from '../lib/correctionTracking'
+import { getConfidenceLevel, getConfidenceColor, getConfidenceWarning } from '../utils/confidenceFiltering'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
@@ -214,6 +215,23 @@ export function DashboardPage() {
         </div>
       )}
 
+      {/* Confidence Filtering Notice */}
+      {mealData.filtered_foods && mealData.filtered_foods.length > 0 && (
+        <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 flex items-center gap-3">
+          <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <div className="flex-1">
+            <p className="font-semibold text-yellow-100">
+              {mealData.filtered_foods.length} low-confidence item{mealData.filtered_foods.length > 1 ? 's' : ''} filtered out
+            </p>
+            <p className="text-sm text-yellow-200/80">
+              Removed: {mealData.filtered_foods.map(f => f.name).join(', ')} (confidence &lt;50%)
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Calorie Summary */}
       <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl p-6 border border-green-500/30">
         <div className="flex items-center justify-between">
@@ -259,13 +277,33 @@ export function DashboardPage() {
           </div>
         </div>
         <div className="space-y-3">
-          {mealData.foods.map((food, index) => (
+          {mealData.foods.map((food, index) => {
+            const confidenceLevel = getConfidenceLevel(food.confidence)
+            const confidenceColors = getConfidenceColor(confidenceLevel)
+            const warning = getConfidenceWarning(food)
+
+            return (
             <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-white/5 gap-3">
               <div className="flex-1">
-                <p className="font-medium text-white">{food.name}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-medium text-white">{food.name}</p>
+                  {/* Confidence Badge */}
+                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${confidenceColors.badge}`}>
+                    {Math.round(food.confidence * 100)}%
+                  </span>
+                </div>
                 <p className="text-sm text-white/50">
                   {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
                 </p>
+                {/* Warning for low confidence */}
+                {warning && (
+                  <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Please verify
+                  </p>
+                )}
               </div>
 
               {/* Edit Button */}
@@ -301,7 +339,8 @@ export function DashboardPage() {
                 </button>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 

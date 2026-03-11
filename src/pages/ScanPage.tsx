@@ -7,6 +7,7 @@ import { getRandomDemoMeal } from '../data/demoMeals'
 import { analyzeMealWithClaude } from '../services/claudeVision'
 import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
+import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
@@ -40,6 +41,9 @@ export function ScanPage() {
       // Apply NYU density-based portion refinement
       mealData.foods = refineMealPortions(mealData.foods)
       logDensityInfo(mealData.foods)
+
+      // Apply NYU confidence filtering (removes <50% confidence)
+      mealData = applyConfidenceFiltering(mealData)
 
       if (isUSDAConfigured()) {
         mealData = await enhanceMealWithUSDA(mealData)
