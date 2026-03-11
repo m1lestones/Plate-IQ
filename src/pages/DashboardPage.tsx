@@ -7,6 +7,7 @@ import { IngredientQuality } from '../components/charts/IngredientQuality'
 import { AIInsights } from '../components/AIInsights'
 import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
+import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
 import { getConfidenceLevel, getConfidenceColor, getConfidenceWarning } from '../utils/confidenceFiltering'
 import { getWarningColor } from '../utils/smartValidation'
@@ -194,12 +195,11 @@ export function DashboardPage() {
         </button>
       </div>
 
-      {/* Meal Image */}
+      {/* Meal Image with Visual Segmentation Overlay */}
       <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-        <img
-          src={image}
-          alt="Your meal"
-          className="w-full max-w-md mx-auto rounded-xl"
+        <FoodSegmentationOverlay
+          imageUrl={image}
+          foods={mealData.foods}
         />
       </div>
 
