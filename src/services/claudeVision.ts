@@ -5,7 +5,9 @@
 
 import type { MealData } from '../types'
 
-const BACKEND_API_URL = 'http://localhost:3001/api/analyze'
+const BACKEND_API_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/analyze`
+  : 'http://localhost:3001/api/analyze'
 
 /**
  * Analyze meal image with Claude Vision API
