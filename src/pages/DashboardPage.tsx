@@ -5,6 +5,7 @@ import { NovaGauge } from '../components/charts/NovaGauge'
 import { MicronutrientBars } from '../components/charts/MicronutrientBars'
 import { IngredientQuality } from '../components/charts/IngredientQuality'
 import { AIInsights } from '../components/AIInsights'
+import { VerdictCard } from '../components/VerdictCard'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
@@ -137,6 +138,9 @@ export function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* Condition Verdict */}
+      {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
 
       {/* Charts Grid */}
       <div className="grid md:grid-cols-2 gap-6">

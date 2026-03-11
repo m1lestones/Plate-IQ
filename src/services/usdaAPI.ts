@@ -101,21 +101,28 @@ export function getNutrientValue(food: USDAFood, nutrientId: number): number {
  * @param food - USDA food object
  */
 export function convertToAppNutrients(food: USDAFood) {
+  // Nutrient IDs: 1008=Energy, 1003=Protein, 1005=Carbs, 1004=Fat, 1079=Fiber
+  // 1093=Sodium, 1258=Saturated Fat, 1253=Cholesterol, 1235=Added Sugar, 1092=Potassium
+  // 1106=Vit A, 1162=Vit C, 1114=Vit D, 1087=Calcium, 1089=Iron
   return {
     calories: Math.round(getNutrientValue(food, 1008)),
     protein_g: Math.round(getNutrientValue(food, 1003) * 10) / 10,
     carbs_g: Math.round(getNutrientValue(food, 1005) * 10) / 10,
     fat_g: Math.round(getNutrientValue(food, 1004) * 10) / 10,
     fiber_g: Math.round(getNutrientValue(food, 1079) * 10) / 10,
-
-    // Calculate % Daily Values
-    // DV: Vit A = 900mcg, Vit C = 90mg, Vit D = 20mcg, Ca = 1300mg, Fe = 18mg, K = 4700mg
+    // Condition-relevant nutrients (per 100g)
+    sodium_mg: Math.round(getNutrientValue(food, 1093)),
+    saturated_fat_g: Math.round(getNutrientValue(food, 1258) * 10) / 10,
+    cholesterol_mg: Math.round(getNutrientValue(food, 1253)),
+    added_sugar_g: Math.round(getNutrientValue(food, 1235) * 10) / 10,
+    potassium_mg: Math.round(getNutrientValue(food, 1092)),
+    // Micronutrient % Daily Values
     vitamin_a_dv: Math.round((getNutrientValue(food, 1106) / 900) * 100),
     vitamin_c_dv: Math.round((getNutrientValue(food, 1162) / 90) * 100),
     vitamin_d_dv: Math.round((getNutrientValue(food, 1114) / 20) * 100),
     calcium_dv: Math.round((getNutrientValue(food, 1087) / 1300) * 100),
     iron_dv: Math.round((getNutrientValue(food, 1089) / 18) * 100),
-    potassium_dv: Math.round((getNutrientValue(food, 1092) / 4700) * 100)
+    potassium_dv: Math.round((getNutrientValue(food, 1092) / 4700) * 100),
   }
 }
 

@@ -52,18 +52,9 @@ export async function analyzeMealWithClaude(imageDataUrl: string): Promise<MealD
       confidence: 0.85, // Default confidence
       category: food.category || 'other',
       nutrients: {
-        // Placeholder - will be replaced by USDA
-        calories: 0,
-        protein_g: 0,
-        carbs_g: 0,
-        fat_g: 0,
-        fiber_g: 0,
-        vitamin_a_dv: 0,
-        vitamin_c_dv: 0,
-        vitamin_d_dv: 0,
-        calcium_dv: 0,
-        iron_dv: 0,
-        potassium_dv: 0
+        calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0, fiber_g: 0,
+        sodium_mg: 0, saturated_fat_g: 0, cholesterol_mg: 0, added_sugar_g: 0, potassium_mg: 0,
+        vitamin_a_dv: 0, vitamin_c_dv: 0, vitamin_d_dv: 0, calcium_dv: 0, iron_dv: 0, potassium_dv: 0,
       }
     }))
 
