@@ -9,7 +9,7 @@ import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
 import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
 import { validateMeal } from '../utils/smartValidation'
-import { mergeFoodsFromAngles, ANGLE_INSTRUCTIONS, type AngleCapture, type CaptureAngle } from '../utils/multiAngleAnalysis'
+import type { AngleCapture, CaptureAngle } from '../utils/multiAngleAnalysis'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
@@ -18,7 +18,7 @@ export function ScanPage() {
   const navigate = useNavigate()
   const [step, setStep] = useState<ScanStep>('capture')
   const [image, setImage] = useState<CapturedImage | null>(null)
-  const [multiAngleMode, setMultiAngleMode] = useState(false)
+  const [multiAngleMode] = useState(false) // setMultiAngleMode unused - multi-angle UI not fully implemented
   const [angleCaptures, setAngleCaptures] = useState<AngleCapture[]>([])
   const [currentAngle, setCurrentAngle] = useState<CaptureAngle>('top_down')
 

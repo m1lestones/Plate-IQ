@@ -41,6 +41,14 @@ export interface FoodItem {
   metadata?: Record<string, unknown>
 }
 
+export interface ValidationWarning {
+  type: 'portion' | 'calorie' | 'logical' | 'meal_context'
+  severity: 'error' | 'warning' | 'info'
+  message: string
+  foodName?: string
+  suggestion?: string
+}
+
 export interface MealData {
   meal_id: string
   meal_type: string
@@ -50,6 +58,9 @@ export interface MealData {
   foods: FoodItem[]
   timestamp: string
   verdict?: MealVerdict
+  reference_object_detected?: boolean
+  filtered_foods?: FoodItem[]
+  validation_warnings?: ValidationWarning[]
 }
 
 export type VerdictLevel = 'safe' | 'caution' | 'avoid'
