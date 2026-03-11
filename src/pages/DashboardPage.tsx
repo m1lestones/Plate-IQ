@@ -108,6 +108,56 @@ export function DashboardPage() {
     })
   }
 
+  // Add new food handler
+  const handleAddFood = () => {
+    if (!mealData) return
+
+    // Create blank food item
+    const newFood: FoodItem = {
+      name: '',
+      estimated_grams: 100,
+      nova_level: 1,
+      confidence: 1.0,
+      category: 'other',
+      nutrients: {
+        calories: 0,
+        protein_g: 0,
+        carbs_g: 0,
+        fat_g: 0,
+        fiber_g: 0,
+        vitamin_a_dv: 0,
+        vitamin_c_dv: 0,
+        vitamin_d_dv: 0,
+        calcium_dv: 0,
+        iron_dv: 0,
+        potassium_dv: 0
+      }
+    }
+
+    // Open edit modal for new food
+    setEditingFood({ food: newFood, index: mealData.foods.length })
+  }
+
+  // Save new food (called from modal)
+  const handleSaveNewFood = (index: number, newFood: FoodItem) => {
+    if (!mealData) return
+
+    // Add to foods array
+    const updatedFoods = [...mealData.foods, newFood]
+
+    const totalCalories = updatedFoods.reduce(
+      (sum, food) => sum + (food.nutrients.calories * food.estimated_grams) / 100,
+      0
+    )
+
+    setMealData({
+      ...mealData,
+      foods: updatedFoods,
+      estimated_calories_low: Math.round(totalCalories * 0.9),
+      estimated_calories_high: Math.round(totalCalories * 1.1)
+    })
+  }
+
   // Save corrections
   const handleSaveCorrections = () => {
     if (!mealData || !originalMealData) return
@@ -172,17 +222,28 @@ export function DashboardPage() {
       <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Foods Identified</h3>
-          {hasEdits && (
+          <div className="flex gap-2">
             <button
-              onClick={handleSaveCorrections}
-              className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-400 text-white text-sm font-semibold transition-all flex items-center gap-2"
+              onClick={handleAddFood}
+              className="px-4 py-2 rounded-lg border border-green-500/50 text-green-400 hover:bg-green-500/10 text-sm font-semibold transition-all flex items-center gap-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Save Corrections
+              Add Food
             </button>
-          )}
+            {hasEdits && (
+              <button
+                onClick={handleSaveCorrections}
+                className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-400 text-white text-sm font-semibold transition-all flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Save Corrections
+              </button>
+            )}
+          </div>
         </div>
         <div className="space-y-3">
           {mealData.foods.map((food, index) => (
@@ -250,7 +311,7 @@ export function DashboardPage() {
         <EditFoodModal
           food={editingFood.food}
           index={editingFood.index}
-          onSave={handleEditFood}
+          onSave={editingFood.index >= mealData.foods.length ? handleSaveNewFood : handleEditFood}
           onDelete={handleDeleteFood}
           onClose={() => setEditingFood(null)}
         />
