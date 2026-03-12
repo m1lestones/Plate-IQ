@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MacroDonut } from '../components/charts/MacroDonut'
-import { NovaGauge } from '../components/charts/NovaGauge'
 import { MicronutrientBars } from '../components/charts/MicronutrientBars'
 import { IngredientQuality } from '../components/charts/IngredientQuality'
 import { AIInsights } from '../components/AIInsights'
@@ -431,9 +430,10 @@ export function DashboardPage() {
       {/* Charts Grid */}
       <div className="grid md:grid-cols-2 gap-6">
         <MacroDonut mealData={mealData} />
-        <NovaGauge mealData={mealData} />
         <MicronutrientBars mealData={mealData} />
-        <IngredientQuality mealData={mealData} />
+        <div className="md:col-span-2">
+          <IngredientQuality mealData={mealData} />
+        </div>
       </div>
 
       {/* AI Insights */}
