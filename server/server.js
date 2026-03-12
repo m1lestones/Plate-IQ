@@ -14,7 +14,8 @@ app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', claudeKey: !!process.env.VITE_CLAUDE_API_KEY })
+  const apiKey = process.env.CLAUDE_API_KEY || process.env.VITE_CLAUDE_API_KEY
+  res.json({ status: 'ok', claudeKey: !!apiKey })
 })
 
 app.post('/api/analyze', async (req, res) => {
