@@ -4,16 +4,27 @@ import type { FoodItem } from '../types'
 interface EditFoodModalProps {
   food: FoodItem
   index: number
-  onSave: (index: number, updatedFood: FoodItem) => void
+  originalGrams?: number
+  portionSize?: 'S' | 'M' | 'L'
+  onSave: (index: number, updatedFood: FoodItem, portionSize?: 'S' | 'M' | 'L') => void
   onDelete: (index: number) => void
   onClose: () => void
 }
 
-export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFoodModalProps) {
+export function EditFoodModal({ food, index, originalGrams, portionSize, onSave, onDelete, onClose }: EditFoodModalProps) {
   const [editedFood, setEditedFood] = useState<FoodItem>(food)
+  const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | null>(portionSize || null)
+
+  const baseGrams = originalGrams || food.estimated_grams
+
+  const applyPortionSize = (size: 'S' | 'M' | 'L') => {
+    const grams = size === 'S' ? Math.round(baseGrams * 0.7) : size === 'L' ? Math.round(baseGrams * 1.3) : baseGrams
+    setEditedFood({ ...editedFood, estimated_grams: grams })
+    setSelectedSize(size)
+  }
 
   const handleSave = () => {
-    onSave(index, editedFood)
+    onSave(index, editedFood, selectedSize || undefined)
     onClose()
   }
 
@@ -30,10 +41,7 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
         {/* Header */}
         <div className="sticky top-0 bg-neutral-900 border-b border-white/10 p-6 flex items-center justify-between">
           <h2 className="text-xl font-bold">Edit Food Item</h2>
-          <button
-            onClick={onClose}
-            className="text-white/60 hover:text-white"
-          >
+          <button onClick={onClose} className="text-white/60 hover:text-white">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -44,9 +52,7 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
         <div className="p-6 space-y-4">
           {/* Food Name */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">
-              Food Name
-            </label>
+            <label className="block text-sm font-medium text-white/80 mb-2">Food Name</label>
             <input
               type="text"
               value={editedFood.name}
@@ -58,13 +64,29 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
 
           {/* Portion Size */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">
-              Portion Size (grams)
-            </label>
+            <label className="block text-sm font-medium text-white/80 mb-2">Portion Size</label>
+            {/* S/M/L quick select */}
+            {originalGrams && (
+              <div className="flex gap-2 mb-2">
+                {(['S', 'M', 'L'] as const).map(size => (
+                  <button
+                    key={size}
+                    onClick={() => applyPortionSize(size)}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
+                      selectedSize === size
+                        ? 'bg-green-500 text-white'
+                        : 'bg-white/10 hover:bg-white/20 text-white/80'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            )}
             <input
               type="number"
               value={editedFood.estimated_grams}
-              onChange={(e) => setEditedFood({ ...editedFood, estimated_grams: parseInt(e.target.value) || 0 })}
+              onChange={(e) => { setEditedFood({ ...editedFood, estimated_grams: parseInt(e.target.value) || 0 }); setSelectedSize(null) }}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
               min="0"
             />
@@ -72,9 +94,7 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">
-              Category
-            </label>
+            <label className="block text-sm font-medium text-white/80 mb-2">Category</label>
             <select
               value={editedFood.category}
               onChange={(e) => setEditedFood({ ...editedFood, category: e.target.value })}
@@ -90,20 +110,18 @@ export function EditFoodModal({ food, index, onSave, onDelete, onClose }: EditFo
             </select>
           </div>
 
-          {/* NOVA Level */}
+          {/* Processing Level */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">
-              Processing Level (NOVA)
-            </label>
+            <label className="block text-sm font-medium text-white/80 mb-2">Processing Level</label>
             <select
               value={editedFood.nova_level}
               onChange={(e) => setEditedFood({ ...editedFood, nova_level: parseInt(e.target.value) })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
             >
-              <option value={1}>1 - Unprocessed (fresh vegetables, plain meat)</option>
-              <option value={2}>2 - Processed ingredients (oil, butter, salt)</option>
-              <option value={3}>3 - Processed (canned, cheese, bread)</option>
-              <option value={4}>4 - Ultra-processed (packaged snacks, fast food)</option>
+              <option value={1}>Whole Food (fresh vegetables, plain meat)</option>
+              <option value={2}>Lightly Processed (oil, butter, salt)</option>
+              <option value={3}>Processed (canned, cheese, bread)</option>
+              <option value={4}>Ultra-Processed (packaged snacks, fast food)</option>
             </select>
           </div>
 
