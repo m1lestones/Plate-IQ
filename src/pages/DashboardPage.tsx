@@ -8,7 +8,6 @@ import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
-import { getConfidenceLevel, getConfidenceColor, getConfidenceWarning } from '../utils/confidenceFiltering'
 import { getWarningColor } from '../utils/smartValidation'
 import type { MealData, FoodItem } from '../types'
 
@@ -57,36 +56,6 @@ export function DashboardPage() {
         </div>
       </div>
     )
-  }
-
-  // Update portion size
-  const updatePortion = (index: number, newGrams: number, size: 'S' | 'M' | 'L') => {
-    const updatedFoods = [...mealData.foods]
-    updatedFoods[index] = { ...updatedFoods[index], estimated_grams: newGrams }
-
-    // Recalculate calorie range
-    const totalCalories = updatedFoods.reduce(
-      (sum, food) => sum + (food.nutrients.calories * food.estimated_grams) / 100,
-      0
-    )
-
-    setMealData({
-      ...mealData,
-      foods: updatedFoods,
-      estimated_calories_low: Math.round(totalCalories * 0.9),
-      estimated_calories_high: Math.round(totalCalories * 1.1)
-    })
-
-    // Update portion size tracking
-    setPortionSizes(prev => ({ ...prev, [index]: size }))
-  }
-
-  // Portion size presets - always calculate from original grams
-  const getPortionPreset = (index: number, size: 'S' | 'M' | 'L') => {
-    const originalGrams = originalMealData?.foods[index]?.estimated_grams || mealData.foods[index].estimated_grams
-    if (size === 'S') return Math.round(originalGrams * 0.7)
-    if (size === 'L') return Math.round(originalGrams * 1.3)
-    return originalGrams
   }
 
   // Edit food handler

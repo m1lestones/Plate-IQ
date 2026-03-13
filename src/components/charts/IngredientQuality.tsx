@@ -12,7 +12,6 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
   const lightlyProcessed = mealData.foods.filter(f => f.nova_level === 2).length
   const processed = mealData.foods.filter(f => f.nova_level === 3).length
   const ultraProcessed = mealData.foods.filter(f => f.nova_level === 4).length
-  const total = mealData.foods.length
 
   // Weighted average NOVA (1–4), then invert so 1 = right (100%), 4 = left (0%)
   const totalGrams = mealData.foods.reduce((sum, f) => sum + f.estimated_grams, 0)
