@@ -8,7 +8,6 @@ import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
-import { getConfidenceLevel, getConfidenceColor, getConfidenceWarning } from '../utils/confidenceFiltering'
 import { getWarningColor } from '../utils/smartValidation'
 import type { MealData, FoodItem } from '../types'
 
@@ -57,36 +56,6 @@ export function DashboardPage() {
         </div>
       </div>
     )
-  }
-
-  // Update portion size
-  const updatePortion = (index: number, newGrams: number, size: 'S' | 'M' | 'L') => {
-    const updatedFoods = [...mealData.foods]
-    updatedFoods[index] = { ...updatedFoods[index], estimated_grams: newGrams }
-
-    // Recalculate calorie range
-    const totalCalories = updatedFoods.reduce(
-      (sum, food) => sum + (food.nutrients.calories * food.estimated_grams) / 100,
-      0
-    )
-
-    setMealData({
-      ...mealData,
-      foods: updatedFoods,
-      estimated_calories_low: Math.round(totalCalories * 0.9),
-      estimated_calories_high: Math.round(totalCalories * 1.1)
-    })
-
-    // Update portion size tracking
-    setPortionSizes(prev => ({ ...prev, [index]: size }))
-  }
-
-  // Portion size presets - always calculate from original grams
-  const getPortionPreset = (index: number, size: 'S' | 'M' | 'L') => {
-    const originalGrams = originalMealData?.foods[index]?.estimated_grams || mealData.foods[index].estimated_grams
-    if (size === 'S') return Math.round(originalGrams * 0.7)
-    if (size === 'L') return Math.round(originalGrams * 1.3)
-    return originalGrams
   }
 
   // Edit food handler
@@ -238,6 +207,10 @@ export function DashboardPage() {
         <FoodSegmentationOverlay
           imageUrl={image}
           foods={mealData.foods}
+          onEditFood={(food, index) => setEditingFood({ food, index })}
+          onAddFood={handleAddFood}
+          hasEdits={hasEdits}
+          onSaveCorrections={handleSaveCorrections}
         />
       </div>
 
@@ -317,113 +290,6 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Food Items with Edit & Portion Adjusters */}
-      <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Foods Identified</h3>
-          <div className="flex gap-2">
-            <button
-              onClick={handleAddFood}
-              className="px-4 py-2 rounded-lg border border-green-500/50 text-green-400 hover:bg-green-500/10 text-sm font-semibold transition-all flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Food
-            </button>
-            {hasEdits && (
-              <button
-                onClick={handleSaveCorrections}
-                className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-400 text-white text-sm font-semibold transition-all flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Save Corrections
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="space-y-3">
-          {mealData.foods.map((food, index) => {
-            const confidenceLevel = getConfidenceLevel(food.confidence)
-            const confidenceColors = getConfidenceColor(confidenceLevel)
-            const warning = getConfidenceWarning(food)
-
-            return (
-            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-white/5 gap-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-medium text-white">{food.name}</p>
-                  {/* Confidence Badge */}
-                  <span className={`px-2 py-0.5 rounded text-xs font-medium ${confidenceColors.badge}`}>
-                    {Math.round(food.confidence * 100)}%
-                  </span>
-                </div>
-                <p className="text-sm text-white/50">
-                  {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
-                </p>
-                {/* Warning for low confidence */}
-                {warning && (
-                  <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    Please verify
-                  </p>
-                )}
-              </div>
-
-              {/* Edit Button */}
-              <button
-                onClick={() => setEditingFood({ food, index })}
-                className="px-3 py-1.5 rounded-lg border border-white/20 hover:bg-white/10 text-white/60 hover:text-white text-sm transition-all flex items-center gap-1"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edit
-              </button>
-
-              {/* Portion Adjuster */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => updatePortion(index, getPortionPreset(index, 'S'), 'S')}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    portionSizes[index] === 'S'
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'bg-white/10 hover:bg-white/20 text-white/80'
-                  }`}
-                >
-                  S
-                </button>
-                <button
-                  onClick={() => updatePortion(index, getPortionPreset(index, 'M'), 'M')}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    portionSizes[index] === 'M'
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'bg-white/10 hover:bg-white/20 text-white/80'
-                  }`}
-                >
-                  M
-                </button>
-                <button
-                  onClick={() => updatePortion(index, getPortionPreset(index, 'L'), 'L')}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    portionSizes[index] === 'L'
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'bg-white/10 hover:bg-white/20 text-white/80'
-                  }`}
-                >
-                  L
-                </button>
-              </div>
-            </div>
-            )
-          })}
-        </div>
-      </div>
-
       {/* Condition Verdict */}
       {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
 
@@ -444,7 +310,16 @@ export function DashboardPage() {
         <EditFoodModal
           food={editingFood.food}
           index={editingFood.index}
-          onSave={editingFood.index >= mealData.foods.length ? handleSaveNewFood : handleEditFood}
+          originalGrams={originalMealData?.foods[editingFood.index]?.estimated_grams}
+          portionSize={portionSizes[editingFood.index]}
+          onSave={(index, updatedFood, size) => {
+            if (editingFood.index >= mealData.foods.length) {
+              handleSaveNewFood(index, updatedFood)
+            } else {
+              handleEditFood(index, updatedFood)
+              if (size) setPortionSizes(prev => ({ ...prev, [index]: size }))
+            }
+          }}
           onDelete={handleDeleteFood}
           onClose={() => setEditingFood(null)}
         />

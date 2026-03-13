@@ -4,6 +4,10 @@ import type { FoodItem } from '../types'
 interface FoodSegmentationOverlayProps {
   imageUrl: string
   foods: FoodItem[]
+  onEditFood: (food: FoodItem, index: number) => void
+  onAddFood: () => void
+  hasEdits: boolean
+  onSaveCorrections: () => void
 }
 
 // Color palette for food highlighting
@@ -31,7 +35,14 @@ const ESTIMATED_POSITIONS = [
   { x: 75, y: 75 },  // Bottom-right
 ]
 
-export function FoodSegmentationOverlay({ imageUrl, foods }: FoodSegmentationOverlayProps) {
+export function FoodSegmentationOverlay({
+  imageUrl,
+  foods,
+  onEditFood,
+  onAddFood,
+  hasEdits,
+  onSaveCorrections,
+}: FoodSegmentationOverlayProps) {
   const [showOverlay, setShowOverlay] = useState(true)
 
   return (
@@ -128,42 +139,72 @@ export function FoodSegmentationOverlay({ imageUrl, foods }: FoodSegmentationOve
         )}
       </div>
 
-      {/* Legend */}
-      {showOverlay && (
-        <div className="mt-4 p-4 bg-white/5 rounded-xl border border-white/10">
-          <h4 className="text-sm font-semibold text-white/80 mb-3 flex items-center gap-2">
+      {/* Detected Foods Legend */}
+      <div className="mt-4 p-4 bg-white/5 rounded-xl border border-white/10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="text-sm font-semibold text-white/80 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
             Detected Foods
           </h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {foods.map((food, index) => {
-              const color = FOOD_COLORS[index % FOOD_COLORS.length]
-              return (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 p-2 rounded-lg"
-                  style={{ backgroundColor: color.bg }}
-                >
-                  <div
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: color.border }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-white truncate">
-                      {food.name}
-                    </p>
-                    <p className="text-xs text-white/60">
-                      {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="flex gap-2">
+            <button
+              onClick={onAddFood}
+              className="px-3 py-1.5 rounded-lg border border-green-500/50 text-green-400 hover:bg-green-500/10 text-xs font-semibold transition-all flex items-center gap-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add Food
+            </button>
+            {hasEdits && (
+              <button
+                onClick={onSaveCorrections}
+                className="px-3 py-1.5 rounded-lg bg-green-500 hover:bg-green-400 text-white text-xs font-semibold transition-all flex items-center gap-1"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Save
+              </button>
+            )}
           </div>
         </div>
-      )}
+
+        {/* Food Items */}
+        <div className="flex flex-wrap gap-2">
+          {foods.map((food, index) => {
+            const color = FOOD_COLORS[index % FOOD_COLORS.length]
+
+            return (
+              <div
+                key={index}
+                className="inline-flex items-center gap-2 p-3 rounded-lg"
+                style={{ backgroundColor: color.bg, border: `1px solid ${color.border}30` }}
+              >
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: color.border }}
+                />
+                <div>
+                  <p className="text-sm font-medium text-white">{food.name}</p>
+                  <p className="text-xs text-white/60">
+                    {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
+                  </p>
+                </div>
+                <button
+                  onClick={() => onEditFood(food, index)}
+                  className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
+                >
+                  Details
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
 
       {/* NYU Attribution */}
       <div className="mt-3 text-center">
