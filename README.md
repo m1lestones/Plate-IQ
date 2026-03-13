@@ -4,6 +4,7 @@ PlateIQ is an AI-powered food wellness dashboard. Snap or upload a photo of your
 
 Built as an 8-day capstone project by Victor Castillo & Juan Franco.
 
+
 ---
 
 ## The Problem
