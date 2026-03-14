@@ -35,6 +35,7 @@ export interface FoodItem {
   name: string
   estimated_grams: number
   nova_level: number
+  nova_verified?: boolean // True if verified by Open Food Facts database
   confidence: number
   category: string
   nutrients: FoodNutrients

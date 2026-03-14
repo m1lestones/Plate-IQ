@@ -3,6 +3,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { getAggregatedPositions, getCommonFoodCorrections, getPortionAdjustments } from './communityLearning.js'
+import { verifyMealNovaLevels } from './novaVerification.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: join(__dirname, '..', '.env') })
@@ -18,6 +20,117 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', claudeKey: !!apiKey })
 })
 
+// Collective Learning Endpoint - Receives feedback from ALL users
+app.post('/api/feedback', async (req, res) => {
+  try {
+    const { type, data, version } = req.body
+
+    // Log feedback for analysis
+    console.log(`📊 Feedback received: ${type}`)
+
+    // Store in JSON file (for now - can move to database later)
+    const fs = await import('fs/promises')
+    const path = await import('path')
+
+    const feedbackDir = path.join(__dirname, 'feedback')
+    await fs.mkdir(feedbackDir, { recursive: true })
+
+    const filename = `${type}_${Date.now()}.json`
+    const filepath = path.join(feedbackDir, filename)
+
+    await fs.writeFile(filepath, JSON.stringify({
+      type,
+      data,
+      version,
+      timestamp: new Date().toISOString()
+    }, null, 2))
+
+    console.log(`✅ Saved: ${filename}`)
+
+    res.json({ success: true, message: 'Feedback received' })
+  } catch (error) {
+    console.error('❌ Feedback error:', error)
+    res.status(500).json({ error: 'Failed to save feedback' })
+  }
+})
+
+// Community Learning Endpoints - Powers collective intelligence
+
+// Get community-learned positions (ALL users' corrections)
+app.get('/api/community/positions', async (req, res) => {
+  try {
+    const positions = await getAggregatedPositions()
+    res.json(positions)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get community positions' })
+  }
+})
+
+// Get common food identification corrections
+app.get('/api/community/food-corrections', async (req, res) => {
+  try {
+    const corrections = await getCommonFoodCorrections()
+    res.json(corrections)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get food corrections' })
+  }
+})
+
+// Get portion adjustment patterns
+app.get('/api/community/portion-adjustments', async (req, res) => {
+  try {
+    const adjustments = await getPortionAdjustments()
+    res.json(adjustments)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get portion adjustments' })
+  }
+})
+
+// Analytics endpoint - Get aggregated learning data
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const fs = await import('fs/promises')
+    const path = await import('path')
+
+    const feedbackDir = path.join(__dirname, 'feedback')
+
+    try {
+      const files = await fs.readdir(feedbackDir)
+      const feedbackData = []
+
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const content = await fs.readFile(path.join(feedbackDir, file), 'utf-8')
+          feedbackData.push(JSON.parse(content))
+        }
+      }
+
+      // Aggregate statistics
+      const stats = {
+        totalFeedback: feedbackData.length,
+        byType: {},
+        mostCorrectedFoods: {},
+        averageConfidence: 0
+      }
+
+      feedbackData.forEach(item => {
+        stats.byType[item.type] = (stats.byType[item.type] || 0) + 1
+
+        if (item.type === 'food_correction') {
+          const foodName = item.data.original.name
+          stats.mostCorrectedFoods[foodName] = (stats.mostCorrectedFoods[foodName] || 0) + 1
+        }
+      })
+
+      res.json(stats)
+    } catch (err) {
+      res.json({ totalFeedback: 0, message: 'No feedback data yet' })
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Analytics error' })
+  }
+})
+
 app.post('/api/analyze', async (req, res) => {
   try {
     const { imageData, mediaType } = req.body
@@ -30,6 +143,13 @@ app.post('/api/analyze', async (req, res) => {
     if (!apiKey) {
       return res.status(500).json({ error: 'Claude API key not configured' })
     }
+
+    // Add timeout controller (60 seconds for vision API)
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 60000)
+
+    console.log('🔍 Sending request to Claude Vision API...')
+    const startTime = Date.now()
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -111,12 +231,17 @@ NOVA LEVELS:
             }
           ]
         }]
-      })
+      }),
+      signal: controller.signal
     })
+
+    clearTimeout(timeout)
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2)
+    console.log(`✅ Claude API responded in ${duration}s`)
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      console.error('Claude API error:', errorData)
+      console.error('❌ Claude API error:', errorData)
       return res.status(response.status).json({ error: 'Claude API error', details: errorData })
     }
 
@@ -125,9 +250,21 @@ NOVA LEVELS:
     const jsonText = textContent?.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
     const parsed = JSON.parse(jsonText)
 
+    console.log(`🍽️  Identified ${parsed.foods?.length || 0} foods`)
+
+    // Verify NOVA levels with Open Food Facts database
+    if (parsed.foods && parsed.foods.length > 0) {
+      console.log('🔍 Verifying NOVA levels with Open Food Facts...')
+      parsed.foods = await verifyMealNovaLevels(parsed.foods)
+    }
+
     res.json(parsed)
   } catch (error) {
-    console.error('Server error:', error)
+    if (error.name === 'AbortError') {
+      console.error('⏱️  Request timeout after 60s')
+      return res.status(504).json({ error: 'Request timeout - try a smaller image' })
+    }
+    console.error('❌ Server error:', error.message)
     res.status(500).json({ error: error.message })
   }
 })

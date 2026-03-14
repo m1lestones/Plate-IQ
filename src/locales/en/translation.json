@@ -1,0 +1,226 @@
+{
+  "navbar": {
+    "home": "Home",
+    "scan": "Scan",
+    "journal": "Journal",
+    "neighborhood": "Neighborhood"
+  },
+  "landing": {
+    "tagline": "Snap Your Plate. Know Your Food.",
+    "description": "AI-powered food wellness dashboard. Get instant nutrition breakdown, processing-level transparency, and personalized insights from a single photo.",
+    "scanNow": "Scan Now",
+    "howItWorks": "How It Works",
+    "step1Title": "Snap",
+    "step1Description": "Take a photo of your meal or upload from your camera roll",
+    "step2Title": "Analyze",
+    "step2Description": "AI identifies foods, estimates portions, and calculates nutrition",
+    "step3Title": "Understand",
+    "step3Description": "See processing levels, nutrient gaps, and personalized insights",
+    "footer": "PlateIQ © {{year}} — 8-Day Capstone Project"
+  },
+  "scan": {
+    "title": "Scan your meal",
+    "prompt": "Point your camera at your plate",
+    "previewTitle": "Looks good?",
+    "previewPrompt": "Confirm to start analysis",
+    "analyzingTitle": "Analyzing...",
+    "analyzingPrompt": "This takes just a few seconds",
+    "scanMeal": "Scan Meal",
+    "uploadPhoto": "Upload Photo",
+    "cameraUnavailable": "Camera unavailable — use file upload below",
+    "proTip": "Pro tip:",
+    "proTipMessage": "Include a credit card, fork, or phone next to your plate for more accurate portion estimates! (NYU research-backed)",
+    "retake": "Retake",
+    "analyzeMeal": "Analyze Meal"
+  },
+  "dashboard": {
+    "title": "Wellness Dashboard",
+    "scanAnother": "Scan Another",
+    "estimatedCalories": "Estimated Calories",
+    "noMealData": "No meal data available",
+    "scanAMeal": "Scan a meal",
+    "referenceObjectDetected": "Reference Object Detected: {{object}}",
+    "referenceObjectMessage": "Portion estimates are more accurate! (NYU research-backed)",
+    "filteredFoodsTitle": "{{count}} low-confidence item filtered out",
+    "filteredFoodsTitle_other": "{{count}} low-confidence items filtered out",
+    "filteredFoodsMessage": "Removed: {{foods}} (confidence <50%)",
+    "correctionsSaved": "✅ Corrections saved! Your feedback helps improve accuracy."
+  },
+  "journal": {
+    "title": "Meal Journal",
+    "noMeals": "No meals logged yet.",
+    "noMealsPrompt": "Scan a meal to start tracking.",
+    "calories": "cal",
+    "mealTypes": {
+      "breakfast": "breakfast",
+      "lunch": "lunch",
+      "dinner": "dinner",
+      "snack": "snack"
+    }
+  },
+  "onboarding": {
+    "title": "Set up your health profile",
+    "subtitle": "Select any conditions that apply. PlateIQ will flag meals that exceed clinical limits for each.",
+    "continueWith": "Continue with {{count}} condition",
+    "continueWith_other": "Continue with {{count}} conditions",
+    "continue": "Continue",
+    "skip": "Skip — I don't have any conditions",
+    "conditions": {
+      "hypertension": {
+        "label": "Hypertension",
+        "description": "High blood pressure — track sodium & potassium"
+      },
+      "high_cholesterol": {
+        "label": "High Cholesterol",
+        "description": "Monitor saturated fat, cholesterol & fiber"
+      },
+      "type2_diabetes": {
+        "label": "Type 2 Diabetes",
+        "description": "Track carbohydrates, added sugar & fiber"
+      },
+      "stroke_risk": {
+        "label": "Stroke Risk",
+        "description": "Combined sodium, saturated fat & potassium tracking"
+      }
+    }
+  },
+  "neighborhood": {
+    "title": "Neighborhood Health",
+    "subtitle": "Explore chronic disease data by ZIP code",
+    "comingSoon": "Coming Soon",
+    "description": "CDC PLACES API integration for neighborhood health metrics.",
+    "descriptionLine2": "See how your food choices connect to community health outcomes.",
+    "stretchGoal": "[P2] Stretch Goal"
+  },
+  "charts": {
+    "macros": {
+      "title": "Macronutrients",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
+    },
+    "micros": {
+      "title": "Micronutrient Coverage",
+      "subtitle": "% of Daily Value per serving",
+      "vitaminA": "Vitamin A",
+      "vitaminC": "Vitamin C",
+      "vitaminD": "Vitamin D",
+      "calcium": "Calcium",
+      "iron": "Iron",
+      "potassium": "Potassium",
+      "legendHigh": "≥20% DV",
+      "legendMedium": "10-20% DV",
+      "legendLow": "<10% DV",
+      "tooltipFormat": "{{value}}% DV"
+    },
+    "quality": {
+      "title": "Food Quality Breakdown",
+      "tooltip": "Foods are grouped by how processed they are — from whole foods (fresh produce, plain meat) to ultra-processed (packaged snacks, fast food with additives).",
+      "ultraProcessed": "Ultra-Processed",
+      "wholeFoods": "Whole Foods",
+      "processed": "Processed",
+      "lightlyProcessed": "Lightly Processed",
+      "item": "item",
+      "item_other": "items",
+      "labels": {
+        "mostlyWholeFoods": "Mostly Whole Foods",
+        "lightlyProcessed": "Lightly Processed",
+        "moderatelyProcessed": "Moderately Processed",
+        "highlyProcessed": "Highly Processed"
+      }
+    }
+  },
+  "editFoodModal": {
+    "title": "Edit Food Item",
+    "foodName": "Food Name",
+    "foodNamePlaceholder": "e.g., Brown Rice",
+    "portionSize": "Portion Size",
+    "category": "Category",
+    "processingLevel": "Processing Level",
+    "infoNote": "💡 Your corrections help improve accuracy. The app learns from your edits to provide better results over time.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "confirmDelete": "Remove \"{{name}}\" from this meal?",
+    "categories": {
+      "protein": "Protein",
+      "carb": "Carbohydrate",
+      "vegetable": "Vegetable",
+      "fruit": "Fruit",
+      "dairy": "Dairy",
+      "fat": "Fat/Oil",
+      "other": "Other"
+    },
+    "processingLevels": {
+      "1": "Whole Food (fresh vegetables, plain meat)",
+      "2": "Lightly Processed (oil, butter, salt)",
+      "3": "Processed (canned, cheese, bread)",
+      "4": "Ultra-Processed (packaged snacks, fast food)"
+    }
+  },
+  "verdictCard": {
+    "safe": "Safe for your conditions",
+    "caution": "Use caution",
+    "avoid": "Exceeds limits",
+    "basedOnProfile": "Based on your health profile"
+  },
+  "aiInsights": {
+    "title": "AI Wellness Insights",
+    "generating": "Generating AI wellness insights...",
+    "excellentChoice": "Excellent choice! This meal features whole, unprocessed foods that provide sustained energy and essential nutrients.",
+    "goodMeal": "Good meal with mostly minimally processed ingredients.",
+    "someProcessed": "This meal contains some processed foods. Consider swapping processed items for whole food alternatives when possible.",
+    "heavilyProcessed": "This meal is heavily processed. Try replacing ultra-processed items with whole foods to improve nutritional quality.",
+    "lowFiber": "This meal is low in fiber ({{grams}}g). Try adding beans, lentils, or leafy greens to boost fiber intake.",
+    "addProtein": "Consider adding a lean protein source like chicken, fish, tofu, or legumes.",
+    "addVegetables": "Add colorful vegetables to increase vitamins and minerals.",
+    "greatVeggies": "Great job including vegetables!",
+    "swapSuggestionSauce": "💡 Swap suggestion: Replace store-bought sauce with homemade using fresh tomatoes and herbs.",
+    "swapSuggestionPasta": "💡 Swap suggestion: Try whole grain or legume-based pasta for more fiber and protein.",
+    "swapSuggestionGeneric": "💡 Swap suggestion: Replace {{food}} with a whole food alternative."
+  },
+  "foodSegmentation": {
+    "toggleHide": "Hide",
+    "toggleShow": "Show",
+    "labels": "Labels",
+    "altText": "Your meal with food detection overlay",
+    "detectedFoods": "Detected Foods",
+    "addFood": "Add Food",
+    "save": "Save",
+    "details": "Details",
+    "caloriesShort": "cal",
+    "attribution": "Visual segmentation powered by NYU Tandon research methodology"
+  },
+  "healthConditions": {
+    "hypertension": "Hypertension",
+    "high_cholesterol": "High Cholesterol",
+    "type2_diabetes": "Type 2 Diabetes",
+    "stroke_risk": "Stroke Risk",
+    "nutrients": {
+      "sodium": "Sodium",
+      "potassium": "Potassium",
+      "saturatedFat": "Saturated Fat",
+      "cholesterol": "Cholesterol",
+      "fiber": "Fiber",
+      "carbohydrates": "Carbohydrates",
+      "addedSugar": "Added Sugar"
+    }
+  },
+  "verdictLevels": {
+    "safe": "Safe",
+    "caution": "Caution",
+    "avoid": "Avoid"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "grams": "g",
+    "milligrams": "mg",
+    "calories": "calories",
+    "and": "and"
+  }
+}

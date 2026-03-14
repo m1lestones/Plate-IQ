@@ -3,6 +3,7 @@
  * Sources: AHA, ACC, ADA, NIH NHLBI, WHO dietary guidelines
  */
 
+import type { TFunction } from 'i18next'
 import type { HealthCondition, VerdictLevel } from '../types'
 
 interface NutrientThreshold {
@@ -48,12 +49,13 @@ export const THRESHOLDS: Record<HealthCondition, NutrientThreshold[]> = {
   ],
 }
 
-export const CONDITION_LABELS: Record<HealthCondition, string> = {
-  hypertension: 'Hypertension',
-  high_cholesterol: 'High Cholesterol',
-  type2_diabetes: 'Type 2 Diabetes',
-  stroke_risk: 'Stroke Risk',
-}
+// Helper function to get condition labels with i18n support
+export const CONDITION_LABELS = (t: TFunction): Record<HealthCondition, string> => ({
+  hypertension: t('healthConditions.hypertension'),
+  high_cholesterol: t('healthConditions.high_cholesterol'),
+  type2_diabetes: t('healthConditions.type2_diabetes'),
+  stroke_risk: t('healthConditions.stroke_risk'),
+})
 
 export const CONDITION_COLORS: Record<VerdictLevel, string> = {
   safe: 'text-green-400',

@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { FoodItem } from '../types'
+import { reportPositionCorrection } from '../lib/feedbackCollector'
 
 interface FoodSegmentationOverlayProps {
   imageUrl: string
@@ -22,9 +24,8 @@ const FOOD_COLORS = [
   { bg: 'rgba(239, 68, 68, 0.3)', border: '#ef4444', text: '#fee2e2' },   // Red
 ]
 
-// Simulated positions for food items on a typical plate
-// In a real implementation, these would come from AI segmentation
-const ESTIMATED_POSITIONS = [
+// Default positions (used as fallback)
+const DEFAULT_POSITIONS = [
   { x: 50, y: 40 },  // Center-top
   { x: 30, y: 55 },  // Left-center
   { x: 70, y: 55 },  // Right-center
@@ -35,6 +36,87 @@ const ESTIMATED_POSITIONS = [
   { x: 75, y: 75 },  // Bottom-right
 ]
 
+// Position correction learning system
+interface PositionCorrection {
+  foodName: string
+  x: number
+  y: number
+  timestamp: number
+}
+
+const savePositionCorrection = (foodName: string, x: number, y: number) => {
+  const corrections: PositionCorrection[] = JSON.parse(
+    localStorage.getItem('plateiq_position_corrections') || '[]'
+  )
+
+  corrections.push({
+    foodName: foodName.toLowerCase(),
+    x,
+    y,
+    timestamp: Date.now()
+  })
+
+  // Keep last 500 corrections
+  const limited = corrections.slice(-500)
+  localStorage.setItem('plateiq_position_corrections', JSON.stringify(limited))
+}
+
+// Get community-learned positions (from ALL users!)
+const getCommunityPosition = async (foodName: string): Promise<{ x: number; y: number } | null> => {
+  try {
+    const response = await fetch('http://localhost:3001/api/community/positions')
+    const communityData = await response.json() as Record<string, { x: number; y: number; confidence: number; sampleSize: number }>
+
+    const normalized = foodName.toLowerCase().trim()
+
+    // Direct match
+    if (communityData[normalized]) {
+      console.log(`🌍 Community wisdom: "${foodName}" at (${communityData[normalized].x}, ${communityData[normalized].y}) from ${communityData[normalized].sampleSize} users`)
+      return { x: communityData[normalized].x, y: communityData[normalized].y }
+    }
+
+    // Fuzzy match
+    for (const [key, value] of Object.entries(communityData)) {
+      if (key.includes(normalized) || normalized.includes(key)) {
+        console.log(`🌍 Community wisdom (fuzzy): "${foodName}" at (${value.x}, ${value.y}) from ${value.sampleSize} users`)
+        return { x: value.x, y: value.y }
+      }
+    }
+  } catch (err) {
+    // Fallback to local if server unavailable
+  }
+
+  return null
+}
+
+const getPredictedPosition = (foodName: string): { x: number; y: number } | null => {
+  const corrections: PositionCorrection[] = JSON.parse(
+    localStorage.getItem('plateiq_position_corrections') || '[]'
+  )
+
+  // Find all corrections for this food (fuzzy match)
+  const matches = corrections.filter(c =>
+    c.foodName.includes(foodName.toLowerCase()) ||
+    foodName.toLowerCase().includes(c.foodName)
+  )
+
+  if (matches.length === 0) return null
+
+  // Average the positions (weighted by recency)
+  const now = Date.now()
+  const weighted = matches.map(m => ({
+    ...m,
+    weight: Math.exp(-(now - m.timestamp) / (1000 * 60 * 60 * 24 * 30)) // Decay over 30 days
+  }))
+
+  const totalWeight = weighted.reduce((sum, w) => sum + w.weight, 0)
+  const avgX = weighted.reduce((sum, w) => sum + w.x * w.weight, 0) / totalWeight
+  const avgY = weighted.reduce((sum, w) => sum + w.y * w.weight, 0) / totalWeight
+
+  console.log(`👤 Personal prediction: "${foodName}" at (${Math.round(avgX)}, ${Math.round(avgY)})`)
+  return { x: avgX, y: avgY }
+}
+
 export function FoodSegmentationOverlay({
   imageUrl,
   foods,
@@ -43,7 +125,84 @@ export function FoodSegmentationOverlay({
   hasEdits,
   onSaveCorrections,
 }: FoodSegmentationOverlayProps) {
+  const { t } = useTranslation()
   const [showOverlay, setShowOverlay] = useState(true)
+  const [positions, setPositions] = useState<Record<number, { x: number; y: number }>>({})
+  const [draggingIndex, setDraggingIndex] = useState<number | null>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  // Initialize positions using COMMUNITY wisdom, then personal, then defaults
+  useEffect(() => {
+    const loadPositions = async () => {
+      const initialPositions: Record<number, { x: number; y: number }> = {}
+
+      for (let index = 0; index < foods.length; index++) {
+        const food = foods[index]
+
+        // Priority 1: Try community-learned position (from ALL users!)
+        const communityPos = await getCommunityPosition(food.name)
+        if (communityPos) {
+          initialPositions[index] = communityPos
+          continue
+        }
+
+        // Priority 2: Try personal learned position
+        const personalPos = getPredictedPosition(food.name)
+        if (personalPos) {
+          initialPositions[index] = personalPos
+          continue
+        }
+
+        // Priority 3: Use default circular positions
+        initialPositions[index] = DEFAULT_POSITIONS[index % DEFAULT_POSITIONS.length]
+      }
+
+      setPositions(initialPositions)
+    }
+
+    loadPositions()
+  }, [foods])
+
+  // Handle drag events
+  const handleDragStart = (index: number) => {
+    setDraggingIndex(index)
+  }
+
+  const handleDrag = (e: React.MouseEvent, index: number) => {
+    if (!imageRef.current) return
+
+    const rect = imageRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+
+    // Clamp within bounds
+    const clampedX = Math.max(5, Math.min(95, x))
+    const clampedY = Math.max(5, Math.min(95, y))
+
+    setPositions(prev => ({
+      ...prev,
+      [index]: { x: clampedX, y: clampedY }
+    }))
+  }
+
+  const handleDragEnd = async (index: number) => {
+    setDraggingIndex(null)
+
+    // Save this correction for future learning
+    const position = positions[index]
+    const defaultPos = DEFAULT_POSITIONS[index % DEFAULT_POSITIONS.length]
+
+    if (position) {
+      // Local learning (for this user)
+      savePositionCorrection(foods[index].name, position.x, position.y)
+
+      // Collective learning (helps ALL users!)
+      await reportPositionCorrection(foods[index].name, defaultPos, position)
+
+      console.log(`💡 Learned: "${foods[index].name}" is at (${Math.round(position.x)}, ${Math.round(position.y)})`)
+      console.log('🌍 Your correction helps improve the app for everyone!')
+    }
+  }
 
   return (
     <div className="relative">
@@ -59,14 +218,22 @@ export function FoodSegmentationOverlay({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           )}
         </svg>
-        {showOverlay ? 'Hide' : 'Show'} Labels
+        {showOverlay ? t('foodSegmentation.toggleHide') : t('foodSegmentation.toggleShow')} {t('foodSegmentation.labels')}
       </button>
+
+      {/* Drag Hint */}
+      {showOverlay && (
+        <div className="absolute top-16 right-4 z-20 px-3 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-100 text-xs max-w-xs backdrop-blur-sm">
+          💡 <strong>Tip:</strong> Drag labels to correct positions. The app learns from your corrections!
+        </div>
+      )}
 
       {/* Main Image Container */}
       <div className="relative w-full max-w-2xl mx-auto">
         <img
+          ref={imageRef}
           src={imageUrl}
-          alt="Your meal with food detection overlay"
+          alt={t('foodSegmentation.altText')}
           className="w-full rounded-xl"
         />
 
@@ -76,17 +243,23 @@ export function FoodSegmentationOverlay({
             {/* Food Labels & Pointers */}
             {foods.map((food, index) => {
               const color = FOOD_COLORS[index % FOOD_COLORS.length]
-              const position = ESTIMATED_POSITIONS[index % ESTIMATED_POSITIONS.length]
+              const position = positions[index] || DEFAULT_POSITIONS[index % DEFAULT_POSITIONS.length]
+              const isDragging = draggingIndex === index
 
               return (
                 <div
                   key={index}
-                  className="absolute"
+                  className="absolute cursor-move"
                   style={{
                     left: `${position.x}%`,
                     top: `${position.y}%`,
-                    transform: 'translate(-50%, -50%)'
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: isDragging ? 100 : 10
                   }}
+                  onMouseDown={() => handleDragStart(index)}
+                  onMouseMove={(e) => isDragging && handleDrag(e, index)}
+                  onMouseUp={() => handleDragEnd(index)}
+                  onMouseLeave={() => draggingIndex === index && handleDragEnd(index)}
                 >
                   {/* Pulse Animation */}
                   <div
@@ -147,7 +320,7 @@ export function FoodSegmentationOverlay({
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
-            Detected Foods
+            {t('foodSegmentation.detectedFoods')}
           </h4>
           <div className="flex gap-2">
             <button
@@ -157,7 +330,7 @@ export function FoodSegmentationOverlay({
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Add Food
+              {t('foodSegmentation.addFood')}
             </button>
             {hasEdits && (
               <button
@@ -167,7 +340,7 @@ export function FoodSegmentationOverlay({
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Save
+                {t('foodSegmentation.save')}
               </button>
             )}
           </div>
@@ -191,14 +364,14 @@ export function FoodSegmentationOverlay({
                 <div>
                   <p className="text-sm font-medium text-white">{food.name}</p>
                   <p className="text-xs text-white/60">
-                    {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} cal
+                    {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} {t('foodSegmentation.caloriesShort')}
                   </p>
                 </div>
                 <button
                   onClick={() => onEditFood(food, index)}
                   className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
                 >
-                  Details
+                  {t('foodSegmentation.details')}
                 </button>
               </div>
             )
@@ -209,7 +382,7 @@ export function FoodSegmentationOverlay({
       {/* NYU Attribution */}
       <div className="mt-3 text-center">
         <p className="text-xs text-white/40">
-          Visual segmentation powered by NYU Tandon research methodology
+          {t('foodSegmentation.attribution')}
         </p>
       </div>
     </div>

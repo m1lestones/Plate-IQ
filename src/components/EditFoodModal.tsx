@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { FoodItem } from '../types'
+import { reportFoodCorrection } from '../lib/feedbackCollector'
 
 interface EditFoodModalProps {
   food: FoodItem
@@ -12,6 +14,7 @@ interface EditFoodModalProps {
 }
 
 export function EditFoodModal({ food, index, originalGrams, portionSize, onSave, onDelete, onClose }: EditFoodModalProps) {
+  const { t } = useTranslation()
   const [editedFood, setEditedFood] = useState<FoodItem>(food)
   const [selectedSize, setSelectedSize] = useState<'S' | 'M' | 'L' | null>(portionSize || null)
 
@@ -23,13 +26,19 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
     setSelectedSize(size)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // Report correction for collective learning (helps ALL users!)
+    if (JSON.stringify(food) !== JSON.stringify(editedFood)) {
+      await reportFoodCorrection(food, editedFood)
+      console.log('🌍 Your correction helps improve the app for everyone!')
+    }
+
     onSave(index, editedFood, selectedSize || undefined)
     onClose()
   }
 
   const handleDelete = () => {
-    if (confirm(`Remove "${food.name}" from this meal?`)) {
+    if (confirm(t('editFoodModal.confirmDelete', { name: food.name }))) {
       onDelete(index)
       onClose()
     }
@@ -40,7 +49,7 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
       <div className="bg-neutral-900 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-neutral-900 border-b border-white/10 p-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Edit Food Item</h2>
+          <h2 className="text-xl font-bold">{t('editFoodModal.title')}</h2>
           <button onClick={onClose} className="text-white/60 hover:text-white">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -52,19 +61,19 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
         <div className="p-6 space-y-4">
           {/* Food Name */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Food Name</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.foodName')}</label>
             <input
               type="text"
               value={editedFood.name}
               onChange={(e) => setEditedFood({ ...editedFood, name: e.target.value })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
-              placeholder="e.g., Brown Rice"
+              placeholder={t('editFoodModal.foodNamePlaceholder')}
             />
           </div>
 
           {/* Portion Size */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Portion Size</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.portionSize')}</label>
             {/* S/M/L quick select */}
             {originalGrams && (
               <div className="flex gap-2 mb-2">
@@ -94,41 +103,41 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Category</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.category')}</label>
             <select
               value={editedFood.category}
               onChange={(e) => setEditedFood({ ...editedFood, category: e.target.value })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
             >
-              <option value="protein">Protein</option>
-              <option value="carb">Carbohydrate</option>
-              <option value="vegetable">Vegetable</option>
-              <option value="fruit">Fruit</option>
-              <option value="dairy">Dairy</option>
-              <option value="fat">Fat/Oil</option>
-              <option value="other">Other</option>
+              <option value="protein">{t('editFoodModal.categories.protein')}</option>
+              <option value="carb">{t('editFoodModal.categories.carb')}</option>
+              <option value="vegetable">{t('editFoodModal.categories.vegetable')}</option>
+              <option value="fruit">{t('editFoodModal.categories.fruit')}</option>
+              <option value="dairy">{t('editFoodModal.categories.dairy')}</option>
+              <option value="fat">{t('editFoodModal.categories.fat')}</option>
+              <option value="other">{t('editFoodModal.categories.other')}</option>
             </select>
           </div>
 
           {/* Processing Level */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">Processing Level</label>
+            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.processingLevel')}</label>
             <select
               value={editedFood.nova_level}
               onChange={(e) => setEditedFood({ ...editedFood, nova_level: parseInt(e.target.value) })}
               className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
             >
-              <option value={1}>Whole Food (fresh vegetables, plain meat)</option>
-              <option value={2}>Lightly Processed (oil, butter, salt)</option>
-              <option value={3}>Processed (canned, cheese, bread)</option>
-              <option value={4}>Ultra-Processed (packaged snacks, fast food)</option>
+              <option value={1}>{t('editFoodModal.processingLevels.1')}</option>
+              <option value={2}>{t('editFoodModal.processingLevels.2')}</option>
+              <option value={3}>{t('editFoodModal.processingLevels.3')}</option>
+              <option value={4}>{t('editFoodModal.processingLevels.4')}</option>
             </select>
           </div>
 
           {/* Info Note */}
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
             <p className="text-xs text-blue-200">
-              💡 Your corrections help improve accuracy. The app learns from your edits to provide better results over time.
+              {t('editFoodModal.infoNote')}
             </p>
           </div>
         </div>
@@ -139,19 +148,19 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
             onClick={handleDelete}
             className="px-4 py-2 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all"
           >
-            Delete
+            {t('editFoodModal.delete')}
           </button>
           <button
             onClick={onClose}
             className="flex-1 px-4 py-2 rounded-lg border border-white/10 text-white/80 hover:bg-white/5 transition-all"
           >
-            Cancel
+            {t('editFoodModal.cancel')}
           </button>
           <button
             onClick={handleSave}
             className="flex-1 px-4 py-2 rounded-lg bg-green-500 hover:bg-green-400 text-white font-semibold transition-all"
           >
-            Save Changes
+            {t('editFoodModal.saveChanges')}
           </button>
         </div>
       </div>

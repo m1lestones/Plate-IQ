@@ -1,0 +1,226 @@
+{
+  "navbar": {
+    "home": "Inicio",
+    "scan": "Escanear",
+    "journal": "Diario",
+    "neighborhood": "Vecindario"
+  },
+  "landing": {
+    "tagline": "Fotografía tu Plato. Conoce tu Comida.",
+    "description": "Panel de bienestar alimentario impulsado por IA. Obtén un desglose nutricional instantáneo, transparencia en el nivel de procesamiento e información personalizada con una sola foto.",
+    "scanNow": "Escanear Ahora",
+    "howItWorks": "Cómo Funciona",
+    "step1Title": "Fotografía",
+    "step1Description": "Toma una foto de tu comida o súbela desde tu galería",
+    "step2Title": "Analiza",
+    "step2Description": "La IA identifica alimentos, estima porciones y calcula la nutrición",
+    "step3Title": "Comprende",
+    "step3Description": "Ve los niveles de procesamiento, deficiencias de nutrientes e información personalizada",
+    "footer": "PlateIQ © {{year}} — Proyecto de Tesis de 8 Días"
+  },
+  "scan": {
+    "title": "Escanea tu comida",
+    "prompt": "Apunta la cámara hacia tu plato",
+    "previewTitle": "¿Se ve bien?",
+    "previewPrompt": "Confirma para comenzar el análisis",
+    "analyzingTitle": "Analizando...",
+    "analyzingPrompt": "Esto toma solo unos segundos",
+    "scanMeal": "Escanear Comida",
+    "uploadPhoto": "Subir Foto",
+    "cameraUnavailable": "Cámara no disponible — usa la opción de subir archivo",
+    "proTip": "Consejo:",
+    "proTipMessage": "¡Incluye una tarjeta de crédito, tenedor o teléfono junto a tu plato para estimaciones de porciones más precisas! (Respaldado por investigación de NYU)",
+    "retake": "Repetir",
+    "analyzeMeal": "Analizar Comida"
+  },
+  "dashboard": {
+    "title": "Panel de Bienestar",
+    "scanAnother": "Escanear Otra",
+    "estimatedCalories": "Calorías Estimadas",
+    "noMealData": "No hay datos de comida disponibles",
+    "scanAMeal": "Escanear una comida",
+    "referenceObjectDetected": "Objeto de Referencia Detectado: {{object}}",
+    "referenceObjectMessage": "¡Las estimaciones de porciones son más precisas! (Respaldado por investigación de NYU)",
+    "filteredFoodsTitle": "{{count}} elemento de baja confianza filtrado",
+    "filteredFoodsTitle_other": "{{count}} elementos de baja confianza filtrados",
+    "filteredFoodsMessage": "Eliminados: {{foods}} (confianza <50%)",
+    "correctionsSaved": "✅ ¡Correcciones guardadas! Tus comentarios ayudan a mejorar la precisión."
+  },
+  "journal": {
+    "title": "Diario de Comidas",
+    "noMeals": "Aún no hay comidas registradas.",
+    "noMealsPrompt": "Escanea una comida para comenzar a hacer seguimiento.",
+    "calories": "cal",
+    "mealTypes": {
+      "breakfast": "desayuno",
+      "lunch": "almuerzo",
+      "dinner": "cena",
+      "snack": "merienda"
+    }
+  },
+  "onboarding": {
+    "title": "Configura tu perfil de salud",
+    "subtitle": "Selecciona las condiciones que apliquen. PlateIQ marcará las comidas que excedan los límites clínicos para cada una.",
+    "continueWith": "Continuar con {{count}} condición",
+    "continueWith_other": "Continuar con {{count}} condiciones",
+    "continue": "Continuar",
+    "skip": "Omitir — No tengo ninguna condición",
+    "conditions": {
+      "hypertension": {
+        "label": "Hipertensión",
+        "description": "Presión arterial alta — rastrea sodio y potasio"
+      },
+      "high_cholesterol": {
+        "label": "Colesterol Alto",
+        "description": "Monitorea grasa saturada, colesterol y fibra"
+      },
+      "type2_diabetes": {
+        "label": "Diabetes Tipo 2",
+        "description": "Rastrea carbohidratos, azúcar añadida y fibra"
+      },
+      "stroke_risk": {
+        "label": "Riesgo de Derrame Cerebral",
+        "description": "Seguimiento combinado de sodio, grasa saturada y potasio"
+      }
+    }
+  },
+  "neighborhood": {
+    "title": "Salud del Vecindario",
+    "subtitle": "Explora datos de enfermedades crónicas por código postal",
+    "comingSoon": "Próximamente",
+    "description": "Integración con la API de CDC PLACES para métricas de salud del vecindario.",
+    "descriptionLine2": "Ve cómo tus elecciones alimentarias se conectan con los resultados de salud comunitaria.",
+    "stretchGoal": "[P2] Meta Opcional"
+  },
+  "charts": {
+    "macros": {
+      "title": "Macronutrientes",
+      "protein": "Proteína",
+      "carbs": "Carbohidratos",
+      "fat": "Grasa"
+    },
+    "micros": {
+      "title": "Cobertura de Micronutrientes",
+      "subtitle": "% del Valor Diario por porción",
+      "vitaminA": "Vitamina A",
+      "vitaminC": "Vitamina C",
+      "vitaminD": "Vitamina D",
+      "calcium": "Calcio",
+      "iron": "Hierro",
+      "potassium": "Potasio",
+      "legendHigh": "≥20% VD",
+      "legendMedium": "10-20% VD",
+      "legendLow": "<10% VD",
+      "tooltipFormat": "{{value}}% VD"
+    },
+    "quality": {
+      "title": "Desglose de Calidad de Alimentos",
+      "tooltip": "Los alimentos se agrupan según su nivel de procesamiento — desde alimentos enteros (productos frescos, carne sin procesar) hasta ultraprocesados (snacks empaquetados, comida rápida con aditivos).",
+      "ultraProcessed": "Ultraprocesado",
+      "wholeFoods": "Alimentos Enteros",
+      "processed": "Procesado",
+      "lightlyProcessed": "Ligeramente Procesado",
+      "item": "elemento",
+      "item_other": "elementos",
+      "labels": {
+        "mostlyWholeFoods": "Principalmente Alimentos Enteros",
+        "lightlyProcessed": "Ligeramente Procesado",
+        "moderatelyProcessed": "Moderadamente Procesado",
+        "highlyProcessed": "Altamente Procesado"
+      }
+    }
+  },
+  "editFoodModal": {
+    "title": "Editar Alimento",
+    "foodName": "Nombre del Alimento",
+    "foodNamePlaceholder": "ej., Arroz Integral",
+    "portionSize": "Tamaño de Porción",
+    "category": "Categoría",
+    "processingLevel": "Nivel de Procesamiento",
+    "infoNote": "💡 Tus correcciones ayudan a mejorar la precisión. La aplicación aprende de tus ediciones para proporcionar mejores resultados con el tiempo.",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "confirmDelete": "¿Eliminar \"{{name}}\" de esta comida?",
+    "categories": {
+      "protein": "Proteína",
+      "carb": "Carbohidrato",
+      "vegetable": "Verdura",
+      "fruit": "Fruta",
+      "dairy": "Lácteo",
+      "fat": "Grasa/Aceite",
+      "other": "Otro"
+    },
+    "processingLevels": {
+      "1": "Alimento Entero (verduras frescas, carne sin procesar)",
+      "2": "Ligeramente Procesado (aceite, mantequilla, sal)",
+      "3": "Procesado (enlatado, queso, pan)",
+      "4": "Ultraprocesado (snacks empaquetados, comida rápida)"
+    }
+  },
+  "verdictCard": {
+    "safe": "Seguro para tus condiciones",
+    "caution": "Usar con precaución",
+    "avoid": "Excede los límites",
+    "basedOnProfile": "Basado en tu perfil de salud"
+  },
+  "aiInsights": {
+    "title": "Información de Bienestar IA",
+    "generating": "Generando información de bienestar IA...",
+    "excellentChoice": "¡Excelente elección! Esta comida presenta alimentos enteros sin procesar que proporcionan energía sostenida y nutrientes esenciales.",
+    "goodMeal": "Buena comida con ingredientes mayormente mínimamente procesados.",
+    "someProcessed": "Esta comida contiene algunos alimentos procesados. Considera intercambiar artículos procesados por alternativas de alimentos enteros cuando sea posible.",
+    "heavilyProcessed": "Esta comida está muy procesada. Intenta reemplazar artículos ultraprocesados con alimentos enteros para mejorar la calidad nutricional.",
+    "lowFiber": "Esta comida es baja en fibra ({{grams}}g). Intenta agregar frijoles, lentejas o verduras de hoja verde para aumentar la ingesta de fibra.",
+    "addProtein": "Considera agregar una fuente de proteína magra como pollo, pescado, tofu o legumbres.",
+    "addVegetables": "Agrega verduras coloridas para aumentar las vitaminas y minerales.",
+    "greatVeggies": "¡Buen trabajo incluyendo verduras!",
+    "swapSuggestionSauce": "💡 Sugerencia de intercambio: Reemplaza la salsa comprada en tienda con una casera usando tomates frescos y hierbas.",
+    "swapSuggestionPasta": "💡 Sugerencia de intercambio: Prueba pasta integral o a base de legumbres para más fibra y proteína.",
+    "swapSuggestionGeneric": "💡 Sugerencia de intercambio: Reemplaza {{food}} con una alternativa de alimento entero."
+  },
+  "foodSegmentation": {
+    "toggleHide": "Ocultar",
+    "toggleShow": "Mostrar",
+    "labels": "Etiquetas",
+    "altText": "Tu comida con superposición de detección de alimentos",
+    "detectedFoods": "Alimentos Detectados",
+    "addFood": "Agregar Alimento",
+    "save": "Guardar",
+    "details": "Detalles",
+    "caloriesShort": "cal",
+    "attribution": "Segmentación visual impulsada por metodología de investigación de NYU Tandon"
+  },
+  "healthConditions": {
+    "hypertension": "Hipertensión",
+    "high_cholesterol": "Colesterol Alto",
+    "type2_diabetes": "Diabetes Tipo 2",
+    "stroke_risk": "Riesgo de Derrame Cerebral",
+    "nutrients": {
+      "sodium": "Sodio",
+      "potassium": "Potasio",
+      "saturatedFat": "Grasa Saturada",
+      "cholesterol": "Colesterol",
+      "fiber": "Fibra",
+      "carbohydrates": "Carbohidratos",
+      "addedSugar": "Azúcar Añadida"
+    }
+  },
+  "verdictLevels": {
+    "safe": "Seguro",
+    "caution": "Precaución",
+    "avoid": "Evitar"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "grams": "g",
+    "milligrams": "mg",
+    "calories": "calorías",
+    "and": "y"
+  }
+}

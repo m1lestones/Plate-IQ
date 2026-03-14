@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { CONDITION_LABELS, CONDITION_BG, CONDITION_COLORS } from '../data/healthThresholds'
 import type { MealVerdict, VerdictLevel } from '../types'
 
@@ -7,17 +8,12 @@ const VERDICT_ICON: Record<VerdictLevel, string> = {
   avoid: '✕',
 }
 
-const VERDICT_LABEL: Record<VerdictLevel, string> = {
-  safe: 'Safe for your conditions',
-  caution: 'Use caution',
-  avoid: 'Exceeds limits',
-}
-
 interface VerdictCardProps {
   verdict: MealVerdict
 }
 
 export function VerdictCard({ verdict }: VerdictCardProps) {
+  const { t } = useTranslation()
   return (
     <div className={`rounded-2xl p-5 border ${CONDITION_BG[verdict.overall]}`}>
       {/* Overall verdict */}
@@ -31,9 +27,9 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
         </div>
         <div>
           <div className={`font-semibold ${CONDITION_COLORS[verdict.overall]}`}>
-            {VERDICT_LABEL[verdict.overall]}
+            {t(`verdictCard.${verdict.overall}`)}
           </div>
-          <div className="text-white/50 text-xs mt-0.5">Based on your health profile</div>
+          <div className="text-white/50 text-xs mt-0.5">{t('verdictCard.basedOnProfile')}</div>
         </div>
       </div>
 
@@ -43,9 +39,9 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
           {verdict.byCondition.map(c => (
             <div key={c.condition} className="bg-black/20 rounded-xl p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium">{CONDITION_LABELS[c.condition]}</span>
+                <span className="text-sm font-medium">{CONDITION_LABELS(t)[c.condition]}</span>
                 <span className={`text-xs font-semibold uppercase ${CONDITION_COLORS[c.verdict]}`}>
-                  {c.verdict}
+                  {t(`verdictLevels.${c.verdict}`)}
                 </span>
               </div>
               {c.flags.length > 0 && (

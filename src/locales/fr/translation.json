@@ -1,0 +1,226 @@
+{
+  "navbar": {
+    "home": "Accueil",
+    "scan": "Scanner",
+    "journal": "Journal",
+    "neighborhood": "Quartier"
+  },
+  "landing": {
+    "tagline": "Photographiez Votre Assiette. Connaissez Votre Nourriture.",
+    "description": "Tableau de bord de bien-être alimentaire alimenté par l'IA. Obtenez une répartition nutritionnelle instantanée, la transparence du niveau de transformation et des informations personnalisées à partir d'une seule photo.",
+    "scanNow": "Scanner Maintenant",
+    "howItWorks": "Comment Ça Marche",
+    "step1Title": "Photographier",
+    "step1Description": "Prenez une photo de votre repas ou téléchargez depuis votre galerie",
+    "step2Title": "Analyser",
+    "step2Description": "L'IA identifie les aliments, estime les portions et calcule la nutrition",
+    "step3Title": "Comprendre",
+    "step3Description": "Voyez les niveaux de transformation, les lacunes en nutriments et les informations personnalisées",
+    "footer": "PlateIQ © {{year}} — Projet de Thèse de 8 Jours"
+  },
+  "scan": {
+    "title": "Scannez votre repas",
+    "prompt": "Pointez votre appareil photo vers votre assiette",
+    "previewTitle": "Ça a l'air bien ?",
+    "previewPrompt": "Confirmez pour commencer l'analyse",
+    "analyzingTitle": "Analyse en cours...",
+    "analyzingPrompt": "Cela ne prend que quelques secondes",
+    "scanMeal": "Scanner le Repas",
+    "uploadPhoto": "Télécharger une Photo",
+    "cameraUnavailable": "Appareil photo non disponible — utilisez le téléchargement de fichier ci-dessous",
+    "proTip": "Conseil pro :",
+    "proTipMessage": "Incluez une carte de crédit, une fourchette ou un téléphone à côté de votre assiette pour des estimations de portions plus précises ! (Basé sur la recherche de NYU)",
+    "retake": "Reprendre",
+    "analyzeMeal": "Analyser le Repas"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord Bien-être",
+    "scanAnother": "Scanner un Autre",
+    "estimatedCalories": "Calories Estimées",
+    "noMealData": "Aucune donnée de repas disponible",
+    "scanAMeal": "Scanner un repas",
+    "referenceObjectDetected": "Objet de Référence Détecté : {{object}}",
+    "referenceObjectMessage": "Les estimations de portions sont plus précises ! (Basé sur la recherche de NYU)",
+    "filteredFoodsTitle": "{{count}} élément à faible confiance filtré",
+    "filteredFoodsTitle_other": "{{count}} éléments à faible confiance filtrés",
+    "filteredFoodsMessage": "Supprimés : {{foods}} (confiance <50%)",
+    "correctionsSaved": "✅ Corrections enregistrées ! Vos commentaires aident à améliorer la précision."
+  },
+  "journal": {
+    "title": "Journal des Repas",
+    "noMeals": "Aucun repas enregistré pour le moment.",
+    "noMealsPrompt": "Scannez un repas pour commencer le suivi.",
+    "calories": "cal",
+    "mealTypes": {
+      "breakfast": "petit-déjeuner",
+      "lunch": "déjeuner",
+      "dinner": "dîner",
+      "snack": "collation"
+    }
+  },
+  "onboarding": {
+    "title": "Configurez votre profil de santé",
+    "subtitle": "Sélectionnez les conditions qui s'appliquent. PlateIQ signalera les repas qui dépassent les limites cliniques pour chacune.",
+    "continueWith": "Continuer avec {{count}} condition",
+    "continueWith_other": "Continuer avec {{count}} conditions",
+    "continue": "Continuer",
+    "skip": "Ignorer — Je n'ai aucune condition",
+    "conditions": {
+      "hypertension": {
+        "label": "Hypertension",
+        "description": "Pression artérielle élevée — suivre le sodium et le potassium"
+      },
+      "high_cholesterol": {
+        "label": "Cholestérol Élevé",
+        "description": "Surveiller les graisses saturées, le cholestérol et les fibres"
+      },
+      "type2_diabetes": {
+        "label": "Diabète de Type 2",
+        "description": "Suivre les glucides, le sucre ajouté et les fibres"
+      },
+      "stroke_risk": {
+        "label": "Risque d'AVC",
+        "description": "Suivi combiné du sodium, des graisses saturées et du potassium"
+      }
+    }
+  },
+  "neighborhood": {
+    "title": "Santé du Quartier",
+    "subtitle": "Explorez les données sur les maladies chroniques par code postal",
+    "comingSoon": "Bientôt Disponible",
+    "description": "Intégration de l'API CDC PLACES pour les mesures de santé du quartier.",
+    "descriptionLine2": "Voyez comment vos choix alimentaires sont liés aux résultats de santé communautaires.",
+    "stretchGoal": "[P2] Objectif Étendu"
+  },
+  "charts": {
+    "macros": {
+      "title": "Macronutriments",
+      "protein": "Protéines",
+      "carbs": "Glucides",
+      "fat": "Lipides"
+    },
+    "micros": {
+      "title": "Couverture en Micronutriments",
+      "subtitle": "% de la Valeur Quotidienne par portion",
+      "vitaminA": "Vitamine A",
+      "vitaminC": "Vitamine C",
+      "vitaminD": "Vitamine D",
+      "calcium": "Calcium",
+      "iron": "Fer",
+      "potassium": "Potassium",
+      "legendHigh": "≥20% VQ",
+      "legendMedium": "10-20% VQ",
+      "legendLow": "<10% VQ",
+      "tooltipFormat": "{{value}}% VQ"
+    },
+    "quality": {
+      "title": "Répartition de la Qualité Alimentaire",
+      "tooltip": "Les aliments sont regroupés selon leur niveau de transformation — des aliments entiers (produits frais, viande nature) aux ultra-transformés (collations emballées, fast-food avec additifs).",
+      "ultraProcessed": "Ultra-transformé",
+      "wholeFoods": "Aliments Entiers",
+      "processed": "Transformé",
+      "lightlyProcessed": "Légèrement Transformé",
+      "item": "élément",
+      "item_other": "éléments",
+      "labels": {
+        "mostlyWholeFoods": "Principalement des Aliments Entiers",
+        "lightlyProcessed": "Légèrement Transformé",
+        "moderatelyProcessed": "Modérément Transformé",
+        "highlyProcessed": "Hautement Transformé"
+      }
+    }
+  },
+  "editFoodModal": {
+    "title": "Modifier l'Aliment",
+    "foodName": "Nom de l'Aliment",
+    "foodNamePlaceholder": "ex., Riz Complet",
+    "portionSize": "Taille de Portion",
+    "category": "Catégorie",
+    "processingLevel": "Niveau de Transformation",
+    "infoNote": "💡 Vos corrections aident à améliorer la précision. L'application apprend de vos modifications pour fournir de meilleurs résultats au fil du temps.",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "saveChanges": "Enregistrer les Modifications",
+    "confirmDelete": "Retirer \"{{name}}\" de ce repas ?",
+    "categories": {
+      "protein": "Protéines",
+      "carb": "Glucides",
+      "vegetable": "Légume",
+      "fruit": "Fruit",
+      "dairy": "Produit Laitier",
+      "fat": "Graisse/Huile",
+      "other": "Autre"
+    },
+    "processingLevels": {
+      "1": "Aliment Entier (légumes frais, viande nature)",
+      "2": "Légèrement Transformé (huile, beurre, sel)",
+      "3": "Transformé (conserve, fromage, pain)",
+      "4": "Ultra-transformé (collations emballées, fast-food)"
+    }
+  },
+  "verdictCard": {
+    "safe": "Sûr pour vos conditions",
+    "caution": "À consommer avec précaution",
+    "avoid": "Dépasse les limites",
+    "basedOnProfile": "Basé sur votre profil de santé"
+  },
+  "aiInsights": {
+    "title": "Informations Bien-être IA",
+    "generating": "Génération des informations bien-être IA...",
+    "excellentChoice": "Excellent choix ! Ce repas met en vedette des aliments entiers non transformés qui fournissent une énergie durable et des nutriments essentiels.",
+    "goodMeal": "Bon repas avec des ingrédients principalement peu transformés.",
+    "someProcessed": "Ce repas contient certains aliments transformés. Envisagez de remplacer les articles transformés par des alternatives d'aliments entiers lorsque possible.",
+    "heavilyProcessed": "Ce repas est fortement transformé. Essayez de remplacer les articles ultra-transformés par des aliments entiers pour améliorer la qualité nutritionnelle.",
+    "lowFiber": "Ce repas est pauvre en fibres ({{grams}}g). Essayez d'ajouter des haricots, des lentilles ou des légumes à feuilles vertes pour augmenter l'apport en fibres.",
+    "addProtein": "Envisagez d'ajouter une source de protéines maigres comme le poulet, le poisson, le tofu ou les légumineuses.",
+    "addVegetables": "Ajoutez des légumes colorés pour augmenter les vitamines et les minéraux.",
+    "greatVeggies": "Excellent travail en incluant des légumes !",
+    "swapSuggestionSauce": "💡 Suggestion d'échange : Remplacez la sauce du commerce par une sauce maison à base de tomates fraîches et d'herbes.",
+    "swapSuggestionPasta": "💡 Suggestion d'échange : Essayez des pâtes complètes ou à base de légumineuses pour plus de fibres et de protéines.",
+    "swapSuggestionGeneric": "💡 Suggestion d'échange : Remplacez {{food}} par une alternative d'aliment entier."
+  },
+  "foodSegmentation": {
+    "toggleHide": "Masquer",
+    "toggleShow": "Afficher",
+    "labels": "Étiquettes",
+    "altText": "Votre repas avec superposition de détection d'aliments",
+    "detectedFoods": "Aliments Détectés",
+    "addFood": "Ajouter un Aliment",
+    "save": "Enregistrer",
+    "details": "Détails",
+    "caloriesShort": "cal",
+    "attribution": "Segmentation visuelle alimentée par la méthodologie de recherche de NYU Tandon"
+  },
+  "healthConditions": {
+    "hypertension": "Hypertension",
+    "high_cholesterol": "Cholestérol Élevé",
+    "type2_diabetes": "Diabète de Type 2",
+    "stroke_risk": "Risque d'AVC",
+    "nutrients": {
+      "sodium": "Sodium",
+      "potassium": "Potassium",
+      "saturatedFat": "Graisses Saturées",
+      "cholesterol": "Cholestérol",
+      "fiber": "Fibres",
+      "carbohydrates": "Glucides",
+      "addedSugar": "Sucre Ajouté"
+    }
+  },
+  "verdictLevels": {
+    "safe": "Sûr",
+    "caution": "Précaution",
+    "avoid": "Éviter"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "grams": "g",
+    "milligrams": "mg",
+    "calories": "calories",
+    "and": "et"
+  }
+}

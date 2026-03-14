@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { CapturedImage } from '../types'
 
 interface PreviewProps {
@@ -7,6 +8,8 @@ interface PreviewProps {
 }
 
 export function Preview({ image, onConfirm, onRetake }: PreviewProps) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="w-full max-w-md aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
@@ -22,13 +25,13 @@ export function Preview({ image, onConfirm, onRetake }: PreviewProps) {
           onClick={onRetake}
           className="flex-1 py-3 rounded-xl border border-white/20 hover:bg-white/5 active:scale-95 text-white/80 font-medium transition-all"
         >
-          Retake
+          {t('scan.retake')}
         </button>
         <button
           onClick={onConfirm}
           className="flex-1 py-3 rounded-xl bg-green-500 hover:bg-green-400 active:scale-95 text-white font-semibold transition-all shadow-lg"
         >
-          Analyze Meal
+          {t('scan.analyzeMeal')}
         </button>
       </div>
     </div>
