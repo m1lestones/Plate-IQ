@@ -70,6 +70,12 @@ export interface ConditionFlag {
   text: string
   source: string
   url: string
+  population?: {
+    stat: string
+    source: string
+    url: string
+    sampleSize: string
+  }
 }
 
 export interface ConditionVerdict {
