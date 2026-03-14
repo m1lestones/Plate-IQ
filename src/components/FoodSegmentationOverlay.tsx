@@ -163,17 +163,32 @@ export function FoodSegmentationOverlay({
     loadPositions()
   }, [foods])
 
-  // Handle drag events
+  // Handle drag events (both mouse and touch)
   const handleDragStart = (index: number) => {
     setDraggingIndex(index)
   }
 
-  const handleDrag = (e: React.MouseEvent, index: number) => {
+  const handleDrag = (e: React.MouseEvent | React.TouchEvent, index: number) => {
     if (!imageRef.current) return
+    e.preventDefault() // Prevent scrolling on mobile
 
     const rect = imageRef.current.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
+
+    // Get client coordinates from either mouse or touch event
+    let clientX: number, clientY: number
+    if ('touches' in e) {
+      // Touch event
+      if (e.touches.length === 0) return
+      clientX = e.touches[0].clientX
+      clientY = e.touches[0].clientY
+    } else {
+      // Mouse event
+      clientX = e.clientX
+      clientY = e.clientY
+    }
+
+    const x = ((clientX - rect.left) / rect.width) * 100
+    const y = ((clientY - rect.top) / rect.height) * 100
 
     // Clamp within bounds
     const clampedX = Math.max(5, Math.min(95, x))
@@ -249,7 +264,7 @@ export function FoodSegmentationOverlay({
               return (
                 <div
                   key={index}
-                  className="absolute cursor-move"
+                  className="absolute cursor-move touch-none"
                   style={{
                     left: `${position.x}%`,
                     top: `${position.y}%`,
@@ -260,6 +275,9 @@ export function FoodSegmentationOverlay({
                   onMouseMove={(e) => isDragging && handleDrag(e, index)}
                   onMouseUp={() => handleDragEnd(index)}
                   onMouseLeave={() => draggingIndex === index && handleDragEnd(index)}
+                  onTouchStart={() => handleDragStart(index)}
+                  onTouchMove={(e) => isDragging && handleDrag(e, index)}
+                  onTouchEnd={() => handleDragEnd(index)}
                 >
                   {/* Pulse Animation */}
                   <div
