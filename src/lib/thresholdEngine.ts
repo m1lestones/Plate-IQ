@@ -1,4 +1,5 @@
 import { THRESHOLDS } from '../data/healthThresholds'
+import { NHANES_CONTEXT } from '../data/nhanesData'
 import type { HealthCondition, MealData, ConditionVerdict, ConditionFlag, MealVerdict, VerdictLevel } from '../types'
 
 function getTotalNutrient(meal: MealData, key: keyof typeof meal.foods[0]['nutrients']): number {
@@ -16,17 +17,22 @@ function evaluateCondition(meal: MealData, condition: HealthCondition): Conditio
   for (const t of thresholds) {
     const value = getTotalNutrient(meal, t.nutrient as keyof typeof meal.foods[0]['nutrients'])
 
+    const nhanesRef = NHANES_CONTEXT[condition]?.[t.nutrient]
+    const population = nhanesRef
+      ? { stat: nhanesRef.stat, source: nhanesRef.source, url: nhanesRef.url, sampleSize: nhanesRef.sampleSize }
+      : undefined
+
     if (t.direction === 'lower_is_better') {
       if (t.avoidAbove !== undefined && value > t.avoidAbove) {
-        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`, source: t.source, url: t.sourceUrl })
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`, source: t.source, url: t.sourceUrl, population })
         worst = 'avoid'
       } else if (t.cautionAbove !== undefined && value > t.cautionAbove) {
-        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`, source: t.source, url: t.sourceUrl })
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`, source: t.source, url: t.sourceUrl, population })
         if (worst !== 'avoid') worst = 'caution'
       }
     } else {
       if (t.cautionBelow !== undefined && value < t.cautionBelow) {
-        flags.push({ text: `Low ${t.label}: ${Math.round(value)}${t.unit} (target ≥${t.cautionBelow}${t.unit})`, source: t.source, url: t.sourceUrl })
+        flags.push({ text: `Low ${t.label}: ${Math.round(value)}${t.unit} (target ≥${t.cautionBelow}${t.unit})`, source: t.source, url: t.sourceUrl, population })
         if (worst !== 'avoid') worst = 'caution'
       }
     }

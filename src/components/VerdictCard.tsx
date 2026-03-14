@@ -51,21 +51,36 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
                 </span>
               </div>
               {c.flags.length > 0 && (
-                <ul className="space-y-0.5">
+                <ul className="space-y-1.5">
                   {c.flags.map((raw, i) => {
                     const flag = normalizeFlag(raw)
                     return (
-                      <li key={i} className="text-white/50 text-xs flex items-center gap-1">
-                        <span>• {flag.text}</span>
-                        {flag.url && (
-                          <a
-                            href={flag.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-400 hover:text-blue-300 underline underline-offset-2 whitespace-nowrap"
-                          >
-                            {flag.source} ↗
-                          </a>
+                      <li key={i} className="text-xs">
+                        <div className="text-white/50 flex items-center gap-1">
+                          <span>• {flag.text}</span>
+                          {flag.url && (
+                            <a
+                              href={flag.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 whitespace-nowrap"
+                            >
+                              {flag.source} ↗
+                            </a>
+                          )}
+                        </div>
+                        {flag.population && (
+                          <div className="mt-0.5 ml-3 text-white/30 italic leading-snug">
+                            {flag.population.stat}{' '}
+                            <a
+                              href={flag.population.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400/60 hover:text-blue-300 underline underline-offset-2 not-italic whitespace-nowrap"
+                            >
+                              {flag.population.source} ({flag.population.sampleSize}) ↗
+                            </a>
+                          </div>
                         )}
                       </li>
                     )
