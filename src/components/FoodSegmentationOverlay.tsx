@@ -65,7 +65,7 @@ const savePositionCorrection = (foodName: string, x: number, y: number) => {
 const getCommunityPosition = async (foodName: string): Promise<{ x: number; y: number } | null> => {
   try {
     const response = await fetch('http://localhost:3001/api/community/positions')
-    const communityData = await response.json()
+    const communityData = await response.json() as Record<string, { x: number; y: number; confidence: number; sampleSize: number }>
 
     const normalized = foodName.toLowerCase().trim()
 
