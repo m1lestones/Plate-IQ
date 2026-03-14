@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Scanner } from '../components/Scanner'
 import { Preview } from '../components/Preview'
 import { LoadingState } from '../components/LoadingState'
@@ -15,6 +16,7 @@ import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
 
 export function ScanPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<ScanStep>('capture')
   const [image, setImage] = useState<CapturedImage | null>(null)
@@ -111,8 +113,8 @@ export function ScanPage() {
       {step === 'capture' && (
         <>
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Scan your meal</h1>
-            <p className="text-white/50 text-sm mt-1">Point your camera at your plate</p>
+            <h1 className="text-2xl font-bold">{t('scan.title')}</h1>
+            <p className="text-white/50 text-sm mt-1">{t('scan.prompt')}</p>
           </div>
           <Scanner onCapture={handleCapture} />
         </>
@@ -121,8 +123,8 @@ export function ScanPage() {
       {step === 'preview' && image && (
         <>
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Looks good?</h1>
-            <p className="text-white/50 text-sm mt-1">Confirm to start analysis</p>
+            <h1 className="text-2xl font-bold">{t('scan.previewTitle')}</h1>
+            <p className="text-white/50 text-sm mt-1">{t('scan.previewPrompt')}</p>
           </div>
           <Preview image={image} onConfirm={handleConfirm} onRetake={handleRetake} />
         </>
@@ -131,8 +133,8 @@ export function ScanPage() {
       {step === 'loading' && (
         <>
           <div className="mb-6">
-            <h1 className="text-2xl font-bold">Analyzing...</h1>
-            <p className="text-white/50 text-sm mt-1">This takes just a few seconds</p>
+            <h1 className="text-2xl font-bold">{t('scan.analyzingTitle')}</h1>
+            <p className="text-white/50 text-sm mt-1">{t('scan.analyzingPrompt')}</p>
           </div>
           <LoadingState />
         </>

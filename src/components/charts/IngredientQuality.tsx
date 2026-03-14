@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { MealData } from '../../types'
 
 interface IngredientQualityProps {
@@ -6,6 +7,7 @@ interface IngredientQualityProps {
 }
 
 export function IngredientQuality({ mealData }: IngredientQualityProps) {
+  const { t } = useTranslation()
   const [showTooltip, setShowTooltip] = useState(false)
 
   const wholeFoods = mealData.foods.filter(f => f.nova_level === 1).length
@@ -20,10 +22,10 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
   const markerPercent = ((4 - avgNova) / 3) * 100 // 4→0%, 1→100%
 
   const getLabel = (nova: number) => {
-    if (nova <= 1.5) return { text: 'Mostly Whole Foods', color: 'text-green-400' }
-    if (nova <= 2.5) return { text: 'Lightly Processed', color: 'text-yellow-400' }
-    if (nova <= 3.5) return { text: 'Moderately Processed', color: 'text-orange-400' }
-    return { text: 'Highly Processed', color: 'text-red-400' }
+    if (nova <= 1.5) return { text: t('charts.quality.labels.mostlyWholeFoods'), color: 'text-green-400' }
+    if (nova <= 2.5) return { text: t('charts.quality.labels.lightlyProcessed'), color: 'text-yellow-400' }
+    if (nova <= 3.5) return { text: t('charts.quality.labels.moderatelyProcessed'), color: 'text-orange-400' }
+    return { text: t('charts.quality.labels.highlyProcessed'), color: 'text-red-400' }
   }
 
   const label = getLabel(avgNova)
@@ -31,7 +33,7 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
   return (
     <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
       <div className="flex items-center gap-2 mb-6">
-        <h3 className="text-lg font-semibold">Food Quality Breakdown</h3>
+        <h3 className="text-lg font-semibold">{t('charts.quality.title')}</h3>
         <div className="relative">
           <button
             onMouseEnter={() => setShowTooltip(true)}
@@ -44,7 +46,7 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
           </button>
           {showTooltip && (
             <div className="absolute left-6 top-0 z-10 w-56 bg-gray-800 border border-white/10 rounded-lg p-3 text-xs text-white/80 shadow-lg">
-              Foods are grouped by how processed they are — from whole foods (fresh produce, plain meat) to ultra-processed (packaged snacks, fast food with additives).
+              {t('charts.quality.tooltip')}
             </div>
           )}
         </div>
@@ -74,8 +76,8 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
 
         {/* End labels */}
         <div className="flex justify-between mt-2 text-xs text-white/50">
-          <span>Ultra-Processed</span>
-          <span>Whole Foods</span>
+          <span>{t('charts.quality.ultraProcessed')}</span>
+          <span>{t('charts.quality.wholeFoods')}</span>
         </div>
       </div>
 
@@ -88,23 +90,23 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
       <div className="grid grid-cols-4 gap-2 text-sm border-t border-white/10 pt-4">
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-red-500" />
-          <div className="text-white/80 text-xs">Ultra-Processed</div>
-          <div className="text-white/50 text-xs">{ultraProcessed} {ultraProcessed === 1 ? 'item' : 'items'}</div>
+          <div className="text-white/80 text-xs">{t('charts.quality.ultraProcessed')}</div>
+          <div className="text-white/50 text-xs">{ultraProcessed} {t('charts.quality.item', { count: ultraProcessed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-orange-500" />
-          <div className="text-white/80 text-xs">Processed</div>
-          <div className="text-white/50 text-xs">{processed} {processed === 1 ? 'item' : 'items'}</div>
+          <div className="text-white/80 text-xs">{t('charts.quality.processed')}</div>
+          <div className="text-white/50 text-xs">{processed} {t('charts.quality.item', { count: processed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
-          <div className="text-white/80 text-xs">Lightly Processed</div>
-          <div className="text-white/50 text-xs">{lightlyProcessed} {lightlyProcessed === 1 ? 'item' : 'items'}</div>
+          <div className="text-white/80 text-xs">{t('charts.quality.lightlyProcessed')}</div>
+          <div className="text-white/50 text-xs">{lightlyProcessed} {t('charts.quality.item', { count: lightlyProcessed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-green-500" />
-          <div className="text-white/80 text-xs">Whole Foods</div>
-          <div className="text-white/50 text-xs">{wholeFoods} {wholeFoods === 1 ? 'item' : 'items'}</div>
+          <div className="text-white/80 text-xs">{t('charts.quality.wholeFoods')}</div>
+          <div className="text-white/50 text-xs">{wholeFoods} {t('charts.quality.item', { count: wholeFoods })}</div>
         </div>
       </div>
     </div>

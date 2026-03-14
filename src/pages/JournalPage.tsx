@@ -1,11 +1,12 @@
+import { useTranslation } from 'react-i18next'
 import { getJournal } from '../lib/healthStorage'
 import { CONDITION_LABELS } from '../data/healthThresholds'
 import type { VerdictLevel } from '../types'
 
-const VERDICT_STYLES: Record<VerdictLevel, { dot: string; label: string }> = {
-  safe: { dot: 'bg-green-500', label: 'Safe' },
-  caution: { dot: 'bg-yellow-400', label: 'Caution' },
-  avoid: { dot: 'bg-red-500', label: 'Avoid' },
+const VERDICT_STYLES: Record<VerdictLevel, { dot: string }> = {
+  safe: { dot: 'bg-green-500' },
+  caution: { dot: 'bg-yellow-400' },
+  avoid: { dot: 'bg-red-500' },
 }
 
 function formatDate(iso: string) {
@@ -15,20 +16,21 @@ function formatDate(iso: string) {
 }
 
 export function JournalPage() {
+  const { t } = useTranslation()
   const entries = getJournal()
 
   if (entries.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
-        <p className="text-white/40 text-sm">No meals logged yet.</p>
-        <p className="text-white/30 text-xs mt-1">Scan a meal to start tracking.</p>
+        <p className="text-white/40 text-sm">{t('journal.noMeals')}</p>
+        <p className="text-white/30 text-xs mt-1">{t('journal.noMealsPrompt')}</p>
       </div>
     )
   }
 
   return (
     <div className="max-w-2xl mx-auto w-full">
-      <h1 className="text-xl font-bold mb-6">Meal Journal</h1>
+      <h1 className="text-xl font-bold mb-6">{t('journal.title')}</h1>
       <div className="flex flex-col gap-3">
         {entries.map(entry => {
           const verdict = entry.verdict
@@ -59,7 +61,7 @@ export function JournalPage() {
                             'bg-green-500/10 border-green-500/30 text-green-300'
                           }`}
                         >
-                          {CONDITION_LABELS[c.condition]}: {c.verdict}
+                          {CONDITION_LABELS(t)[c.condition]}: {t(`verdictLevels.${c.verdict}`)}
                         </span>
                       ))}
                     </div>
@@ -69,7 +71,7 @@ export function JournalPage() {
                   <div className="text-sm font-semibold">
                     {entry.estimated_calories_low}–{entry.estimated_calories_high}
                   </div>
-                  <div className="text-white/40 text-xs">cal</div>
+                  <div className="text-white/40 text-xs">{t('journal.calories')}</div>
                 </div>
               </div>
             </div>

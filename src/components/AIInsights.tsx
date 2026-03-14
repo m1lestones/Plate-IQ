@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { MealData } from '../types'
 
 interface AIInsightsProps {
@@ -6,6 +7,7 @@ interface AIInsightsProps {
 }
 
 export function AIInsights({ mealData }: AIInsightsProps) {
+  const { t } = useTranslation()
   const [insights, setInsights] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -28,30 +30,30 @@ export function AIInsights({ mealData }: AIInsightsProps) {
       let insight = ''
 
       if (avgNova <= 1.5) {
-        insight = `Excellent choice! This meal features whole, unprocessed foods that provide sustained energy and essential nutrients. `
+        insight = t('aiInsights.excellentChoice') + ' '
       } else if (avgNova <= 2.5) {
-        insight = `Good meal with mostly minimally processed ingredients. `
+        insight = t('aiInsights.goodMeal') + ' '
       } else if (avgNova <= 3.5) {
-        insight = `This meal contains some processed foods. Consider swapping processed items for whole food alternatives when possible. `
+        insight = t('aiInsights.someProcessed') + ' '
       } else {
-        insight = `This meal is heavily processed. Try replacing ultra-processed items with whole foods to improve nutritional quality. `
+        insight = t('aiInsights.heavilyProcessed') + ' '
       }
 
       // Add fiber insight
       if (totalFiber < 8) {
-        insight += `This meal is low in fiber (${Math.round(totalFiber)}g). Try adding beans, lentils, or leafy greens to boost fiber intake. `
+        insight += t('aiInsights.lowFiber', { grams: Math.round(totalFiber) }) + ' '
       }
 
       // Add protein insight
       if (!hasProtein) {
-        insight += `Consider adding a lean protein source like chicken, fish, tofu, or legumes. `
+        insight += t('aiInsights.addProtein') + ' '
       }
 
       // Add veggie insight
       if (!hasVegetables) {
-        insight += `Add colorful vegetables to increase vitamins and minerals. `
+        insight += t('aiInsights.addVegetables') + ' '
       } else {
-        insight += `Great job including vegetables! `
+        insight += t('aiInsights.greatVeggies') + ' '
       }
 
       // Food swap suggestion
@@ -59,11 +61,11 @@ export function AIInsights({ mealData }: AIInsightsProps) {
       if (processedFoods.length > 0) {
         const food = processedFoods[0]
         if (food.name.toLowerCase().includes('sauce')) {
-          insight += `\n\n💡 Swap suggestion: Replace store-bought sauce with homemade using fresh tomatoes and herbs.`
+          insight += '\n\n' + t('aiInsights.swapSuggestionSauce')
         } else if (food.name.toLowerCase().includes('pasta')) {
-          insight += `\n\n💡 Swap suggestion: Try whole grain or legume-based pasta for more fiber and protein.`
+          insight += '\n\n' + t('aiInsights.swapSuggestionPasta')
         } else {
-          insight += `\n\n💡 Swap suggestion: Replace ${food.name.toLowerCase()} with a whole food alternative.`
+          insight += '\n\n' + t('aiInsights.swapSuggestionGeneric', { food: food.name.toLowerCase() })
         }
       }
 
@@ -75,14 +77,14 @@ export function AIInsights({ mealData }: AIInsightsProps) {
       setInsights(generateInsights())
       setLoading(false)
     }, 1500)
-  }, [mealData])
+  }, [mealData, t])
 
   if (loading) {
     return (
       <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-2xl p-6 border border-green-500/20">
         <div className="flex items-center gap-3">
           <div className="animate-spin w-5 h-5 border-2 border-green-400 border-t-transparent rounded-full" />
-          <span className="text-white/60">Generating AI wellness insights...</span>
+          <span className="text-white/60">{t('aiInsights.generating')}</span>
         </div>
       </div>
     )
@@ -97,7 +99,7 @@ export function AIInsights({ mealData }: AIInsightsProps) {
           </svg>
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-semibold mb-2 text-white">AI Wellness Insights</h3>
+          <h3 className="text-lg font-semibold mb-2 text-white">{t('aiInsights.title')}</h3>
           <p className="text-white/80 text-sm leading-relaxed whitespace-pre-line">
             {insights}
           </p>

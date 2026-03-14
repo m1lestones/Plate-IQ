@@ -1,0 +1,226 @@
+{
+  "navbar": {
+    "home": "首页",
+    "scan": "扫描",
+    "journal": "日志",
+    "neighborhood": "社区"
+  },
+  "landing": {
+    "tagline": "拍摄您的餐盘。了解您的食物。",
+    "description": "AI驱动的食品健康仪表板。通过一张照片即可获得即时营养分解、加工级别透明度和个性化见解。",
+    "scanNow": "立即扫描",
+    "howItWorks": "如何使用",
+    "step1Title": "拍摄",
+    "step1Description": "拍摄您的餐食照片或从相册上传",
+    "step2Title": "分析",
+    "step2Description": "AI识别食物、估算份量并计算营养",
+    "step3Title": "理解",
+    "step3Description": "查看加工级别、营养缺口和个性化见解",
+    "footer": "PlateIQ © {{year}} — 8天毕业项目"
+  },
+  "scan": {
+    "title": "扫描您的餐食",
+    "prompt": "将相机对准您的餐盘",
+    "previewTitle": "看起来不错吗？",
+    "previewPrompt": "确认以开始分析",
+    "analyzingTitle": "分析中...",
+    "analyzingPrompt": "只需几秒钟",
+    "scanMeal": "扫描餐食",
+    "uploadPhoto": "上传照片",
+    "cameraUnavailable": "相机不可用 — 请使用下方文件上传",
+    "proTip": "专业提示：",
+    "proTipMessage": "在您的餐盘旁边放置信用卡、叉子或手机，以获得更准确的份量估算！（基于NYU研究）",
+    "retake": "重拍",
+    "analyzeMeal": "分析餐食"
+  },
+  "dashboard": {
+    "title": "健康仪表板",
+    "scanAnother": "扫描另一个",
+    "estimatedCalories": "估计卡路里",
+    "noMealData": "没有可用的餐食数据",
+    "scanAMeal": "扫描一份餐食",
+    "referenceObjectDetected": "检测到参考对象：{{object}}",
+    "referenceObjectMessage": "份量估算更加准确！（基于NYU研究）",
+    "filteredFoodsTitle": "过滤了{{count}}个低置信度项目",
+    "filteredFoodsTitle_other": "过滤了{{count}}个低置信度项目",
+    "filteredFoodsMessage": "已移除：{{foods}}（置信度<50%）",
+    "correctionsSaved": "✅ 更正已保存！您的反馈有助于提高准确性。"
+  },
+  "journal": {
+    "title": "餐食日志",
+    "noMeals": "尚未记录餐食。",
+    "noMealsPrompt": "扫描一份餐食开始跟踪。",
+    "calories": "卡",
+    "mealTypes": {
+      "breakfast": "早餐",
+      "lunch": "午餐",
+      "dinner": "晚餐",
+      "snack": "小吃"
+    }
+  },
+  "onboarding": {
+    "title": "设置您的健康档案",
+    "subtitle": "选择适用的任何状况。PlateIQ将标记超出每种状况临床限值的餐食。",
+    "continueWith": "继续{{count}}个状况",
+    "continueWith_other": "继续{{count}}个状况",
+    "continue": "继续",
+    "skip": "跳过 — 我没有任何状况",
+    "conditions": {
+      "hypertension": {
+        "label": "高血压",
+        "description": "高血压 — 跟踪钠和钾"
+      },
+      "high_cholesterol": {
+        "label": "高胆固醇",
+        "description": "监测饱和脂肪、胆固醇和纤维"
+      },
+      "type2_diabetes": {
+        "label": "2型糖尿病",
+        "description": "跟踪碳水化合物、添加糖和纤维"
+      },
+      "stroke_risk": {
+        "label": "中风风险",
+        "description": "综合跟踪钠、饱和脂肪和钾"
+      }
+    }
+  },
+  "neighborhood": {
+    "title": "社区健康",
+    "subtitle": "按邮政编码探索慢性病数据",
+    "comingSoon": "即将推出",
+    "description": "CDC PLACES API集成用于社区健康指标。",
+    "descriptionLine2": "了解您的食物选择如何与社区健康结果相关联。",
+    "stretchGoal": "[P2] 延伸目标"
+  },
+  "charts": {
+    "macros": {
+      "title": "宏量营养素",
+      "protein": "蛋白质",
+      "carbs": "碳水化合物",
+      "fat": "脂肪"
+    },
+    "micros": {
+      "title": "微量营养素覆盖率",
+      "subtitle": "每份的每日营养价值百分比",
+      "vitaminA": "维生素A",
+      "vitaminC": "维生素C",
+      "vitaminD": "维生素D",
+      "calcium": "钙",
+      "iron": "铁",
+      "potassium": "钾",
+      "legendHigh": "≥20% DV",
+      "legendMedium": "10-20% DV",
+      "legendLow": "<10% DV",
+      "tooltipFormat": "{{value}}% DV"
+    },
+    "quality": {
+      "title": "食品质量分析",
+      "tooltip": "食物按加工程度分组 — 从全食物（新鲜农产品、未加工肉类）到超加工食品（包装零食、含添加剂的快餐）。",
+      "ultraProcessed": "超加工",
+      "wholeFoods": "全食物",
+      "processed": "加工",
+      "lightlyProcessed": "轻度加工",
+      "item": "项",
+      "item_other": "项",
+      "labels": {
+        "mostlyWholeFoods": "主要是全食物",
+        "lightlyProcessed": "轻度加工",
+        "moderatelyProcessed": "中度加工",
+        "highlyProcessed": "高度加工"
+      }
+    }
+  },
+  "editFoodModal": {
+    "title": "编辑食物项目",
+    "foodName": "食物名称",
+    "foodNamePlaceholder": "例如，糙米",
+    "portionSize": "份量大小",
+    "category": "类别",
+    "processingLevel": "加工级别",
+    "infoNote": "💡 您的更正有助于提高准确性。应用程序会从您的编辑中学习，以便随着时间的推移提供更好的结果。",
+    "delete": "删除",
+    "cancel": "取消",
+    "saveChanges": "保存更改",
+    "confirmDelete": "从此餐食中移除\"{{name}}\"？",
+    "categories": {
+      "protein": "蛋白质",
+      "carb": "碳水化合物",
+      "vegetable": "蔬菜",
+      "fruit": "水果",
+      "dairy": "乳制品",
+      "fat": "脂肪/油",
+      "other": "其他"
+    },
+    "processingLevels": {
+      "1": "全食物（新鲜蔬菜、未加工肉类）",
+      "2": "轻度加工（油、黄油、盐）",
+      "3": "加工（罐头、奶酪、面包）",
+      "4": "超加工（包装零食、快餐）"
+    }
+  },
+  "verdictCard": {
+    "safe": "对您的状况安全",
+    "caution": "谨慎使用",
+    "avoid": "超出限值",
+    "basedOnProfile": "基于您的健康档案"
+  },
+  "aiInsights": {
+    "title": "AI健康见解",
+    "generating": "正在生成AI健康见解...",
+    "excellentChoice": "出色的选择！这顿餐食以全食物、未加工食品为特色，提供持续的能量和必需营养素。",
+    "goodMeal": "良好的餐食，主要是最低限度加工的成分。",
+    "someProcessed": "这顿餐食包含一些加工食品。在可能的情况下，考虑将加工食品换成全食物替代品。",
+    "heavilyProcessed": "这顿餐食严重加工。尝试用全食物替换超加工食品以提高营养质量。",
+    "lowFiber": "这顿餐食纤维含量低（{{grams}}克）。尝试添加豆类、扁豆或绿叶蔬菜以增加纤维摄入量。",
+    "addProtein": "考虑添加瘦蛋白质来源，如鸡肉、鱼、豆腐或豆类。",
+    "addVegetables": "添加多彩蔬菜以增加维生素和矿物质。",
+    "greatVeggies": "包含蔬菜做得很好！",
+    "swapSuggestionSauce": "💡 交换建议：用新鲜番茄和香草自制酱汁替换商店购买的酱汁。",
+    "swapSuggestionPasta": "💡 交换建议：尝试全麦或豆类意大利面，以获得更多纤维和蛋白质。",
+    "swapSuggestionGeneric": "💡 交换建议：用全食物替代品替换{{food}}。"
+  },
+  "foodSegmentation": {
+    "toggleHide": "隐藏",
+    "toggleShow": "显示",
+    "labels": "标签",
+    "altText": "带有食物检测叠加层的餐食",
+    "detectedFoods": "检测到的食物",
+    "addFood": "添加食物",
+    "save": "保存",
+    "details": "详情",
+    "caloriesShort": "卡",
+    "attribution": "由NYU Tandon研究方法提供支持的视觉分割"
+  },
+  "healthConditions": {
+    "hypertension": "高血压",
+    "high_cholesterol": "高胆固醇",
+    "type2_diabetes": "2型糖尿病",
+    "stroke_risk": "中风风险",
+    "nutrients": {
+      "sodium": "钠",
+      "potassium": "钾",
+      "saturatedFat": "饱和脂肪",
+      "cholesterol": "胆固醇",
+      "fiber": "纤维",
+      "carbohydrates": "碳水化合物",
+      "addedSugar": "添加糖"
+    }
+  },
+  "verdictLevels": {
+    "safe": "安全",
+    "caution": "谨慎",
+    "avoid": "避免"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "confirm": "确认",
+    "grams": "克",
+    "milligrams": "毫克",
+    "calories": "卡路里",
+    "and": "和"
+  }
+}

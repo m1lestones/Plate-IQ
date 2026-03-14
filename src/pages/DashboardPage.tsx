@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { MacroDonut } from '../components/charts/MacroDonut'
 import { MicronutrientBars } from '../components/charts/MicronutrientBars'
 import { IngredientQuality } from '../components/charts/IngredientQuality'
@@ -12,6 +13,7 @@ import { getWarningColor } from '../utils/smartValidation'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
+  const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
   const initialMealData = location.state?.mealData as MealData | undefined
@@ -46,12 +48,12 @@ export function DashboardPage() {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-white/60">No meal data available</p>
+          <p className="text-white/60">{t('dashboard.noMealData')}</p>
           <button
             onClick={() => navigate('/scan')}
             className="px-6 py-2.5 rounded-xl bg-green-500 hover:bg-green-400 text-white font-semibold transition-all"
           >
-            Scan a meal
+            {t('dashboard.scanAMeal')}
           </button>
         </div>
       </div>
@@ -183,7 +185,7 @@ export function DashboardPage() {
     setHasEdits(false)
 
     // Show success message
-    alert('✅ Corrections saved! Your feedback helps improve accuracy.')
+    alert(t('dashboard.correctionsSaved'))
   }
 
   return (
@@ -191,14 +193,14 @@ export function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Wellness Dashboard</h1>
+          <h1 className="text-2xl font-bold">{t('dashboard.title')}</h1>
           <p className="text-white/50 text-sm mt-1">{mealData.primary_cuisine} • {mealData.meal_type}</p>
         </div>
         <button
           onClick={() => navigate('/scan')}
           className="px-4 py-2 rounded-xl border border-white/20 text-white/80 hover:bg-white/5 transition-all text-sm"
         >
-          Scan Another
+          {t('dashboard.scanAnother')}
         </button>
       </div>
 
@@ -221,8 +223,8 @@ export function DashboardPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div className="flex-1">
-            <p className="font-semibold text-blue-100">Reference Object Detected: {mealData.reference_object_detected.replace('_', ' ')}</p>
-            <p className="text-sm text-blue-200/80">Portion estimates are more accurate! (NYU research-backed)</p>
+            <p className="font-semibold text-blue-100">{t('dashboard.referenceObjectDetected', { object: mealData.reference_object_detected.replace('_', ' ') })}</p>
+            <p className="text-sm text-blue-200/80">{t('dashboard.referenceObjectMessage')}</p>
           </div>
         </div>
       )}
@@ -235,10 +237,10 @@ export function DashboardPage() {
           </svg>
           <div className="flex-1">
             <p className="font-semibold text-yellow-100">
-              {mealData.filtered_foods.length} low-confidence item{mealData.filtered_foods.length > 1 ? 's' : ''} filtered out
+              {t('dashboard.filteredFoodsTitle', { count: mealData.filtered_foods.length })}
             </p>
             <p className="text-sm text-yellow-200/80">
-              Removed: {mealData.filtered_foods.map(f => f.name).join(', ')} (confidence &lt;50%)
+              {t('dashboard.filteredFoodsMessage', { foods: mealData.filtered_foods.map(f => f.name).join(', ') })}
             </p>
           </div>
         </div>
@@ -277,7 +279,7 @@ export function DashboardPage() {
       <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl p-6 border border-green-500/30">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm text-white/60 uppercase tracking-wide">Estimated Calories</h3>
+            <h3 className="text-sm text-white/60 uppercase tracking-wide">{t('dashboard.estimatedCalories')}</h3>
             <p className="text-3xl font-bold text-white mt-1">
               {mealData.estimated_calories_low} - {mealData.estimated_calories_high}
             </p>

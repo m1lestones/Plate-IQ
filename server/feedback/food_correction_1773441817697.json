@@ -1,0 +1,15 @@
+{
+  "type": "food_correction",
+  "data": {
+    "original": {
+      "name": "rice",
+      "grams": 150
+    },
+    "corrected": {
+      "name": "brown rice",
+      "grams": 180
+    }
+  },
+  "version": "1.0",
+  "timestamp": "2026-03-13T22:43:37.697Z"
+}

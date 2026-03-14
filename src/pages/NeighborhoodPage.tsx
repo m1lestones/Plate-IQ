@@ -1,10 +1,14 @@
+import { useTranslation } from 'react-i18next'
+
 export function NeighborhoodPage() {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col h-full">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Neighborhood Health</h1>
+        <h1 className="text-2xl font-bold">{t('neighborhood.title')}</h1>
         <p className="text-white/50 text-sm mt-1">
-          Explore chronic disease data by ZIP code
+          {t('neighborhood.subtitle')}
         </p>
       </div>
 
@@ -31,15 +35,15 @@ export function NeighborhoodPage() {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-semibold text-white/80">Coming Soon</h2>
+          <h2 className="text-xl font-semibold text-white/80">{t('neighborhood.comingSoon')}</h2>
           <p className="text-white/50 text-sm">
-            CDC PLACES API integration for neighborhood health metrics.
+            {t('neighborhood.description')}
             <br />
-            See how your food choices connect to community health outcomes.
+            {t('neighborhood.descriptionLine2')}
           </p>
           <div className="pt-4">
             <span className="inline-block px-4 py-2 rounded-lg bg-white/5 text-white/40 text-xs font-medium">
-              [P2] Stretch Goal
+              {t('neighborhood.stretchGoal')}
             </span>
           </div>
         </div>

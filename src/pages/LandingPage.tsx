@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export function LandingPage() {
+  const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
       {/* Hero Section */}
@@ -23,13 +25,12 @@ export function LandingPage() {
 
           {/* Tagline */}
           <p className="text-xl md:text-3xl text-white/70 font-light max-w-2xl mx-auto">
-            Snap Your Plate. Know Your Food.
+            {t('landing.tagline')}
           </p>
 
           {/* Value Prop */}
           <p className="text-base md:text-lg text-white/50 max-w-xl mx-auto">
-            AI-powered food wellness dashboard. Get instant nutrition breakdown,
-            processing-level transparency, and personalized insights from a single photo.
+            {t('landing.description')}
           </p>
 
           {/* CTA Button */}
@@ -42,14 +43,14 @@ export function LandingPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Scan Now
+              {t('landing.scanNow')}
             </Link>
           </div>
 
           {/* How It Works - Optional P2 */}
           <div className="pt-16">
             <h2 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-8">
-              How It Works
+              {t('landing.howItWorks')}
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
               {/* Step 1 */}
@@ -57,9 +58,9 @@ export function LandingPage() {
                 <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
                   <span className="text-2xl font-bold text-green-400">1</span>
                 </div>
-                <h3 className="font-semibold text-white">Snap</h3>
+                <h3 className="font-semibold text-white">{t('landing.step1Title')}</h3>
                 <p className="text-sm text-white/50">
-                  Take a photo of your meal or upload from your camera roll
+                  {t('landing.step1Description')}
                 </p>
               </div>
 
@@ -68,9 +69,9 @@ export function LandingPage() {
                 <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
                   <span className="text-2xl font-bold text-green-400">2</span>
                 </div>
-                <h3 className="font-semibold text-white">Analyze</h3>
+                <h3 className="font-semibold text-white">{t('landing.step2Title')}</h3>
                 <p className="text-sm text-white/50">
-                  AI identifies foods, estimates portions, and calculates nutrition
+                  {t('landing.step2Description')}
                 </p>
               </div>
 
@@ -79,9 +80,9 @@ export function LandingPage() {
                 <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
                   <span className="text-2xl font-bold text-green-400">3</span>
                 </div>
-                <h3 className="font-semibold text-white">Understand</h3>
+                <h3 className="font-semibold text-white">{t('landing.step3Title')}</h3>
                 <p className="text-sm text-white/50">
-                  See processing levels, nutrient gaps, and personalized insights
+                  {t('landing.step3Description')}
                 </p>
               </div>
             </div>
@@ -91,7 +92,7 @@ export function LandingPage() {
 
       {/* Footer */}
       <footer className="py-6 text-center text-white/30 text-sm border-t border-white/5">
-        <p>PlateIQ &copy; {new Date().getFullYear()} — 8-Day Capstone Project</p>
+        <p>{t('landing.footer', { year: new Date().getFullYear() })}</p>
       </footer>
     </div>
   )
