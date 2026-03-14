@@ -9,7 +9,6 @@ import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
-import { getWarningColor } from '../utils/smartValidation'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
@@ -243,35 +242,6 @@ export function DashboardPage() {
               {t('dashboard.filteredFoodsMessage', { foods: mealData.filtered_foods.map(f => f.name).join(', ') })}
             </p>
           </div>
-        </div>
-      )}
-
-      {/* Smart Validation Warnings */}
-      {mealData.validation_warnings && mealData.validation_warnings.length > 0 && (
-        <div className="space-y-2">
-          {mealData.validation_warnings
-            .filter(w => w.severity === 'error' || w.severity === 'warning')
-            .slice(0, 3) // Show top 3 warnings
-            .map((warning, idx) => {
-              const colors = getWarningColor(warning.severity)
-              return (
-                <div key={idx} className={`${colors.bg} border ${colors.border} rounded-xl p-4 flex items-start gap-3`}>
-                  <svg className={`w-5 h-5 ${colors.text} flex-shrink-0 mt-0.5`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    {warning.severity === 'error' ? (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    ) : (
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    )}
-                  </svg>
-                  <div className="flex-1">
-                    <p className={`font-medium ${colors.text}`}>{warning.message}</p>
-                    {warning.suggestion && (
-                      <p className="text-sm text-white/60 mt-1">💡 {warning.suggestion}</p>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
         </div>
       )}
 
