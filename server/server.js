@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { getAggregatedPositions, getCommonFoodCorrections, getPortionAdjustments } from './communityLearning.js'
+import { verifyMealNovaLevels } from './novaVerification.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: join(__dirname, '..', '.env') })
@@ -250,6 +251,13 @@ NOVA LEVELS:
     const parsed = JSON.parse(jsonText)
 
     console.log(`🍽️  Identified ${parsed.foods?.length || 0} foods`)
+
+    // Verify NOVA levels with Open Food Facts database
+    if (parsed.foods && parsed.foods.length > 0) {
+      console.log('🔍 Verifying NOVA levels with Open Food Facts...')
+      parsed.foods = await verifyMealNovaLevels(parsed.foods)
+    }
+
     res.json(parsed)
   } catch (error) {
     if (error.name === 'AbortError') {

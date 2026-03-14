@@ -15,6 +15,10 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
   const processed = mealData.foods.filter(f => f.nova_level === 3).length
   const ultraProcessed = mealData.foods.filter(f => f.nova_level === 4).length
 
+  // Check how many NOVA levels were verified by Open Food Facts
+  const verifiedCount = mealData.foods.filter(f => f.nova_verified).length
+  const totalCount = mealData.foods.length
+
   // Weighted average NOVA (1–4), then invert so 1 = right (100%), 4 = left (0%)
   const totalGrams = mealData.foods.reduce((sum, f) => sum + f.estimated_grams, 0)
   const weightedNova = mealData.foods.reduce((sum, f) => sum + f.nova_level * f.estimated_grams, 0)
@@ -32,24 +36,38 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
 
   return (
     <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-      <div className="flex items-center gap-2 mb-6">
-        <h3 className="text-lg font-semibold">{t('charts.quality.title')}</h3>
-        <div className="relative">
-          <button
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-            className="text-white/40 hover:text-white/70 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-            </svg>
-          </button>
-          {showTooltip && (
-            <div className="absolute left-6 top-0 z-10 w-56 bg-gray-800 border border-white/10 rounded-lg p-3 text-xs text-white/80 shadow-lg">
-              {t('charts.quality.tooltip')}
-            </div>
-          )}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">{t('charts.quality.title')}</h3>
+          <div className="relative">
+            <button
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+              className="text-white/40 hover:text-white/70 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </button>
+            {showTooltip && (
+              <div className="absolute left-6 top-0 z-10 w-56 bg-gray-800 border border-white/10 rounded-lg p-3 text-xs text-white/80 shadow-lg">
+                {t('charts.quality.tooltip')}
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Verification Badge */}
+        {verifiedCount > 0 && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-lg">
+            <svg className="w-3.5 h-3.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span className="text-xs text-green-300 font-medium">
+              {verifiedCount}/{totalCount} verified
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Gauge */}
