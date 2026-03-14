@@ -1,5 +1,5 @@
 import { THRESHOLDS } from '../data/healthThresholds'
-import type { HealthCondition, MealData, ConditionVerdict, MealVerdict, VerdictLevel } from '../types'
+import type { HealthCondition, MealData, ConditionVerdict, ConditionFlag, MealVerdict, VerdictLevel } from '../types'
 
 function getTotalNutrient(meal: MealData, key: keyof typeof meal.foods[0]['nutrients']): number {
   return meal.foods.reduce((sum, food) => {
@@ -10,7 +10,7 @@ function getTotalNutrient(meal: MealData, key: keyof typeof meal.foods[0]['nutri
 
 function evaluateCondition(meal: MealData, condition: HealthCondition): ConditionVerdict {
   const thresholds = THRESHOLDS[condition]
-  const flags: string[] = []
+  const flags: ConditionFlag[] = []
   let worst: VerdictLevel = 'safe'
 
   for (const t of thresholds) {
@@ -18,15 +18,15 @@ function evaluateCondition(meal: MealData, condition: HealthCondition): Conditio
 
     if (t.direction === 'lower_is_better') {
       if (t.avoidAbove !== undefined && value > t.avoidAbove) {
-        flags.push(`${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`)
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`, source: t.source, url: t.sourceUrl })
         worst = 'avoid'
       } else if (t.cautionAbove !== undefined && value > t.cautionAbove) {
-        flags.push(`${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`)
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`, source: t.source, url: t.sourceUrl })
         if (worst !== 'avoid') worst = 'caution'
       }
     } else {
       if (t.cautionBelow !== undefined && value < t.cautionBelow) {
-        flags.push(`Low ${t.label}: ${Math.round(value)}${t.unit} (target ≥${t.cautionBelow}${t.unit})`)
+        flags.push({ text: `Low ${t.label}: ${Math.round(value)}${t.unit} (target ≥${t.cautionBelow}${t.unit})`, source: t.source, url: t.sourceUrl })
         if (worst !== 'avoid') worst = 'caution'
       }
     }

@@ -66,10 +66,16 @@ export interface MealData {
 
 export type VerdictLevel = 'safe' | 'caution' | 'avoid'
 
+export interface ConditionFlag {
+  text: string
+  source: string
+  url: string
+}
+
 export interface ConditionVerdict {
   condition: HealthCondition
   verdict: VerdictLevel
-  flags: string[]
+  flags: Array<ConditionFlag | string>
 }
 
 export interface MealVerdict {
