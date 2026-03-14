@@ -1,6 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { CONDITION_LABELS, CONDITION_BG, CONDITION_COLORS } from '../data/healthThresholds'
-import type { MealVerdict, VerdictLevel } from '../types'
+import type { ConditionFlag, MealVerdict, VerdictLevel } from '../types'
+
+// Handles both new object flags and legacy string flags
+function normalizeFlag(flag: ConditionFlag | string): ConditionFlag {
+  if (typeof flag === 'string') return { text: flag, source: '', url: '' }
+  return flag
+}
 
 const VERDICT_ICON: Record<VerdictLevel, string> = {
   safe: '✓',
@@ -46,9 +52,24 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
               </div>
               {c.flags.length > 0 && (
                 <ul className="space-y-0.5">
-                  {c.flags.map((flag, i) => (
-                    <li key={i} className="text-white/50 text-xs">• {flag}</li>
-                  ))}
+                  {c.flags.map((raw, i) => {
+                    const flag = normalizeFlag(raw)
+                    return (
+                      <li key={i} className="text-white/50 text-xs flex items-center gap-1">
+                        <span>• {flag.text}</span>
+                        {flag.url && (
+                          <a
+                            href={flag.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:text-blue-300 underline underline-offset-2 whitespace-nowrap"
+                          >
+                            {flag.source} ↗
+                          </a>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
             </div>
