@@ -80,14 +80,15 @@ export function getConfidenceLabel(level: ConfidenceLevel): string {
  * Get warning message for low confidence items
  */
 export function getConfidenceWarning(food: FoodItem): string | null {
-  const level = getConfidenceLevel(food.confidence)
+  const confidence = food.confidence ?? 0.85
+  const level = getConfidenceLevel(confidence)
 
   if (level === 'filtered') {
-    return `"${food.name}" has very low confidence (${Math.round(food.confidence * 100)}%). This item was likely misidentified.`
+    return `"${food.name}" has very low confidence (${Math.round(confidence * 100)}%). This item was likely misidentified.`
   }
 
   if (level === 'low') {
-    return `"${food.name}" has low confidence (${Math.round(food.confidence * 100)}%). Please verify this is correct.`
+    return `"${food.name}" has low confidence (${Math.round(confidence * 100)}%). Please verify this is correct.`
   }
 
   return null
@@ -114,16 +115,17 @@ export function filterLowConfidenceFoods(
   const filtered: FoodItem[] = []
 
   foods.forEach(food => {
-    if (food.confidence >= threshold) {
+    const confidence = food.confidence ?? 0.85
+    if (confidence >= threshold) {
       kept.push(food)
     } else {
       filtered.push(food)
-      console.warn(`🚫 Filtered out low-confidence food: "${food.name}" (${Math.round(food.confidence * 100)}%)`)
+      console.warn(`🚫 Filtered out low-confidence food: "${food.name}" (${Math.round(confidence * 100)}%)`)
     }
   })
 
   const averageConfidence = kept.length > 0
-    ? kept.reduce((sum, f) => sum + f.confidence, 0) / kept.length
+    ? kept.reduce((sum, f) => sum + (f.confidence ?? 0.85), 0) / kept.length
     : 0
 
   return {
@@ -161,7 +163,8 @@ export function applyConfidenceFiltering(
     console.log(`Total foods: ${stats.total}`)
     console.log(`Kept: ${stats.kept} (avg confidence: ${Math.round(stats.averageConfidence * 100)}%)`)
     console.log(`Filtered: ${stats.filtered}`)
-    console.log('Filtered items:', filtered.map(f => `${f.name} (${Math.round(f.confidence * 100)}%)`))
+    console.log('Filtered items:', filtered.map(f => `${f.name} (${Math.round((f.confidence ?? 0.85) * 100)}%)`))
+
     console.groupEnd()
   }
 
@@ -191,7 +194,7 @@ export function getConfidenceDistribution(foods: FoodItem[]): {
   filtered: number
 } {
   return foods.reduce((acc, food) => {
-    const level = getConfidenceLevel(food.confidence)
+    const level = getConfidenceLevel(food.confidence ?? 0.85)
     acc[level]++
     return acc
   }, { high: 0, medium: 0, low: 0, filtered: 0 })
@@ -202,7 +205,7 @@ export function getConfidenceDistribution(foods: FoodItem[]): {
  */
 export function getFoodsNeedingReview(foods: FoodItem[]): FoodItem[] {
   return foods.filter(food => {
-    const level = getConfidenceLevel(food.confidence)
+    const level = getConfidenceLevel(food.confidence ?? 0.85)
     return level === 'low' || level === 'filtered'
   })
 }
