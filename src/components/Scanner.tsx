@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { CapturedImage } from '../types'
+import { compressImage } from '../utils/imageCompression'
 
 interface ScannerProps {
   onCapture: (image: CapturedImage) => void
@@ -47,7 +48,7 @@ export function Scanner({ onCapture }: ScannerProps) {
     }
   }, [startCamera])
 
-  const capture = useCallback(() => {
+  const capture = useCallback(async () => {
     const video = videoRef.current
     const canvas = canvasRef.current
     if (!video || !canvas) return
@@ -55,29 +56,33 @@ export function Scanner({ onCapture }: ScannerProps) {
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
     canvas.getContext('2d')?.drawImage(video, 0, 0)
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+    const raw = canvas.toDataURL('image/jpeg', 0.9)
+    const dataUrl = await compressImage(raw)
 
     streamRef.current?.getTracks().forEach(t => t.stop())
     onCapture({ dataUrl })
   }, [onCapture])
 
-  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
     const objectUrl = URL.createObjectURL(file)
-    const img = new Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.naturalWidth
-      canvas.height = img.naturalHeight
-      canvas.getContext('2d')?.drawImage(img, 0, 0)
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-      URL.revokeObjectURL(objectUrl)
-      streamRef.current?.getTracks().forEach(t => t.stop())
-      onCapture({ dataUrl })
-    }
-    img.src = objectUrl
+    const raw = await new Promise<string>((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        canvas.getContext('2d')?.drawImage(img, 0, 0)
+        resolve(canvas.toDataURL('image/jpeg', 0.9))
+        URL.revokeObjectURL(objectUrl)
+      }
+      img.src = objectUrl
+    })
+    const dataUrl = await compressImage(raw)
+    streamRef.current?.getTracks().forEach(t => t.stop())
+    onCapture({ dataUrl })
   }, [onCapture])
 
   return (
