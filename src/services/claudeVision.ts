@@ -29,6 +29,14 @@ export async function analyzeMealWithClaude(
 
   console.log('Calling backend proxy for Claude Vision...')
 
+  // Wake up Render free-tier instance before the real request
+  try {
+    const healthUrl = BACKEND_API_URL.replace('/api/analyze', '/health')
+    await fetch(healthUrl, { signal: AbortSignal.timeout(60000) })
+  } catch {
+    // Ignore - just a warm-up ping
+  }
+
   try {
     const response = await fetch(BACKEND_API_URL, {
       method: 'POST',
