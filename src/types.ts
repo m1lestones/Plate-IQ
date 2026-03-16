@@ -70,6 +70,7 @@ export interface ConditionFlag {
   text: string
   source: string
   url: string
+  topOffenders?: Array<{ name: string; amount: string }>
   population?: {
     stat: string
     source: string

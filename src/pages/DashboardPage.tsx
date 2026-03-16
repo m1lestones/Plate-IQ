@@ -9,6 +9,8 @@ import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
+import { getHealthProfile } from '../lib/healthStorage'
+import { evaluateMeal } from '../lib/thresholdEngine'
 import type { MealData, FoodItem } from '../types'
 
 export function DashboardPage() {
@@ -23,6 +25,15 @@ export function DashboardPage() {
   const [editingFood, setEditingFood] = useState<{ food: FoodItem; index: number } | null>(null)
   const [hasEdits, setHasEdits] = useState(false)
   const [portionSizes, setPortionSizes] = useState<Record<number, 'S' | 'M' | 'L'>>({})
+
+  // Recompute verdict on mount so topOffenders and NHANES context are always fresh
+  useEffect(() => {
+    if (!mealData) return
+    const profile = getHealthProfile()
+    if (!profile || profile.conditions.length === 0) return
+    const { overall, byCondition } = evaluateMeal(mealData, profile.conditions)
+    setMealData(prev => prev ? { ...prev, verdict: { overall, byCondition, aiInsight: prev.verdict?.aiInsight ?? '' } } : prev)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Initialize all portion sizes to 'M' on mount
   useEffect(() => {
@@ -249,7 +260,7 @@ export function DashboardPage() {
       <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl p-6 border border-green-500/30">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-sm text-white/60 uppercase tracking-wide">{t('dashboard.estimatedCalories')}</h3>
+            <h3 className="text-2xl font-bold text-white/60 uppercase tracking-wide">{t('dashboard.estimatedCalories')}</h3>
             <p className="text-3xl font-bold text-white mt-1">
               {mealData.estimated_calories_low} - {mealData.estimated_calories_high}
             </p>
