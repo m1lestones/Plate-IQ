@@ -12,9 +12,17 @@ const BACKEND_API_URL = import.meta.env.VITE_API_URL
 /**
  * Analyze meal image with Claude Vision API
  * @param imageDataUrl - Base64 data URL of meal photo
+ * @param sessionId - User session identifier
+ * @param imageUrl - URL of uploaded image in Supabase Storage
+ * @param imagePath - Path of image in storage bucket
  * @returns Meal analysis with identified foods
  */
-export async function analyzeMealWithClaude(imageDataUrl: string): Promise<MealData> {
+export async function analyzeMealWithClaude(
+  imageDataUrl: string,
+  sessionId?: string,
+  imageUrl?: string,
+  imagePath?: string
+): Promise<MealData> {
   // Extract base64 data
   const base64Data = imageDataUrl.split(',')[1] || imageDataUrl
   const mediaType = imageDataUrl.match(/data:(image\/[^;]+)/)?.[1] || 'image/jpeg'
@@ -29,7 +37,10 @@ export async function analyzeMealWithClaude(imageDataUrl: string): Promise<MealD
       },
       body: JSON.stringify({
         imageData: base64Data,
-        mediaType
+        mediaType,
+        sessionId,
+        imageUrl,
+        imagePath
       })
     })
 

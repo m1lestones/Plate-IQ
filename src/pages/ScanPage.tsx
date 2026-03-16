@@ -6,6 +6,7 @@ import { Preview } from '../components/Preview'
 import { LoadingState } from '../components/LoadingState'
 import { getRandomDemoMeal } from '../data/demoMeals'
 import { analyzeMealWithClaude } from '../services/claudeVision'
+import { uploadMealImage, getSessionId } from '../services/imageUpload'
 import { enhanceMealWithUSDA, isUSDAConfigured } from '../utils/usdaEnhancer'
 import { refineMealPortions, logDensityInfo } from '../utils/portionRefinement'
 import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
@@ -62,8 +63,25 @@ export function ScanPage() {
       const useDemoMode = import.meta.env.VITE_DEMO_MODE === 'true'
       const hasClaudeKey = import.meta.env.VITE_CLAUDE_API_KEY?.trim()
 
+      // Get session ID for tracking user's scans
+      const sessionId = getSessionId()
+
+      let imageUrl: string | undefined
+      let imagePath: string | undefined
+
+      // Upload image to Supabase Storage (even in demo mode for data collection)
+      try {
+        const uploadResult = await uploadMealImage(image.dataUrl, sessionId)
+        imageUrl = uploadResult.imageUrl
+        imagePath = uploadResult.imagePath
+        console.log('✅ Image uploaded:', imageUrl)
+      } catch (uploadError) {
+        console.error('⚠️ Image upload failed, continuing with analysis...', uploadError)
+        // Continue even if upload fails - don't block the user
+      }
+
       if (!useDemoMode && hasClaudeKey) {
-        mealData = await analyzeMealWithClaude(image.dataUrl)
+        mealData = await analyzeMealWithClaude(image.dataUrl, sessionId, imageUrl, imagePath)
       } else {
         mealData = getRandomDemoMeal()
       }

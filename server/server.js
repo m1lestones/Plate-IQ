@@ -3,8 +3,9 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
-import { getAggregatedPositions, getCommonFoodCorrections, getPortionAdjustments } from './communityLearning.js'
+import { supabase } from './supabaseClient.js'
 import { verifyMealNovaLevels } from './novaVerification.js'
+import crypto from 'crypto'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: join(__dirname, '..', '.env') })
@@ -20,33 +21,109 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', claudeKey: !!apiKey })
 })
 
+// Upload meal image to Supabase Storage
+app.post('/api/upload-image', async (req, res) => {
+  try {
+    const { imageData, mediaType, sessionId } = req.body
+
+    if (!imageData) {
+      return res.status(400).json({ error: 'No image data provided' })
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now()
+    const randomId = crypto.randomBytes(8).toString('hex')
+    const extension = mediaType?.split('/')[1] || 'jpg'
+    const filename = `${sessionId || 'anonymous'}_${timestamp}_${randomId}.${extension}`
+    const filepath = `meals/${filename}`
+
+    // Convert base64 to buffer
+    const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '')
+    const buffer = Buffer.from(base64Data, 'base64')
+
+    // Upload to Supabase Storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('meal-images')
+      .upload(filepath, buffer, {
+        contentType: mediaType || 'image/jpeg',
+        upsert: false
+      })
+
+    if (uploadError) {
+      console.error('❌ Upload error:', uploadError)
+      return res.status(500).json({ error: 'Failed to upload image', details: uploadError })
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('meal-images')
+      .getPublicUrl(filepath)
+
+    console.log(`✅ Image uploaded: ${filename}`)
+
+    res.json({
+      success: true,
+      imageUrl: urlData.publicUrl,
+      imagePath: filepath
+    })
+  } catch (error) {
+    console.error('❌ Image upload error:', error)
+    res.status(500).json({ error: 'Failed to upload image' })
+  }
+})
+
 // Collective Learning Endpoint - Receives feedback from ALL users
 app.post('/api/feedback', async (req, res) => {
   try {
-    const { type, data, version } = req.body
+    const { type, data, sessionId } = req.body
 
-    // Log feedback for analysis
     console.log(`📊 Feedback received: ${type}`)
 
-    // Store in JSON file (for now - can move to database later)
-    const fs = await import('fs/promises')
-    const path = await import('path')
+    // Save to appropriate Supabase table based on feedback type
+    let result
 
-    const feedbackDir = path.join(__dirname, 'feedback')
-    await fs.mkdir(feedbackDir, { recursive: true })
+    if (type === 'food_correction') {
+      const { original, corrected, mealScanId } = data
+      result = await supabase.from('food_corrections').insert({
+        meal_scan_id: mealScanId || null,
+        session_id: sessionId || 'anonymous',
+        original_food_name: original.name,
+        original_grams: original.grams,
+        original_nova_level: original.nova_level || 1,
+        corrected_food_name: corrected.name,
+        corrected_grams: corrected.grams,
+        corrected_nova_level: corrected.nova_level || 1,
+        correction_type: original.name !== corrected.name ? 'name_change' : 'portion_change'
+      })
+    } else if (type === 'position_correction') {
+      const { foodName, originalPosition, correctedPosition, mealScanId } = data
+      result = await supabase.from('position_corrections').insert({
+        meal_scan_id: mealScanId || null,
+        session_id: sessionId || 'anonymous',
+        food_name: foodName,
+        original_x: originalPosition.x,
+        original_y: originalPosition.y,
+        corrected_x: correctedPosition.x,
+        corrected_y: correctedPosition.y
+      })
+    } else if (type === 'portion_adjustment') {
+      const { foodName, originalGrams, adjustedGrams, adjustmentType, mealScanId } = data
+      result = await supabase.from('portion_adjustments').insert({
+        meal_scan_id: mealScanId || null,
+        session_id: sessionId || 'anonymous',
+        food_name: foodName,
+        original_grams: originalGrams,
+        adjusted_grams: adjustedGrams,
+        adjustment_type: adjustmentType || 'custom'
+      })
+    }
 
-    const filename = `${type}_${Date.now()}.json`
-    const filepath = path.join(feedbackDir, filename)
+    if (result?.error) {
+      console.error('❌ Database error:', result.error)
+      return res.status(500).json({ error: 'Failed to save feedback' })
+    }
 
-    await fs.writeFile(filepath, JSON.stringify({
-      type,
-      data,
-      version,
-      timestamp: new Date().toISOString()
-    }, null, 2))
-
-    console.log(`✅ Saved: ${filename}`)
-
+    console.log(`✅ Feedback saved to database`)
     res.json({ success: true, message: 'Feedback received' })
   } catch (error) {
     console.error('❌ Feedback error:', error)
@@ -59,9 +136,43 @@ app.post('/api/feedback', async (req, res) => {
 // Get community-learned positions (ALL users' corrections)
 app.get('/api/community/positions', async (req, res) => {
   try {
-    const positions = await getAggregatedPositions()
-    res.json(positions)
+    const { data, error } = await supabase
+      .from('position_corrections')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1000)
+
+    if (error) throw error
+
+    // Aggregate positions by food name
+    const aggregated = {}
+    data.forEach(correction => {
+      const foodName = correction.food_name.toLowerCase()
+      if (!aggregated[foodName]) {
+        aggregated[foodName] = {
+          avgX: 0,
+          avgY: 0,
+          count: 0
+        }
+      }
+      aggregated[foodName].avgX += correction.corrected_x
+      aggregated[foodName].avgY += correction.corrected_y
+      aggregated[foodName].count += 1
+    })
+
+    // Calculate averages
+    Object.keys(aggregated).forEach(foodName => {
+      const item = aggregated[foodName]
+      aggregated[foodName] = {
+        x: Math.round((item.avgX / item.count) * 100) / 100,
+        y: Math.round((item.avgY / item.count) * 100) / 100,
+        sampleSize: item.count
+      }
+    })
+
+    res.json(aggregated)
   } catch (error) {
+    console.error('❌ Community positions error:', error)
     res.status(500).json({ error: 'Failed to get community positions' })
   }
 })
@@ -69,9 +180,33 @@ app.get('/api/community/positions', async (req, res) => {
 // Get common food identification corrections
 app.get('/api/community/food-corrections', async (req, res) => {
   try {
-    const corrections = await getCommonFoodCorrections()
-    res.json(corrections)
+    const { data, error } = await supabase
+      .from('food_corrections')
+      .select('original_food_name, corrected_food_name')
+      .order('created_at', { ascending: false })
+      .limit(1000)
+
+    if (error) throw error
+
+    // Count correction patterns
+    const corrections = {}
+    data.forEach(item => {
+      const key = `${item.original_food_name}→${item.corrected_food_name}`
+      corrections[key] = (corrections[key] || 0) + 1
+    })
+
+    // Convert to array and sort
+    const result = Object.entries(corrections)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 50)
+      .map(([key, count]) => {
+        const [original, corrected] = key.split('→')
+        return { original, corrected, count }
+      })
+
+    res.json(result)
   } catch (error) {
+    console.error('❌ Food corrections error:', error)
     res.status(500).json({ error: 'Failed to get food corrections' })
   }
 })
@@ -79,61 +214,93 @@ app.get('/api/community/food-corrections', async (req, res) => {
 // Get portion adjustment patterns
 app.get('/api/community/portion-adjustments', async (req, res) => {
   try {
-    const adjustments = await getPortionAdjustments()
-    res.json(adjustments)
+    const { data, error } = await supabase
+      .from('portion_adjustments')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1000)
+
+    if (error) throw error
+
+    // Aggregate by food name
+    const adjustments = {}
+    data.forEach(item => {
+      const foodName = item.food_name
+      if (!adjustments[foodName]) {
+        adjustments[foodName] = {
+          totalRatio: 0,
+          count: 0
+        }
+      }
+      const ratio = item.adjusted_grams / item.original_grams
+      adjustments[foodName].totalRatio += ratio
+      adjustments[foodName].count += 1
+    })
+
+    // Calculate averages
+    const result = {}
+    Object.keys(adjustments).forEach(foodName => {
+      const item = adjustments[foodName]
+      const avgRatio = item.totalRatio / item.count
+      result[foodName] = {
+        averageAdjustmentRatio: Math.round(avgRatio * 100) / 100,
+        sampleSize: item.count,
+        suggestion: avgRatio > 1.1 ? 'AI underestimates' : avgRatio < 0.9 ? 'AI overestimates' : 'Accurate'
+      }
+    })
+
+    res.json(result)
   } catch (error) {
+    console.error('❌ Portion adjustments error:', error)
     res.status(500).json({ error: 'Failed to get portion adjustments' })
   }
 })
 
-// Analytics endpoint - Get aggregated learning data
+// Analytics endpoint - Get aggregated learning data from Supabase
 app.get('/api/analytics', async (req, res) => {
   try {
-    const fs = await import('fs/promises')
-    const path = await import('path')
+    // Get counts from all tables
+    const [scansResult, correctionsResult, positionsResult, portionsResult] = await Promise.all([
+      supabase.from('meal_scans').select('*', { count: 'exact', head: true }),
+      supabase.from('food_corrections').select('*', { count: 'exact', head: true }),
+      supabase.from('position_corrections').select('*', { count: 'exact', head: true }),
+      supabase.from('portion_adjustments').select('*', { count: 'exact', head: true })
+    ])
 
-    const feedbackDir = path.join(__dirname, 'feedback')
+    // Get most corrected foods
+    const { data: topCorrections } = await supabase
+      .from('food_corrections')
+      .select('original_food_name')
+      .order('created_at', { ascending: false })
+      .limit(100)
 
-    try {
-      const files = await fs.readdir(feedbackDir)
-      const feedbackData = []
+    const mostCorrectedFoods = {}
+    topCorrections?.forEach(item => {
+      const name = item.original_food_name
+      mostCorrectedFoods[name] = (mostCorrectedFoods[name] || 0) + 1
+    })
 
-      for (const file of files) {
-        if (file.endsWith('.json')) {
-          const content = await fs.readFile(path.join(feedbackDir, file), 'utf-8')
-          feedbackData.push(JSON.parse(content))
-        }
-      }
-
-      // Aggregate statistics
-      const stats = {
-        totalFeedback: feedbackData.length,
-        byType: {},
-        mostCorrectedFoods: {},
-        averageConfidence: 0
-      }
-
-      feedbackData.forEach(item => {
-        stats.byType[item.type] = (stats.byType[item.type] || 0) + 1
-
-        if (item.type === 'food_correction') {
-          const foodName = item.data.original.name
-          stats.mostCorrectedFoods[foodName] = (stats.mostCorrectedFoods[foodName] || 0) + 1
-        }
-      })
-
-      res.json(stats)
-    } catch (err) {
-      res.json({ totalFeedback: 0, message: 'No feedback data yet' })
+    const stats = {
+      totalMealScans: scansResult.count || 0,
+      totalFeedback: (correctionsResult.count || 0) + (positionsResult.count || 0) + (portionsResult.count || 0),
+      byType: {
+        food_corrections: correctionsResult.count || 0,
+        position_corrections: positionsResult.count || 0,
+        portion_adjustments: portionsResult.count || 0
+      },
+      mostCorrectedFoods
     }
+
+    res.json(stats)
   } catch (error) {
+    console.error('❌ Analytics error:', error)
     res.status(500).json({ error: 'Analytics error' })
   }
 })
 
 app.post('/api/analyze', async (req, res) => {
   try {
-    const { imageData, mediaType } = req.body
+    const { imageData, mediaType, sessionId, imageUrl, imagePath } = req.body
     console.log('Received mediaType:', mediaType, '| imageData length:', imageData?.length)
     const validMediaTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
     const safeMediaType = validMediaTypes.includes(mediaType) ? mediaType : 'image/jpeg'
@@ -256,6 +423,32 @@ NOVA LEVELS:
     if (parsed.foods && parsed.foods.length > 0) {
       console.log('🔍 Verifying NOVA levels with Open Food Facts...')
       parsed.foods = await verifyMealNovaLevels(parsed.foods)
+    }
+
+    // Save meal scan to Supabase database
+    try {
+      const { data: mealScan, error: dbError } = await supabase
+        .from('meal_scans')
+        .insert({
+          session_id: sessionId || 'anonymous',
+          image_url: imageUrl || null,
+          image_path: imagePath || null,
+          meal_type: parsed.meal_type || null,
+          primary_cuisine: parsed.primary_cuisine || null,
+          reference_object_detected: parsed.reference_object_detected || 'none',
+          foods: parsed.foods || []
+        })
+        .select()
+        .single()
+
+      if (dbError) {
+        console.error('❌ Failed to save meal scan:', dbError)
+      } else {
+        console.log(`✅ Meal scan saved to database (ID: ${mealScan.id})`)
+        parsed.mealScanId = mealScan.id  // Return scan ID to frontend for feedback linking
+      }
+    } catch (dbError) {
+      console.error('❌ Database error:', dbError)
     }
 
     res.json(parsed)
