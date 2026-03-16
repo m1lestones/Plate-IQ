@@ -32,10 +32,10 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
           {VERDICT_ICON[verdict.overall]}
         </div>
         <div>
-          <div className={`font-semibold ${CONDITION_COLORS[verdict.overall]}`}>
+          <div className={`text-2xl font-bold ${CONDITION_COLORS[verdict.overall]}`}>
             {t(`verdictCard.${verdict.overall}`)}
           </div>
-          <div className="text-white/50 text-xs mt-0.5">{t('verdictCard.basedOnProfile')}</div>
+          <div className="text-white/50 text-sm mt-0.5">{t('verdictCard.basedOnProfile')}</div>
         </div>
       </div>
 
@@ -43,20 +43,20 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
       {verdict.byCondition.length > 0 && (
         <div className="space-y-3">
           {verdict.byCondition.map(c => (
-            <div key={c.condition} className="bg-black/20 rounded-xl p-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium">{CONDITION_LABELS(t)[c.condition]}</span>
-                <span className={`text-xs font-semibold uppercase ${CONDITION_COLORS[c.verdict]}`}>
+            <div key={c.condition} className="bg-black/20 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-lg font-semibold">{CONDITION_LABELS(t)[c.condition]}</span>
+                <span className={`text-base font-bold uppercase ${CONDITION_COLORS[c.verdict]}`}>
                   {t(`verdictLevels.${c.verdict}`)}
                 </span>
               </div>
               {c.flags.length > 0 && (
-                <ul className="space-y-1.5">
+                <ul className="space-y-3">
                   {c.flags.map((raw, i) => {
                     const flag = normalizeFlag(raw)
                     return (
-                      <li key={i} className="text-xs">
-                        <div className="text-white/50 flex items-center gap-1">
+                      <li key={i}>
+                        <div className="text-white/70 text-base flex items-center gap-1.5">
                           <span>• {flag.text}</span>
                           {flag.url && (
                             <a
@@ -69,8 +69,13 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
                             </a>
                           )}
                         </div>
+                        {flag.topOffenders && flag.topOffenders.length > 0 && (
+                          <div className="mt-1 ml-3 text-white/50 text-sm">
+                            Main sources: {flag.topOffenders.map(f => `${f.name} (${f.amount})`).join(', ')}
+                          </div>
+                        )}
                         {flag.population && (
-                          <div className="mt-0.5 ml-3 text-white/30 italic leading-snug">
+                          <div className="mt-1 ml-3 text-white/30 text-sm italic leading-snug">
                             {flag.population.stat}{' '}
                             <a
                               href={flag.population.url}

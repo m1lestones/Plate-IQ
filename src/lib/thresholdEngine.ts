@@ -9,6 +9,18 @@ function getTotalNutrient(meal: MealData, key: keyof typeof meal.foods[0]['nutri
   }, 0)
 }
 
+function getTopOffenders(meal: MealData, nutrientKey: string, unit: string) {
+  return meal.foods
+    .map(food => ({
+      name: food.name,
+      value: (food.nutrients[nutrientKey as keyof typeof food.nutrients] as number * food.estimated_grams) / 100,
+    }))
+    .filter(f => f.value > 0)
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 3)
+    .map(f => ({ name: f.name, amount: `${Math.round(f.value)}${unit}` }))
+}
+
 function evaluateCondition(meal: MealData, condition: HealthCondition): ConditionVerdict {
   const thresholds = THRESHOLDS[condition]
   const flags: ConditionFlag[] = []
@@ -24,10 +36,12 @@ function evaluateCondition(meal: MealData, condition: HealthCondition): Conditio
 
     if (t.direction === 'lower_is_better') {
       if (t.avoidAbove !== undefined && value > t.avoidAbove) {
-        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`, source: t.source, url: t.sourceUrl, population })
+        const topOffenders = getTopOffenders(meal, t.nutrient, t.unit)
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.avoidAbove}${t.unit})`, source: t.source, url: t.sourceUrl, topOffenders, population })
         worst = 'avoid'
       } else if (t.cautionAbove !== undefined && value > t.cautionAbove) {
-        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`, source: t.source, url: t.sourceUrl, population })
+        const topOffenders = getTopOffenders(meal, t.nutrient, t.unit)
+        flags.push({ text: `${t.label}: ${Math.round(value)}${t.unit} (limit ${t.cautionAbove}${t.unit})`, source: t.source, url: t.sourceUrl, topOffenders, population })
         if (worst !== 'avoid') worst = 'caution'
       }
     } else {

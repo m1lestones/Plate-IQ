@@ -365,29 +365,29 @@ export function FoodSegmentationOverlay({
         </div>
 
         {/* Food Items */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {foods.map((food, index) => {
             const color = FOOD_COLORS[index % FOOD_COLORS.length]
 
             return (
               <div
                 key={index}
-                className="inline-flex items-center gap-2 p-3 rounded-lg"
+                className="inline-flex items-center gap-3 p-4 rounded-xl"
                 style={{ backgroundColor: color.bg, border: `1px solid ${color.border}30` }}
               >
                 <div
-                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  className="w-4 h-4 rounded-full flex-shrink-0"
                   style={{ backgroundColor: color.border }}
                 />
                 <div>
-                  <p className="text-sm font-medium text-white">{food.name}</p>
-                  <p className="text-xs text-white/60">
+                  <p className="text-lg font-semibold text-white">{food.name}</p>
+                  <p className="text-base text-white/60">
                     {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} {t('foodSegmentation.caloriesShort')}
                   </p>
                 </div>
                 <button
                   onClick={() => onEditFood(food, index)}
-                  className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
+                  className="px-4 py-2 rounded-lg text-base font-medium bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
                 >
                   {t('foodSegmentation.details')}
                 </button>
