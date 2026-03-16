@@ -88,11 +88,11 @@ export function mergeFoodsFromAngles(
       )
 
       const avgConfidence =
-        group.reduce((sum, { food }) => sum + food.confidence, 0) / group.length
+        group.reduce((sum, { food }) => sum + (food.confidence ?? 0.85), 0) / group.length
 
       // Take the highest quality nutrients (from highest confidence detection)
       const bestDetection = group.reduce((best, current) =>
-        current.food.confidence > best.food.confidence ? current : best
+        (current.food.confidence ?? 0.85) > (best.food.confidence ?? 0.85) ? current : best
       )
 
       mergedFoods.push({
