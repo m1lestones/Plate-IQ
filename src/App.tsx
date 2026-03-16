@@ -5,6 +5,7 @@ import { OnboardingPage } from './pages/OnboardingPage'
 import { ScanPage } from './pages/ScanPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { JournalPage } from './pages/JournalPage'
+import { ProfilePage } from './pages/ProfilePage'
 import { getHealthProfile } from './lib/healthStorage'
 
 function RequireOnboarding({ children }: { children: React.ReactNode }) {
@@ -32,6 +33,7 @@ export default function App() {
                 <Route path="/scan" element={<RequireOnboarding><ScanPage /></RequireOnboarding>} />
                 <Route path="/dashboard" element={<RequireOnboarding><DashboardPage /></RequireOnboarding>} />
                 <Route path="/journal" element={<RequireOnboarding><JournalPage /></RequireOnboarding>} />
+                <Route path="/profile" element={<RequireOnboarding><ProfilePage /></RequireOnboarding>} />
               </Routes>
             </main>
           </div>

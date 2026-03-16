@@ -13,7 +13,7 @@ import { applyConfidenceFiltering } from '../utils/confidenceFiltering'
 import { validateMeal } from '../utils/smartValidation'
 import type { AngleCapture, CaptureAngle } from '../utils/multiAngleAnalysis'
 import { evaluateMeal } from '../lib/thresholdEngine'
-import { getHealthProfile, saveMealToJournal } from '../lib/healthStorage'
+import { getHealthProfile, saveMealToJournal, saveLastScan } from '../lib/healthStorage'
 import type { CapturedImage, ScanStep, MealData } from '../types'
 
 export function ScanPage() {
@@ -109,6 +109,7 @@ export function ScanPage() {
       }
 
       saveMealToJournal(mealData)
+      saveLastScan(mealData)
 
       navigate('/dashboard', { state: { mealData, image: image.dataUrl } })
 
