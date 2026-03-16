@@ -36,7 +36,7 @@ export interface FoodItem {
   estimated_grams: number
   nova_level: number
   nova_verified?: boolean // True if verified by Open Food Facts database
-  confidence: number
+  confidence?: number // Cleared when user manually edits the item
   category: string
   nutrients: FoodNutrients
   metadata?: Record<string, unknown>
@@ -70,7 +70,8 @@ export interface ConditionFlag {
   text: string
   source: string
   url: string
-  topOffenders?: Array<{ name: string; amount: string }>
+  topOffenders?: Array<{ name: string; amount: string; category: string }>
+  swapSuggestion?: string
   population?: {
     stat: string
     source: string

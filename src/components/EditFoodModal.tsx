@@ -33,7 +33,8 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
       console.log('🌍 Your correction helps improve the app for everyone!')
     }
 
-    onSave(index, editedFood, selectedSize || undefined)
+    // Clear accuracy when user manually edits — it's no longer an AI reading
+    onSave(index, { ...editedFood, confidence: undefined }, selectedSize || undefined)
     onClose()
   }
 
@@ -133,6 +134,25 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
               <option value={4}>{t('editFoodModal.processingLevels.4')}</option>
             </select>
           </div>
+
+          {/* AI Accuracy */}
+          {food.confidence !== undefined && (
+            <div className={`rounded-lg p-3 border ${
+              food.confidence >= 0.85 ? 'bg-green-500/10 border-green-500/20' :
+              food.confidence >= 0.6  ? 'bg-yellow-500/10 border-yellow-500/20' :
+                                        'bg-red-500/10 border-red-500/20'
+            }`}>
+              <p className="text-xs text-white/60 mb-1">AI Accuracy</p>
+              <p className={`text-lg font-bold ${
+                food.confidence >= 0.85 ? 'text-green-400' :
+                food.confidence >= 0.6  ? 'text-yellow-400' :
+                                          'text-red-400'
+              }`}>
+                {Math.round(food.confidence * 100)}%
+              </p>
+              <p className="text-xs text-white/40 mt-0.5">Editing this item will remove the accuracy reading</p>
+            </div>
+          )}
 
           {/* Info Note */}
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">

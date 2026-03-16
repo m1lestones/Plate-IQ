@@ -74,6 +74,12 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
                             Main sources: {flag.topOffenders.map(f => `${f.name} (${f.amount})`).join(', ')}
                           </div>
                         )}
+                        {flag.swapSuggestion && (
+                          <div className="mt-1.5 ml-3 flex items-start gap-1.5">
+                            <span className="text-green-400 text-sm">↔</span>
+                            <span className="text-green-400/80 text-sm">{flag.swapSuggestion}</span>
+                          </div>
+                        )}
                         {flag.population && (
                           <div className="mt-1 ml-3 text-white/30 text-sm italic leading-snug">
                             {flag.population.stat}{' '}

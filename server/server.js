@@ -356,7 +356,8 @@ Return ONLY valid JSON (no markdown):
       "name": "Specific food name (e.g. 'Brown Rice' not 'Rice')",
       "estimated_grams": weight_in_grams,
       "nova_level": 1_to_4_processing_level,
-      "category": "protein|carb|vegetable|fruit|dairy|fat|other"
+      "category": "protein|carb|vegetable|fruit|dairy|fat|other",
+      "confidence": 0.0_to_1.0_how_confident_you_are_in_this_identification
     }
   ],
   "reference_object_detected": "credit_card|fork|spoon|plate|coin|phone|none",

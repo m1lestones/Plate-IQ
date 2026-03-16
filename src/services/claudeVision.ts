@@ -70,7 +70,7 @@ export async function analyzeMealWithClaude(
       name: food.name,
       estimated_grams: food.estimated_grams,
       nova_level: food.nova_level || 1,
-      confidence: 0.85, // Default confidence
+      confidence: typeof food.confidence === 'number' ? Math.min(1, Math.max(0, food.confidence)) : 0.85,
       category: food.category || 'other',
       nutrients: {
         calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0, fiber_g: 0,
