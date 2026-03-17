@@ -108,6 +108,8 @@ export function ScanPage() {
         mealData = { ...mealData, verdict: { overall, byCondition, aiInsight: '' } }
       }
 
+      if (imageUrl) mealData = { ...mealData, image_url: imageUrl }
+
       saveMealToJournal(mealData)
       saveLastScan(mealData)
 

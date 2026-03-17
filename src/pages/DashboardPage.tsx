@@ -18,7 +18,7 @@ export function DashboardPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const initialMealData = (location.state?.mealData as MealData | undefined) || getLastScan()
-  const image = location.state?.image as string | undefined
+  const image = (location.state?.image as string | undefined) || initialMealData?.image_url
 
   const [mealData, setMealData] = useState<MealData | null>(initialMealData || null)
   const [originalMealData, setOriginalMealData] = useState<MealData | null>(initialMealData || null)
