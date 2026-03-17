@@ -6,7 +6,9 @@
 
 import type { FoodItem, MealData } from '../types'
 
-const FEEDBACK_ENDPOINT = '/api/feedback' // Backend endpoint
+const FEEDBACK_ENDPOINT = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/feedback`
+  : 'http://localhost:3001/api/feedback'
 
 interface FoodCorrection {
   original: {
