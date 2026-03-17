@@ -2,6 +2,7 @@ import type { HealthProfile, JournalEntry, MealData } from '../types'
 
 const PROFILE_KEY = 'plateiq_health_profile'
 const JOURNAL_KEY = 'plateiq_journal'
+const LAST_SCAN_KEY = 'plateiq_last_scan'
 
 export function getHealthProfile(): HealthProfile | null {
   try {
@@ -23,6 +24,25 @@ export function getJournal(): JournalEntry[] {
   } catch {
     return []
   }
+}
+
+export function saveLastScan(meal: MealData): void {
+  localStorage.setItem(LAST_SCAN_KEY, JSON.stringify(meal))
+}
+
+export function getLastScan(): MealData | null {
+  try {
+    const raw = localStorage.getItem(LAST_SCAN_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+export function clearAllData(): void {
+  localStorage.removeItem(PROFILE_KEY)
+  localStorage.removeItem(JOURNAL_KEY)
+  localStorage.removeItem(LAST_SCAN_KEY)
 }
 
 export function saveMealToJournal(meal: MealData): void {

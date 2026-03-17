@@ -9,7 +9,7 @@ import { VerdictCard } from '../components/VerdictCard'
 import { EditFoodModal } from '../components/EditFoodModal'
 import { FoodSegmentationOverlay } from '../components/FoodSegmentationOverlay'
 import { saveMealCorrection } from '../lib/correctionTracking'
-import { getHealthProfile } from '../lib/healthStorage'
+import { getHealthProfile, getLastScan } from '../lib/healthStorage'
 import { evaluateMeal } from '../lib/thresholdEngine'
 import type { MealData, FoodItem } from '../types'
 
@@ -17,7 +17,7 @@ export function DashboardPage() {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
-  const initialMealData = location.state?.mealData as MealData | undefined
+  const initialMealData = (location.state?.mealData as MealData | undefined) || getLastScan()
   const image = location.state?.image as string | undefined
 
   const [mealData, setMealData] = useState<MealData | null>(initialMealData || null)
