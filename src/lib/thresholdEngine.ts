@@ -1,7 +1,7 @@
 import { THRESHOLDS } from '../data/healthThresholds'
 import { NHANES_CONTEXT } from '../data/nhanesData'
 import { getSwapSuggestion } from '../data/swapSuggestions'
-import { getFruitGILevel } from '../data/glycemicIndex'
+import { getFoodGILevel } from '../data/glycemicIndex'
 import type { HealthCondition, MealData, ConditionVerdict, ConditionFlag, MealVerdict, VerdictLevel } from '../types'
 
 function getTotalNutrient(meal: MealData, key: keyof typeof meal.foods[0]['nutrients']): number {
@@ -62,17 +62,17 @@ function isMostlyWholeFoodsOrVegetables(meal: MealData): boolean {
  * For diabetes: check if carbs come from high-GI fruits vs whole grains/vegetables.
  * High-GI fruits still get a gentle caution. Low/medium GI fruits are safe.
  */
-function getDiabetesFruitSugar(meal: MealData): { hasHighGIFruit: boolean; hasMediumGIFruit: boolean } {
-  let hasHighGIFruit = false
-  let hasMediumGIFruit = false
+function getDiabetesGIBreakdown(meal: MealData): { hasHighGI: boolean; hasMediumGI: boolean } {
+  let hasHighGI = false
+  let hasMediumGI = false
 
   for (const food of meal.foods) {
-    const gi = getFruitGILevel(food.name)
-    if (gi === 'high') hasHighGIFruit = true
-    if (gi === 'medium') hasMediumGIFruit = true
+    const gi = getFoodGILevel(food.name)
+    if (gi === 'high') hasHighGI = true
+    if (gi === 'medium') hasMediumGI = true
   }
 
-  return { hasHighGIFruit, hasMediumGIFruit }
+  return { hasHighGI, hasMediumGI }
 }
 
 function evaluateCondition(meal: MealData, condition: HealthCondition): ConditionVerdict {
@@ -99,25 +99,25 @@ function evaluateCondition(meal: MealData, condition: HealthCondition): Conditio
 
       // Special case: diabetes + carbs — check if source is high-GI fruit vs whole food
       if (condition === 'type2_diabetes' && t.nutrient === 'carbs_g' && isWholeFoodMeal) {
-        const { hasHighGIFruit, hasMediumGIFruit } = getDiabetesFruitSugar(meal)
+        const { hasHighGI, hasMediumGI } = getDiabetesGIBreakdown(meal)
 
-        if (!hasHighGIFruit && !hasMediumGIFruit) {
-          // All carbs from vegetables/whole grains/low-GI fruit — skip carb flag entirely
+        if (!hasHighGI && !hasMediumGI) {
+          // All carbs from vegetables/whole grains/low-GI foods — skip carb flag entirely
           continue
         }
-        if (hasMediumGIFruit && !hasHighGIFruit) {
-          // Medium GI fruits like mango/banana — only caution, never avoid
+        if (hasMediumGI && !hasHighGI) {
+          // Medium GI foods like oatmeal, pineapple, mango — only caution, never avoid
           if (adjustedCaution !== undefined && value > adjustedCaution) {
             const topOffenders = getTopOffenders(meal, t.nutrient, t.unit)
             flags.push({
-              text: `${t.label}: ${Math.round(value)}${t.unit} — natural sugars from fruit (limit ${Math.round(adjustedCaution)}${t.unit})`,
+              text: `${t.label}: ${Math.round(value)}${t.unit} — moderate GI foods present (limit ${Math.round(adjustedCaution)}${t.unit})`,
               source: t.source, url: t.sourceUrl, topOffenders, population
             })
             if (worst !== 'avoid') worst = 'caution'
           }
           continue
         }
-        // High GI fruit (watermelon, dates) — apply normal rules below
+        // High GI foods (white bread, instant rice, watermelon) — apply normal rules below
       }
 
       // Special case: diabetes + added_sugar — skip if meal is whole food (no added sugar)
