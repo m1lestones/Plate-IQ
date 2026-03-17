@@ -12,47 +12,66 @@
 
 export type GILevel = 'low' | 'medium' | 'high'
 
+// HIGH GI (70+) — flag for diabetes
 const HIGH_GI_FRUITS: string[] = [
-  'watermelon', 'dates', 'plantain', 'plantains', 'breadfruit',
-  'lychee', 'lychees',
+  'watermelon',                              // GI 75
+  'dates',                                   // GI 70
+  'plantain', 'plantains', 'cooked plantain', // GI 70 cooked
+  'lychee in syrup', 'canned lychee',        // GI 79 — canned only
 ]
 
-// Medium GI (56-69) — gentle caution for diabetes only
-// Sources: glycemic-index.net + ZOE + Diabetes Canada
+// MEDIUM GI (56-69) — gentle caution for diabetes only
 const MEDIUM_GI_FRUITS: string[] = [
-  'pineapple', 'pineapples',
-  'melon', 'cantaloupe', 'honeydew', 'rockmelon',
-  'papaya', 'papayas',
-  'raisins', 'dried fruit', 'dried fruits',
+  'mango', 'mangoes', 'mango slices',        // GI 56 — glycemic-index.net
+  'pineapple', 'pineapples',                 // GI 66
+  'melon', 'cantaloupe', 'honeydew', 'rockmelon', // GI 65
+  'papaya', 'papayas',                       // GI 60
+  'raisins',                                 // GI 65
+  'dried fruit', 'dried fruits',             // GI 60+
+  'breadfruit',                              // GI 65
+  'ripe banana', 'very ripe banana',         // GI 60 when overripe
 ]
 
-// Low GI (≤55) — safe even for diabetes
-// Note: mango (51), banana (51), grapes (46) are LOW per Diabetes Canada
+// LOW GI (≤55) — safe even for diabetes
 const LOW_GI_FRUITS: string[] = [
-  'blueberry', 'blueberries',
-  'strawberry', 'strawberries',
-  'raspberry', 'raspberries',
-  'blackberry', 'blackberries',
-  'cherry', 'cherries',
-  'apple', 'apples',
-  'pear', 'pears',
-  'orange', 'oranges',
-  'grapefruit', 'grapefruits',
-  'peach', 'peaches',
-  'plum', 'plums',
-  'apricot', 'apricots',
-  'kiwi', 'kiwis', 'kiwifruit',
-  'mandarin', 'mandarins', 'tangerine', 'tangerines',
-  'passion fruit', 'passionfruit',
-  'nectarine', 'nectarines',
-  'fig', 'figs',
-  'pomelo', 'cranberry', 'cranberries',
-  'goji berries', 'goji berry',
-  'lemon', 'lemons', 'lime', 'limes',
-  'mango', 'mangoes', 'mango slices',       // GI 51 — Diabetes Canada
-  'banana', 'bananas', 'ripe banana',        // GI 51 — Diabetes Canada
-  'grapes', 'grape', 'red grapes', 'black grapes', 'green grapes', // GI 46 — Diabetes Canada
-  'green banana', 'unripe banana',
+  'avocado', 'avocados',                     // GI 10
+  'physalis', 'cape gooseberry',             // GI 15
+  'black currant', 'blackcurrant',           // GI 15
+  'gooseberry', 'gooseberries',              // GI 15
+  'grapefruit', 'grapefruits',               // GI 22
+  'blueberry', 'blueberries',               // GI 25
+  'blackberry', 'blackberries',             // GI 25
+  'raspberry', 'raspberries',               // GI 25
+  'strawberry', 'strawberries',             // GI 25
+  'cherry', 'cherries',                     // GI 25
+  'cloudberry', 'cloudberries',             // GI 25
+  'goji berries', 'goji berry',             // GI 25
+  'red currant', 'redcurrant',              // GI 25
+  'pear', 'pears',                          // GI 30
+  'mandarin', 'mandarins',                  // GI 30
+  'tangerine', 'tangerines',                // GI 30
+  'orange', 'oranges',                      // GI 30-35
+  'passion fruit', 'passionfruit',          // GI 30
+  'pomelo',                                 // GI 30
+  'apricot', 'apricots',                    // GI 34
+  'fig', 'figs',                            // GI 35
+  'nectarine', 'nectarines',               // GI 35
+  'peach', 'peaches',                      // GI 35
+  'plum', 'plums',                         // GI 35
+  'pomegranate', 'pomegranates',           // GI 35
+  'prickly pear',                          // GI 35
+  'quince',                                // GI 35
+  'apple', 'apples',                       // GI 36
+  'prune', 'prunes',                       // GI 40
+  'melon pear', 'pepino',                  // GI 40
+  'cranberry', 'cranberries',              // GI 45
+  'green banana', 'unripe banana',         // GI 45
+  'banana', 'bananas',                     // GI 48
+  'grapes', 'grape', 'red grapes', 'green grapes', // GI 45-46
+  'kiwi', 'kiwis', 'kiwifruit',           // GI 50
+  'lychee', 'lychees',                     // GI 50 fresh
+  'persimmon', 'persimmons',              // GI 50
+  'lemon', 'lemons', 'lime', 'limes',     // very low
 ]
 
 export function getFruitGILevel(foodName: string): GILevel | null {
