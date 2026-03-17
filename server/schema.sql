@@ -5,6 +5,47 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =====================================================
+-- USER PROFILES TABLE
+-- Stores personal info and health conditions per user
+-- =====================================================
+CREATE TABLE IF NOT EXISTS user_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT,
+  full_name TEXT,
+  phone TEXT,
+  country TEXT,
+  gender TEXT CHECK (gender IN ('male', 'female', 'non_binary', 'prefer_not_to_say')),
+  date_of_birth DATE,
+  health_conditions TEXT[] DEFAULT '{}',
+  notifications_enabled BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- RLS for user_profiles
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can read own profile" ON user_profiles
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile" ON user_profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON user_profiles
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can delete own profile" ON user_profiles
+  FOR DELETE USING (auth.uid() = id);
+
+-- Function to let users delete their own auth account
+CREATE OR REPLACE FUNCTION delete_user()
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  DELETE FROM auth.users WHERE id = auth.uid();
+END;
+$$;
+
+-- =====================================================
 -- MEAL SCANS TABLE
 -- Stores metadata about each meal scan
 -- =====================================================
