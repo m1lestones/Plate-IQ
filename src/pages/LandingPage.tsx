@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { getLastScan } from '../lib/healthStorage'
 
 export function LandingPage() {
   const { t } = useTranslation()
+  const lastScan = getLastScan()
   return (
     <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
       {/* Hero Section */}
@@ -34,7 +36,7 @@ export function LandingPage() {
           </p>
 
           {/* CTA Button */}
-          <div className="pt-8">
+          <div className="pt-8 flex flex-col items-center gap-3">
             <Link
               to="/scan"
               className="inline-flex items-center gap-3 px-8 py-4 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl shadow-xl hover:shadow-green-500/50 transition-all active:scale-95 text-lg"
@@ -45,6 +47,17 @@ export function LandingPage() {
               </svg>
               {t('landing.scanNow')}
             </Link>
+            {lastScan && (
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-medium rounded-2xl transition-all active:scale-95 text-sm"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                View Last Scan
+              </Link>
+            )}
           </div>
 
           {/* How It Works - Optional P2 */}

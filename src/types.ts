@@ -58,6 +58,7 @@ export interface MealData {
   estimated_calories_high: number
   foods: FoodItem[]
   timestamp: string
+  image_url?: string
   verdict?: MealVerdict
   reference_object_detected?: string
   filtered_foods?: FoodItem[]
