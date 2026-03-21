@@ -244,7 +244,7 @@ export function FoodSegmentationOverlay({
       )}
 
       {/* Main Image Container */}
-      <div className="relative w-full max-w-2xl mx-auto">
+      <div className="relative w-full max-w-2xl mx-auto overflow-hidden">
         <img
           ref={imageRef}
           src={imageUrl}

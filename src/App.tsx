@@ -32,9 +32,9 @@ function AppRoutes() {
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/onboarding" element={<RequireAuth><OnboardingPage /></RequireAuth>} />
       <Route path="/*" element={
-        <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
+        <div className="min-h-screen bg-neutral-950 text-white flex flex-col overflow-x-hidden">
           <NavBar />
-          <main className="flex-1 flex flex-col pt-20 md:pt-24 pb-20 md:pb-10 px-6">
+          <main className="flex-1 flex flex-col pt-20 md:pt-24 pb-20 md:pb-10 px-6 w-full min-w-0">
             <Routes>
               <Route path="/" element={<RequireOnboarding><LandingPage /></RequireOnboarding>} />
               <Route path="/scan" element={<RequireOnboarding><ScanPage /></RequireOnboarding>} />
