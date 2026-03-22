@@ -64,27 +64,27 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center mx-auto mb-4 shadow-md">
             <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
               <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold">PlateIQ</h1>
-          <p className="text-white/50 text-sm mt-1">AI-powered meal analysis</p>
+          <h1 className="text-2xl font-bold text-slate-800">PlateIQ</h1>
+          <p className="text-slate-500 text-sm mt-1">AI-powered meal analysis</p>
         </div>
 
         {/* Tabs (login / signup only) */}
         {tab !== 'forgot' && (
-          <div className="flex bg-white/5 rounded-xl p-1 mb-6">
+          <div className="flex bg-slate-100 rounded-xl p-1 mb-6">
             <button
               onClick={() => { setTab('login'); setError(null) }}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                tab === 'login' ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white'
+                tab === 'login' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
               Log In
@@ -92,7 +92,7 @@ export function AuthPage() {
             <button
               onClick={() => { setTab('signup'); setError(null) }}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
-                tab === 'signup' ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white'
+                tab === 'signup' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
               }`}
             >
               Sign Up
@@ -102,12 +102,12 @@ export function AuthPage() {
 
         {/* Error / Success */}
         {error && (
-          <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
             {error}
           </div>
         )}
         {success && (
-          <div className="mb-4 px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-xl text-green-400 text-sm">
+          <div className="mb-4 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">
             {success}
           </div>
         )}
@@ -118,12 +118,12 @@ export function AuthPage() {
             <input
               type="email" required placeholder="Email"
               value={loginEmail} onChange={e => setLoginEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <input
               type="password" required placeholder="Password"
               value={loginPassword} onChange={e => setLoginPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <button
               type="submit" disabled={loading}
@@ -133,7 +133,7 @@ export function AuthPage() {
             </button>
             <button
               type="button" onClick={() => { setTab('forgot'); setError(null) }}
-              className="text-sm text-white/40 hover:text-white/70 transition-colors text-center"
+              className="text-sm text-slate-400 hover:text-slate-600 transition-colors text-center"
             >
               Forgot password?
             </button>
@@ -146,22 +146,22 @@ export function AuthPage() {
             <input
               type="text" required placeholder="Full name"
               value={signupName} onChange={e => setSignupName(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <input
               type="email" required placeholder="Email"
               value={signupEmail} onChange={e => setSignupEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <input
               type="password" required placeholder="Password (min 6 characters)"
               value={signupPassword} onChange={e => setSignupPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <input
               type="password" required placeholder="Confirm password"
               value={signupConfirm} onChange={e => setSignupConfirm(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <button
               type="submit" disabled={loading}
@@ -176,13 +176,13 @@ export function AuthPage() {
         {tab === 'forgot' && (
           <form onSubmit={handleForgot} className="flex flex-col gap-3">
             <div className="text-center mb-2">
-              <h2 className="font-semibold">Reset Password</h2>
-              <p className="text-white/50 text-sm mt-1">Enter your email and we'll send a reset link.</p>
+              <h2 className="font-semibold text-slate-800">Reset Password</h2>
+              <p className="text-slate-500 text-sm mt-1">Enter your email and we'll send a reset link.</p>
             </div>
             <input
               type="email" required placeholder="Email"
               value={forgotEmail} onChange={e => setForgotEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
             <button
               type="submit" disabled={loading}
@@ -192,7 +192,7 @@ export function AuthPage() {
             </button>
             <button
               type="button" onClick={() => { setTab('login'); setError(null); setSuccess(null) }}
-              className="text-sm text-white/40 hover:text-white/70 transition-colors text-center"
+              className="text-sm text-slate-400 hover:text-slate-600 transition-colors text-center"
             >
               Back to Log In
             </button>
