@@ -51,7 +51,7 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-[#eef2f7] text-slate-800 flex flex-col items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="mb-8 text-center">
