@@ -214,16 +214,26 @@ export function DashboardPage() {
         </button>
       </div>
 
+      {/* Condition Verdict — first, matching Stitch design */}
+      {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
+
       {/* Meal Image with Visual Segmentation Overlay */}
-      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
-        <FoodSegmentationOverlay
-          imageUrl={image}
-          foods={mealData.foods}
-          onEditFood={(food, index) => setEditingFood({ food, index })}
-          onAddFood={handleAddFood}
-          hasEdits={hasEdits}
-          onSaveCorrections={handleSaveCorrections}
-        />
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+        {/* Meal subtitle */}
+        <div className="px-5 pt-4 pb-2">
+          <p className="text-slate-500 text-sm capitalize">{mealData.meal_type}</p>
+          <h2 className="text-lg font-bold text-slate-800">{mealData.primary_cuisine}</h2>
+        </div>
+        <div className="px-4 pb-4">
+          <FoodSegmentationOverlay
+            imageUrl={image}
+            foods={mealData.foods}
+            onEditFood={(food, index) => setEditingFood({ food, index })}
+            onAddFood={handleAddFood}
+            hasEdits={hasEdits}
+            onSaveCorrections={handleSaveCorrections}
+          />
+        </div>
       </div>
 
       {/* Reference Object Detection Badge */}
@@ -272,9 +282,6 @@ export function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Condition Verdict */}
-      {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
 
       {/* Macros & Micros Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
