@@ -58,7 +58,7 @@ export function DashboardPage() {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-white/60">{t('dashboard.noMealData')}</p>
+          <p className="text-slate-500">{t('dashboard.noMealData')}</p>
           <button
             onClick={() => navigate('/scan')}
             className="px-6 py-2.5 rounded-xl bg-green-500 hover:bg-green-400 text-white font-semibold transition-all"
@@ -199,23 +199,23 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 pb-6">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{t('dashboard.title')}</h1>
-          <p className="text-white/50 text-sm mt-1">{mealData.primary_cuisine} • {mealData.meal_type}</p>
+          <h1 className="text-2xl font-bold text-slate-800">{t('dashboard.title')}</h1>
+          <p className="text-slate-500 text-sm mt-1">{mealData.primary_cuisine} • {mealData.meal_type}</p>
         </div>
         <button
           onClick={() => navigate('/scan')}
-          className="px-4 py-2 rounded-xl border border-white/20 text-white/80 hover:bg-white/5 transition-all text-sm"
+          className="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-all text-sm"
         >
           {t('dashboard.scanAnother')}
         </button>
       </div>
 
       {/* Meal Image with Visual Segmentation Overlay */}
-      <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+      <div className="bg-white rounded-3xl p-4 shadow-sm border border-slate-100">
         <FoodSegmentationOverlay
           imageUrl={image}
           foods={mealData.foods}
@@ -228,28 +228,28 @@ export function DashboardPage() {
 
       {/* Reference Object Detection Badge */}
       {mealData.reference_object_detected && mealData.reference_object_detected !== 'none' && (
-        <div className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-blue-50 border border-blue-200 rounded-3xl p-4 flex items-center gap-3">
           <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div className="flex-1">
-            <p className="font-semibold text-blue-100">{t('dashboard.referenceObjectDetected', { object: mealData.reference_object_detected.replace('_', ' ') })}</p>
-            <p className="text-sm text-blue-200/80">{t('dashboard.referenceObjectMessage')}</p>
+            <p className="font-semibold text-blue-800">{t('dashboard.referenceObjectDetected', { object: mealData.reference_object_detected.replace('_', ' ') })}</p>
+            <p className="text-sm text-blue-600">{t('dashboard.referenceObjectMessage')}</p>
           </div>
         </div>
       )}
 
       {/* Confidence Filtering Notice */}
       {mealData.filtered_foods && mealData.filtered_foods.length > 0 && (
-        <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-3xl p-4 flex items-center gap-3">
           <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
           <div className="flex-1">
-            <p className="font-semibold text-yellow-100">
+            <p className="font-semibold text-yellow-800">
               {t('dashboard.filteredFoodsTitle', { count: mealData.filtered_foods.length })}
             </p>
-            <p className="text-sm text-yellow-200/80">
+            <p className="text-sm text-yellow-700">
               {t('dashboard.filteredFoodsMessage', { foods: mealData.filtered_foods.map(f => f.name).join(', ') })}
             </p>
           </div>
@@ -257,16 +257,16 @@ export function DashboardPage() {
       )}
 
       {/* Calorie Summary */}
-      <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl p-6 border border-green-500/30">
+      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-2xl font-bold text-white/60 uppercase tracking-wide">{t('dashboard.estimatedCalories')}</h3>
-            <p className="text-3xl font-bold text-white mt-1">
-              {mealData.estimated_calories_low} - {mealData.estimated_calories_high}
+            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">{t('dashboard.estimatedCalories')}</h3>
+            <p className="text-3xl font-bold text-slate-800 mt-1">
+              {mealData.estimated_calories_low} – {mealData.estimated_calories_high}
             </p>
           </div>
-          <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-            <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+            <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
@@ -276,17 +276,17 @@ export function DashboardPage() {
       {/* Condition Verdict */}
       {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
 
-      {/* Charts Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* Macros & Micros Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <MacroDonut mealData={mealData} />
         <MicronutrientBars mealData={mealData} />
-        <div className="md:col-span-2">
-          <IngredientQuality mealData={mealData} />
-        </div>
       </div>
 
-      {/* AI Insights */}
-      <AIInsights mealData={mealData} />
+      {/* Food Quality + AI Insights Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <IngredientQuality mealData={mealData} />
+        <AIInsights mealData={mealData} />
+      </div>
 
       {/* Edit Food Modal */}
       {editingFood && (

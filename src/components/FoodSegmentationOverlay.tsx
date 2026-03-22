@@ -238,7 +238,7 @@ export function FoodSegmentationOverlay({
 
       {/* Drag Hint */}
       {showOverlay && (
-        <div className="absolute top-16 right-4 z-20 px-3 py-2 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-100 text-xs max-w-xs backdrop-blur-sm">
+        <div className="absolute top-16 right-4 z-20 px-3 py-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs max-w-xs backdrop-blur-sm">
           💡 <strong>Tip:</strong> Drag labels to correct positions. The app learns from your corrections!
         </div>
       )}
@@ -301,27 +301,15 @@ export function FoodSegmentationOverlay({
                     }}
                   />
 
-                  {/* Food Label */}
+                  {/* Food Label + Portion stacked (Stitch style) */}
                   <div
-                    className="absolute top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg backdrop-blur-md text-xs font-semibold whitespace-nowrap shadow-lg"
-                    style={{
-                      backgroundColor: color.bg,
-                      border: `2px solid ${color.border}`,
-                      color: color.text
-                    }}
+                    className="absolute top-6 left-1/2 -translate-x-1/2 px-2 py-1 rounded-lg backdrop-blur-sm flex flex-col items-center shadow-sm text-white text-xs whitespace-nowrap"
+                    style={{ backgroundColor: `${color.border}e6` }}
                   >
-                    {food.name}
-                  </div>
-
-                  {/* Portion Info */}
-                  <div
-                    className="absolute top-12 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded backdrop-blur-md text-xs whitespace-nowrap"
-                    style={{
-                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      color: color.text
-                    }}
-                  >
-                    {food.estimated_grams}g
+                    <span className="font-medium mb-0.5">{food.name}</span>
+                    <span className="bg-black/60 text-[10px] px-1.5 py-0.5 rounded">
+                      {food.estimated_grams}g
+                    </span>
                   </div>
                 </div>
               )
@@ -331,10 +319,10 @@ export function FoodSegmentationOverlay({
       </div>
 
       {/* Detected Foods Legend */}
-      <div className="mt-4 p-4 bg-white/5 rounded-xl border border-white/10">
+      <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-semibold text-white/80 flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
@@ -380,14 +368,14 @@ export function FoodSegmentationOverlay({
                   style={{ backgroundColor: color.border }}
                 />
                 <div>
-                  <p className="text-lg font-semibold text-white">{food.name}</p>
-                  <p className="text-base text-white/60">
+                  <p className="text-sm font-semibold text-slate-800">{food.name}</p>
+                  <p className="text-xs text-slate-500">
                     {food.estimated_grams}g • {Math.round((food.nutrients.calories * food.estimated_grams) / 100)} {t('foodSegmentation.caloriesShort')}
                   </p>
                 </div>
                 <button
                   onClick={() => onEditFood(food, index)}
-                  className="px-4 py-2 rounded-lg text-base font-medium bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all"
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-800 transition-all"
                 >
                   {t('foodSegmentation.details')}
                 </button>
@@ -399,7 +387,7 @@ export function FoodSegmentationOverlay({
 
       {/* NYU Attribution */}
       <div className="mt-3 text-center">
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-slate-400">
           {t('foodSegmentation.attribution')}
         </p>
       </div>
