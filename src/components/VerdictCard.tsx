@@ -56,14 +56,14 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
                     const flag = normalizeFlag(raw)
                     return (
                       <li key={i}>
-                        <div className="text-white/70 text-base flex items-center gap-1.5">
+                        <div className="text-white/70 text-base flex flex-wrap items-center gap-1.5">
                           <span>• {flag.text}</span>
                           {flag.url && (
                             <a
                               href={flag.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 whitespace-nowrap"
+                              className="text-blue-400 hover:text-blue-300 underline underline-offset-2 break-all"
                             >
                               {flag.source} ↗
                             </a>
@@ -87,7 +87,7 @@ export function VerdictCard({ verdict }: VerdictCardProps) {
                               href={flag.population.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-400/60 hover:text-blue-300 underline underline-offset-2 not-italic whitespace-nowrap"
+                              className="text-blue-400/60 hover:text-blue-300 underline underline-offset-2 not-italic break-all"
                             >
                               {flag.population.source} ({flag.population.sampleSize}) ↗
                             </a>
