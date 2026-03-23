@@ -41,28 +41,29 @@ export function MicronutrientBars({ mealData }: MicronutrientBarsProps) {
   }
 
   return (
-    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-      <h3 className="text-lg font-semibold mb-4">{t('charts.micros.title')}</h3>
-      <p className="text-xs text-white/50 mb-4">{t('charts.micros.subtitle')}</p>
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+      <h3 className="font-bold text-lg text-slate-800 mb-1">{t('charts.micros.title')}</h3>
+      <p className="text-xs text-slate-500 mb-4">{t('charts.micros.subtitle')}</p>
 
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data} layout="vertical">
-          <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
-          <XAxis type="number" stroke="#ffffff60" tick={{ fill: '#ffffff80', fontSize: 12 }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 12 }} />
           <YAxis
             type="category"
             dataKey="name"
-            stroke="#ffffff60"
-            tick={{ fill: '#ffffff80', fontSize: 12 }}
+            stroke="#94a3b8"
+            tick={{ fill: '#64748b', fontSize: 12 }}
             width={80}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#171717',
-              border: '1px solid #ffffff20',
-              borderRadius: '8px'
+              backgroundColor: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
             }}
-            labelStyle={{ color: '#fff' }}
+            labelStyle={{ color: '#1e293b' }}
             formatter={(value: any) => [t('charts.micros.tooltipFormat', { value }), '']}
           />
           <Bar
@@ -74,7 +75,7 @@ export function MicronutrientBars({ mealData }: MicronutrientBarsProps) {
       </ResponsiveContainer>
 
       {/* Legend */}
-      <div className="mt-4 flex gap-4 text-xs text-white/60 justify-center">
+      <div className="mt-4 flex gap-4 text-xs text-slate-500 justify-center">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded bg-green-500" />
           <span>{t('charts.micros.legendHigh')}</span>

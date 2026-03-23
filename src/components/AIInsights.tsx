@@ -81,29 +81,27 @@ export function AIInsights({ mealData }: AIInsightsProps) {
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-2xl p-6 border border-green-500/20">
+      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
         <div className="flex items-center gap-3">
-          <div className="animate-spin w-5 h-5 border-2 border-green-400 border-t-transparent rounded-full" />
-          <span className="text-white/60">{t('aiInsights.generating')}</span>
+          <div className="animate-spin w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full" />
+          <span className="text-slate-500">{t('aiInsights.generating')}</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 rounded-2xl p-6 border border-green-500/20">
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
-          <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold mb-2 text-white">{t('aiInsights.title')}</h3>
-          <p className="text-white/80 text-sm leading-relaxed whitespace-pre-line">
-            {insights}
-          </p>
-        </div>
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex items-start gap-4">
+      <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      </div>
+      <div className="flex-1">
+        <h3 className="font-bold text-lg text-slate-800 mb-1">{t('aiInsights.title')}</h3>
+        <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-line">
+          {insights}
+        </p>
       </div>
     </div>
   )

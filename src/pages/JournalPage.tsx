@@ -22,8 +22,8 @@ export function JournalPage() {
   if (entries.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
-        <p className="text-white/40 text-sm">{t('journal.noMeals')}</p>
-        <p className="text-white/30 text-xs mt-1">{t('journal.noMealsPrompt')}</p>
+        <p className="text-slate-400 text-sm">{t('journal.noMeals')}</p>
+        <p className="text-slate-300 text-xs mt-1">{t('journal.noMealsPrompt')}</p>
       </div>
     )
   }
@@ -37,17 +37,17 @@ export function JournalPage() {
           const style = verdict ? VERDICT_STYLES[verdict.overall] : null
 
           return (
-            <div key={entry.meal_id} className="bg-white/5 border border-white/10 rounded-2xl px-4 py-4">
+            <div key={entry.meal_id} className="bg-white border border-slate-100 rounded-3xl px-4 py-4 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     {style && (
                       <span className={`w-2 h-2 rounded-full ${style.dot}`} />
                     )}
-                    <span className="font-medium text-sm capitalize">{entry.meal_type}</span>
-                    <span className="text-white/30 text-xs">{formatDate(entry.timestamp)}</span>
+                    <span className="font-medium text-sm text-slate-800 capitalize">{entry.meal_type}</span>
+                    <span className="text-slate-400 text-xs">{formatDate(entry.timestamp)}</span>
                   </div>
-                  <p className="text-white/60 text-xs">
+                  <p className="text-slate-500 text-xs">
                     {entry.foods.map(f => f.name).join(', ')}
                   </p>
                   {verdict && verdict.byCondition.length > 0 && (
@@ -56,9 +56,9 @@ export function JournalPage() {
                         <span
                           key={c.condition}
                           className={`text-xs px-2 py-0.5 rounded-full border ${
-                            c.verdict === 'avoid' ? 'bg-red-500/10 border-red-500/30 text-red-300' :
-                            c.verdict === 'caution' ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300' :
-                            'bg-green-500/10 border-green-500/30 text-green-300'
+                            c.verdict === 'avoid' ? 'bg-red-50 border-red-200 text-red-600' :
+                            c.verdict === 'caution' ? 'bg-yellow-50 border-yellow-200 text-yellow-700' :
+                            'bg-green-50 border-green-200 text-green-700'
                           }`}
                         >
                           {CONDITION_LABELS(t)[c.condition]}: {t(`verdictLevels.${c.verdict}`)}
@@ -68,10 +68,10 @@ export function JournalPage() {
                   )}
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-sm font-semibold">
+                  <div className="text-sm font-semibold text-slate-800">
                     {entry.estimated_calories_low}–{entry.estimated_calories_high}
                   </div>
-                  <div className="text-white/40 text-xs">{t('journal.calories')}</div>
+                  <div className="text-slate-400 text-xs">{t('journal.calories')}</div>
                 </div>
               </div>
             </div>

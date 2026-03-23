@@ -1,110 +1,118 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getLastScan } from '../lib/healthStorage'
+import { MiniDashboardPreview } from '../components/MiniDashboardPreview'
 
 export function LandingPage() {
   const { t } = useTranslation()
   const lastScan = getLastScan()
+
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col">
+    <div className="flex flex-col -mt-6">
       {/* Hero Section */}
-      <main className="flex-1 flex items-center justify-center px-6 py-20 md:py-32">
-        <div className="max-w-4xl w-full text-center space-y-8">
-          {/* Logo */}
-          <div className="flex justify-center">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-2xl">
-              <svg className="w-12 h-12 md:w-14 md:h-14 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
-
-          {/* Brand Name */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-            Plate<span className="text-green-400">IQ</span>
-          </h1>
-
-          {/* Tagline */}
-          <p className="text-xl md:text-3xl text-white/70 font-light max-w-2xl mx-auto">
-            {t('landing.tagline')}
-          </p>
-
-          {/* Value Prop */}
-          <p className="text-base md:text-lg text-white/50 max-w-xl mx-auto">
-            {t('landing.description')}
-          </p>
-
-          {/* CTA Button */}
-          <div className="pt-8 flex flex-col items-center gap-3">
-            <Link
-              to="/scan"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-green-500 hover:bg-green-400 text-white font-semibold rounded-2xl shadow-xl hover:shadow-green-500/50 transition-all active:scale-95 text-lg"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {t('landing.scanNow')}
-            </Link>
-            {lastScan && (
+      <section style={{ backgroundColor: '#2B3541' }} className="text-white min-h-[500px] flex flex-col pt-10 pb-16 px-8 lg:px-24">
+        <div className="flex flex-col lg:flex-row items-center justify-between w-full max-w-5xl mx-auto flex-grow gap-12 lg:gap-8">
+          <div className="w-full lg:w-1/2 flex flex-col items-start text-center lg:text-left gap-8">
+            <h1 style={{ fontFamily: 'Merriweather, serif' }} className="text-5xl lg:text-[64px] font-bold leading-[1.1]">
+              Nutrition<br />transparency in<br />every bite.
+            </h1>
+            <div className="flex flex-col items-center lg:items-start gap-3 w-full sm:w-auto">
               <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-medium rounded-2xl transition-all active:scale-95 text-sm"
+                to="/scan"
+                style={{ backgroundColor: '#52B76C' }}
+                className="hover:opacity-90 active:scale-95 text-white font-medium py-3 px-8 rounded-full transition-all text-lg w-full sm:w-auto text-center"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                View Last Scan
+                {t('landing.scanNow')}
               </Link>
-            )}
-          </div>
-
-          {/* How It Works - Optional P2 */}
-          <div className="pt-16">
-            <h2 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-8">
-              {t('landing.howItWorks')}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              {/* Step 1 */}
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
-                  <span className="text-2xl font-bold text-green-400">1</span>
-                </div>
-                <h3 className="font-semibold text-white">{t('landing.step1Title')}</h3>
-                <p className="text-sm text-white/50">
-                  {t('landing.step1Description')}
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
-                  <span className="text-2xl font-bold text-green-400">2</span>
-                </div>
-                <h3 className="font-semibold text-white">{t('landing.step2Title')}</h3>
-                <p className="text-sm text-white/50">
-                  {t('landing.step2Description')}
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="space-y-3">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto">
-                  <span className="text-2xl font-bold text-green-400">3</span>
-                </div>
-                <h3 className="font-semibold text-white">{t('landing.step3Title')}</h3>
-                <p className="text-sm text-white/50">
-                  {t('landing.step3Description')}
-                </p>
-              </div>
+              {lastScan && (
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-600 font-medium rounded-full transition-all text-sm w-full sm:w-auto justify-center"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  View Last Scan
+                </Link>
+              )}
             </div>
+          </div>
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end pr-4">
+            <img
+              src="/filet_mignon.png"
+              alt="Healthy plated food"
+              className="w-full max-w-[340px] lg:max-w-[440px] object-contain drop-shadow-2xl"
+            />
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 px-8 lg:px-24">
+        <div className="text-center mb-12">
+          <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: '#52B76C' }}>The Process</span>
+          <h2 style={{ fontFamily: 'Merriweather, serif' }} className="text-3xl font-bold text-slate-800 mt-2">{t('landing.howItWorks')}</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {[
+            {
+              icon: (
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              ),
+              title: t('landing.step1Title'),
+              desc: t('landing.step1Description'),
+              img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC62bfGBTvAh6REuZIpUNEfVkUxQbAcLs_fTgU1JXusfHOLGAzEKBQ3rhDQmlWCpCMR76O09SreJ4PcqV2KR1ASWW2c6oXZYrocwcsJ9ksThbWx-Do-KLkN75GLi00Qqwo2SM-J5bdmTWvheuwhcgYrJDTflhPGFsC9GZe1SfYQcwuCPoF2IYawRGMBu1BRypU9aMqMhtMPtQMAkq_V8FZvZ0_0GHR5cenNaKHNNP9N0ey4c8eQVNxeJGUnDMuJCjqQlK4-5doTr_oX',
+            },
+            {
+              icon: (
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              ),
+              title: t('landing.step2Title'),
+              desc: t('landing.step2Description'),
+              img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZ8nCuVHoBUMyzmDVBXL5XgcqYZJ_Whc9ALl7gnewNh_S9Sk8vMRjuaZs2FCZNzEMmVCu1YTBM_IBoGGpBSNfFJ1bRkZ7guNCbSkdoamho825tchNinwRaScBfkechhbw_Rt7P6YKz4KaY_NDfPYzO63TEJvIhtb4dUbmx3ekRexCHnxryvjlEi0aed99aZlJMZx5cJOxKxOc4ew9rqWwZKKPu7UAsiZ36Ksh-GGT7_DIwPATdRn2l4ficvpl3R1ca6pIZsv5ZD8Ev',
+            },
+            {
+              icon: (
+                <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+              ),
+              title: t('landing.step3Title'),
+              desc: t('landing.step3Description'),
+              img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVgDceZJqWgDWOJJl8-JuRBDg8C4zh-wM6CHl9zi0kM403IRzKNQp7NKw9PIk3OxLpZiN_b5BZInTtg7MYTpQHdct_c0GNMV1R5nnAi_GCVXx5uBN1eD16OYJOjIFw9ss5tRz51h2Y9GAqqnLLFiK0NxzsnhR1NQgsKMmJhUGcKBMz_U865yeXnQ9t3LSbQOLWSVy0akTV3FiCkmc4r2yi8FPw3gmEKsaLE4mfSNpnjSkeINzvBpZXxffLNHhPyKvVEk6RHl-P3aa4',
+            },
+          ].map((step, i) => (
+            <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-6 items-center">
+              <div className="flex-1 flex flex-col items-center sm:items-start text-center sm:text-left">
+                <div style={{ backgroundColor: '#52B76C' }} className="w-10 h-10 rounded-full flex items-center justify-center mb-4">
+                  {step.icon}
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-slate-800">{step.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+              <div className="w-full sm:w-1/2 flex-shrink-0 relative">
+                {i === 2 ? <MiniDashboardPreview /> : <img src={i === 1 ? '/eggs_meal.png' : step.img} alt={step.title} className="w-full h-auto rounded-lg object-cover shadow-sm" />}
+                {i === 1 && (
+                  <div className="absolute inset-0 rounded-lg" style={{ background: 'rgba(82,183,108,0.08)' }}>
+                    <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 rounded-tl" style={{ borderColor: '#52B76C' }} />
+                    <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 rounded-tr" style={{ borderColor: '#52B76C' }} />
+                    <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 rounded-bl" style={{ borderColor: '#52B76C' }} />
+                    <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 rounded-br" style={{ borderColor: '#52B76C' }} />
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="py-6 text-center text-white/30 text-sm border-t border-white/5">
+      <footer className="py-6 text-center text-slate-400 text-sm border-t border-slate-200">
         <p>{t('landing.footer', { year: new Date().getFullYear() })}</p>
       </footer>
     </div>

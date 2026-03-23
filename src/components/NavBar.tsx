@@ -13,7 +13,7 @@ export function NavBar() {
   return (
     <>
       {/* Desktop Navbar - Top */}
-      <nav className="hidden md:flex fixed top-0 left-0 right-0 bg-neutral-950/95 backdrop-blur-sm border-b border-white/10 z-50">
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-slate-200 z-50">
         <div className="max-w-7xl mx-auto w-full px-6 py-4 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -23,7 +23,7 @@ export function NavBar() {
                 <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
               </svg>
             </div>
-            <span className="font-bold text-xl tracking-tight text-white">PlateIQ</span>
+            <span className="font-bold text-xl tracking-tight text-slate-800">PlateIQ</span>
           </Link>
 
           {/* Nav Links */}
@@ -32,8 +32,8 @@ export function NavBar() {
               to="/"
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 isActive('/')
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
+                  ? 'bg-slate-100 text-slate-900'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@ export function NavBar() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 isActive('/scan')
                   ? 'bg-green-500 text-white'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,8 +61,8 @@ export function NavBar() {
               to="/journal"
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 isActive('/journal')
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
+                  ? 'bg-slate-100 text-slate-900'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@ export function NavBar() {
               <Link
                 to="/profile"
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                  isActive('/profile') ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'
+                  isActive('/profile') ? 'bg-slate-100 text-slate-900' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
                 }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,13 +91,13 @@ export function NavBar() {
       </nav>
 
       {/* Mobile Navbar - Bottom */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-neutral-950/95 backdrop-blur-sm border-t border-white/10 z-50 overflow-visible">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 z-50 overflow-visible">
         <div className="flex items-center justify-around px-6 h-16">
 
           <Link
             to="/"
             className={`flex flex-col items-center gap-1 py-2 transition-all ${
-              isActive('/') ? 'text-white' : 'text-white/50'
+              isActive('/') ? 'text-slate-900' : 'text-slate-400'
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +109,7 @@ export function NavBar() {
           <Link
             to="/scan"
             className={`flex flex-col items-center gap-1 py-2 transition-all ${
-              isActive('/scan') ? 'text-green-400' : 'text-white/50'
+              isActive('/scan') ? 'text-green-600' : 'text-slate-400'
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@ export function NavBar() {
           <Link
             to="/journal"
             className={`flex flex-col items-center gap-1 py-2 transition-all ${
-              isActive('/journal') ? 'text-white' : 'text-white/50'
+              isActive('/journal') ? 'text-slate-900' : 'text-slate-400'
             }`}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,7 +135,7 @@ export function NavBar() {
             <Link
               to="/profile"
               className={`flex flex-col items-center gap-1 py-2 transition-all ${
-                isActive('/profile') ? 'text-white' : 'text-white/50'
+                isActive('/profile') ? 'text-slate-900' : 'text-slate-400'
               }`}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

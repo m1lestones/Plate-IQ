@@ -164,24 +164,24 @@ export function ProfilePage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold">My Profile</h1>
-          <p className="text-white/40 text-sm mt-0.5">{user?.email}</p>
+          <p className="text-slate-400 text-sm mt-0.5">{user?.email}</p>
         </div>
         <button
           onClick={handleSignOut}
-          className="px-3 py-1.5 text-sm text-white/50 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all"
+          className="px-3 py-1.5 text-sm text-slate-500 hover:text-slate-800 border border-slate-200 hover:border-slate-300 rounded-lg transition-all"
         >
           Sign out
         </button>
       </div>
 
       {/* Section tabs */}
-      <div className="flex gap-1 bg-white/5 rounded-xl p-1 mb-6 overflow-x-auto">
+      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 mb-6 overflow-x-auto">
         {sections.map(s => (
           <button
             key={s.id}
             onClick={() => { setActiveSection(s.id); setError(null) }}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeSection === s.id ? 'bg-white/10 text-white' : 'text-white/50 hover:text-white'
+              activeSection === s.id ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             {s.icon}
@@ -191,7 +191,7 @@ export function ProfilePage() {
       </div>
 
       {error && (
-        <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+        <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
           {error}
         </div>
       )}
@@ -200,65 +200,65 @@ export function ProfilePage() {
       {activeSection === 'profile' && (
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Full Name</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Full Name</label>
             <input
               type="text" value={fullName} onChange={e => setFullName(e.target.value)}
               placeholder="Your name"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Email</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Email</label>
             <input
               type="email" value={user?.email || ''} disabled
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/40 cursor-not-allowed"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"
             />
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Phone Number</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Phone Number</label>
             <input
               type="tel" value={phone} onChange={e => setPhone(e.target.value)}
               placeholder="+1 (555) 000-0000"
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-white/50 mb-1.5 block">Gender</label>
+              <label className="text-xs text-slate-500 mb-1.5 block">Gender</label>
               <select
                 value={gender} onChange={e => setGender(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-green-500/60"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               >
                 <option value="">Select</option>
                 {GENDERS.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs text-white/50 mb-1.5 block">Date of Birth</label>
+              <label className="text-xs text-slate-500 mb-1.5 block">Date of Birth</label>
               <input
                 type="date" value={dob} onChange={e => setDob(e.target.value)}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-green-500/60"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
               />
             </div>
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Country</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Country</label>
             <select
               value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             >
               <option value="">Select country</option>
               {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
-          <div className="flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded-xl">
+          <div className="flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl">
             <div>
-              <div className="text-sm font-medium">Notifications</div>
-              <div className="text-xs text-white/40 mt-0.5">Meal reminders and health tips</div>
+              <div className="text-sm font-medium text-slate-800">Notifications</div>
+              <div className="text-xs text-slate-400 mt-0.5">Meal reminders and health tips</div>
             </div>
             <button
               onClick={() => setNotifications(!notifications)}
-              className={`w-12 h-6 rounded-full transition-colors relative ${notifications ? 'bg-green-500' : 'bg-white/20'}`}
+              className={`w-12 h-6 rounded-full transition-colors relative ${notifications ? 'bg-green-500' : 'bg-slate-200'}`}
             >
               <div className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform ${notifications ? 'translate-x-6' : 'translate-x-0.5'}`} />
             </button>
@@ -277,7 +277,7 @@ export function ProfilePage() {
       {/* Health Conditions */}
       {activeSection === 'health' && (
         <div className="flex flex-col gap-3">
-          <p className="text-white/50 text-sm mb-2">PlateIQ flags meals that exceed clinical limits for each condition you select.</p>
+          <p className="text-slate-500 text-sm mb-2">PlateIQ flags meals that exceed clinical limits for each condition you select.</p>
           {CONDITIONS.map(c => {
             const isSelected = selected.has(c.id)
             return (
@@ -292,17 +292,17 @@ export function ProfilePage() {
                   setSaved(false)
                 }}
                 className={`w-full text-left px-4 py-4 rounded-2xl border transition-all ${
-                  isSelected ? 'bg-green-500/15 border-green-500/60' : 'bg-white/5 border-white/10 hover:bg-white/8'
+                  isSelected ? 'bg-green-50 border-green-400' : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{c.icon}</span>
                   <div className="flex-1">
-                    <div className="font-semibold text-sm">{c.label}</div>
-                    <div className="text-white/50 text-xs mt-0.5">{c.description}</div>
+                    <div className="font-semibold text-sm text-slate-800">{c.label}</div>
+                    <div className="text-slate-500 text-xs mt-0.5">{c.description}</div>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                    isSelected ? 'bg-green-500 border-green-500' : 'border-white/30'
+                    isSelected ? 'bg-green-500 border-green-500' : 'border-slate-300'
                   }`}>
                     {isSelected && (
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -328,7 +328,7 @@ export function ProfilePage() {
       {/* Language */}
       {activeSection === 'language' && (
         <div className="flex flex-col gap-3">
-          <p className="text-white/50 text-sm mb-2">Choose the language for the app.</p>
+          <p className="text-slate-500 text-sm mb-2">Choose the language for the app.</p>
           {LANGUAGES.map(lang => {
             const isSelected = i18n.language === lang.code
             return (
@@ -336,12 +336,12 @@ export function ProfilePage() {
                 key={lang.code}
                 onClick={() => i18n.changeLanguage(lang.code)}
                 className={`w-full text-left px-4 py-4 rounded-2xl border transition-all flex items-center justify-between ${
-                  isSelected ? 'bg-green-500/15 border-green-500/60' : 'bg-white/5 border-white/10 hover:bg-white/8'
+                  isSelected ? 'bg-green-50 border-green-400' : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
-                <span className="font-semibold text-sm">{lang.label}</span>
+                <span className="font-semibold text-sm text-slate-800">{lang.label}</span>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                  isSelected ? 'bg-green-500 border-green-500' : 'border-white/30'
+                  isSelected ? 'bg-green-500 border-green-500' : 'border-slate-300'
                 }`}>
                   {isSelected && (
                     <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -358,26 +358,26 @@ export function ProfilePage() {
       {/* Security */}
       {activeSection === 'security' && (
         <div className="flex flex-col gap-4">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-4">
             <div className="font-medium text-sm mb-1">Password</div>
-            <div className="text-xs text-white/40 mb-4">We'll send a reset link to {user?.email}</div>
+            <div className="text-xs text-slate-400 mb-4">We'll send a reset link to {user?.email}</div>
             {resetSent ? (
-              <div className="px-4 py-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm">
+              <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
                 Reset link sent — check your email.
               </div>
             ) : (
               <button
                 onClick={handleResetPassword}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/15 rounded-lg text-sm font-medium transition-all"
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-medium text-slate-700 transition-all"
               >
                 Send Password Reset Email
               </button>
             )}
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-4">
             <div className="font-medium text-sm mb-1">Account</div>
-            <div className="text-xs text-white/40 mb-1">Signed in as</div>
-            <div className="text-sm text-white/70">{user?.email}</div>
+            <div className="text-xs text-slate-400 mb-1">Signed in as</div>
+            <div className="text-sm text-slate-600">{user?.email}</div>
           </div>
         </div>
       )}
@@ -385,9 +385,9 @@ export function ProfilePage() {
       {/* Data & Privacy */}
       {activeSection === 'data' && (
         <div className="flex flex-col gap-4">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+          <div className="bg-white border border-slate-200 rounded-xl p-4">
             <div className="font-medium text-sm mb-1">Your Data</div>
-            <div className="text-xs text-white/40 leading-relaxed">
+            <div className="text-xs text-slate-400 leading-relaxed">
               All meal scans, corrections, and health data are stored securely. We never sell your data. You can delete everything at any time.
             </div>
           </div>
@@ -395,14 +395,14 @@ export function ProfilePage() {
           {!showResetConfirm ? (
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="w-full py-3 rounded-xl border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 text-sm font-medium transition-all"
+              className="w-full py-3 rounded-xl border border-yellow-400 text-yellow-600 hover:bg-yellow-50 bg-white text-sm font-medium transition-all"
             >
               Reset App Data
             </button>
           ) : (
-            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
-              <p className="text-sm text-yellow-300 mb-1 font-medium">Reset app data?</p>
-              <p className="text-xs text-yellow-300/70 mb-4">This clears your local scan history and health setup. You'll be asked to set up health conditions again on next login. Your account is not deleted.</p>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+              <p className="text-sm text-yellow-800 mb-1 font-medium">Reset app data?</p>
+              <p className="text-xs text-yellow-700 mb-4">This clears your local scan history and health setup. You'll be asked to set up health conditions again on next login. Your account is not deleted.</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleResetAppData}
@@ -412,7 +412,7 @@ export function ProfilePage() {
                 </button>
                 <button
                   onClick={() => setShowResetConfirm(false)}
-                  className="flex-1 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm font-medium transition-all"
+                  className="flex-1 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-all"
                 >
                   Cancel
                 </button>
@@ -423,14 +423,14 @@ export function ProfilePage() {
           {!showDeleteConfirm ? (
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="w-full py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm font-medium transition-all"
+              className="w-full py-3 rounded-xl border border-red-400 text-red-500 hover:bg-red-50 bg-white text-sm font-medium transition-all"
             >
               Delete Account
             </button>
           ) : (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
-              <p className="text-sm text-red-300 mb-1 font-medium">Delete your account?</p>
-              <p className="text-xs text-red-300/70 mb-4">This permanently deletes your profile, scan history, and all data. This cannot be undone.</p>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+              <p className="text-sm text-red-700 mb-1 font-medium">Delete your account?</p>
+              <p className="text-xs text-red-600 mb-4">This permanently deletes your profile, scan history, and all data. This cannot be undone.</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleDeleteAccount}
@@ -440,7 +440,7 @@ export function ProfilePage() {
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm font-medium transition-all"
+                  className="flex-1 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-all"
                 >
                   Cancel
                 </button>

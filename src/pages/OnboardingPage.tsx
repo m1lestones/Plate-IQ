@@ -51,17 +51,17 @@ export function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-[#eef2f7] text-slate-800 flex flex-col items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center mx-auto mb-4 shadow-md">
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold">{t('onboarding.title')}</h1>
-          <p className="text-white/50 text-sm mt-2">
+          <h1 className="text-2xl font-bold text-slate-800">{t('onboarding.title')}</h1>
+          <p className="text-slate-500 text-sm mt-2">
             {t('onboarding.subtitle')}
           </p>
         </div>
@@ -76,18 +76,18 @@ export function OnboardingPage() {
                 onClick={() => toggle(c.id)}
                 className={`w-full text-left px-4 py-4 rounded-2xl border transition-all ${
                   isSelected
-                    ? 'bg-green-500/15 border-green-500/60'
-                    : 'bg-white/5 border-white/10 hover:bg-white/8'
+                    ? 'bg-green-50 border-green-400'
+                    : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">{c.icon}</span>
                   <div className="flex-1">
-                    <div className="font-semibold text-sm">{t(`onboarding.conditions.${c.id}.label`)}</div>
-                    <div className="text-white/50 text-xs mt-0.5">{t(`onboarding.conditions.${c.id}.description`)}</div>
+                    <div className="font-semibold text-sm text-slate-800">{t(`onboarding.conditions.${c.id}.label`)}</div>
+                    <div className="text-slate-500 text-xs mt-0.5">{t(`onboarding.conditions.${c.id}.description`)}</div>
                   </div>
                   <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                    isSelected ? 'bg-green-500 border-green-500' : 'border-white/30'
+                    isSelected ? 'bg-green-500 border-green-500' : 'border-slate-300'
                   }`}>
                     {isSelected && (
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,13 +104,13 @@ export function OnboardingPage() {
         {/* Actions */}
         <button
           onClick={handleContinue}
-          className="w-full py-3.5 rounded-xl bg-green-500 hover:bg-green-400 text-white font-semibold transition-all"
+          className="w-full py-3.5 rounded-xl bg-green-500 hover:bg-green-400 text-white font-semibold transition-all shadow-sm"
         >
           {selected.size > 0 ? t('onboarding.continueWith', { count: selected.size }) : t('onboarding.continue')}
         </button>
         <button
           onClick={handleSkip}
-          className="w-full py-3 mt-2 text-white/40 hover:text-white/70 text-sm transition-colors"
+          className="w-full py-3 mt-2 text-slate-400 hover:text-slate-600 text-sm transition-colors"
         >
           {t('onboarding.skip')}
         </button>

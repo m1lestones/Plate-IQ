@@ -23,7 +23,7 @@ export function Preview({ image, onConfirm, onRetake }: PreviewProps) {
       <div className="flex gap-3 w-full max-w-md">
         <button
           onClick={onRetake}
-          className="flex-1 py-3 rounded-xl border border-white/20 hover:bg-white/5 active:scale-95 text-white/80 font-medium transition-all"
+          className="flex-1 py-3 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-600 font-medium transition-all"
         >
           {t('scan.retake')}
         </button>

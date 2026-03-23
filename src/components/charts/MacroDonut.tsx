@@ -35,8 +35,8 @@ export function MacroDonut({ mealData }: MacroDonutProps) {
   ]
 
   return (
-    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-      <h3 className="text-lg font-semibold mb-4">{t('charts.macros.title')}</h3>
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+      <h3 className="font-bold text-lg text-slate-800 mb-4">{t('charts.macros.title')}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie
@@ -56,7 +56,7 @@ export function MacroDonut({ mealData }: MacroDonutProps) {
             verticalAlign="bottom"
             height={36}
             formatter={(value, entry: any) => (
-              <span className="text-white/80 text-sm">
+              <span className="text-slate-700 text-sm">
                 {value}: {entry.payload.value}g
               </span>
             )}

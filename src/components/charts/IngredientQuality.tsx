@@ -26,31 +26,31 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
   const markerPercent = ((4 - avgNova) / 3) * 100 // 4→0%, 1→100%
 
   const getLabel = (nova: number) => {
-    if (nova <= 1.5) return { text: t('charts.quality.labels.mostlyWholeFoods'), color: 'text-green-400' }
-    if (nova <= 2.5) return { text: t('charts.quality.labels.lightlyProcessed'), color: 'text-yellow-400' }
-    if (nova <= 3.5) return { text: t('charts.quality.labels.moderatelyProcessed'), color: 'text-orange-400' }
-    return { text: t('charts.quality.labels.highlyProcessed'), color: 'text-red-400' }
+    if (nova <= 1.5) return { text: t('charts.quality.labels.mostlyWholeFoods'), color: 'text-green-600' }
+    if (nova <= 2.5) return { text: t('charts.quality.labels.lightlyProcessed'), color: 'text-yellow-600' }
+    if (nova <= 3.5) return { text: t('charts.quality.labels.moderatelyProcessed'), color: 'text-orange-600' }
+    return { text: t('charts.quality.labels.highlyProcessed'), color: 'text-red-600' }
   }
 
   const label = getLabel(avgNova)
 
   return (
-    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{t('charts.quality.title')}</h3>
+          <h3 className="font-bold text-lg text-slate-800">{t('charts.quality.title')}</h3>
           <div className="relative">
             <button
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="text-white/40 hover:text-white/70 transition-colors"
+              className="text-slate-400 hover:text-slate-600 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
               </svg>
             </button>
             {showTooltip && (
-              <div className="absolute left-6 top-0 z-10 w-56 bg-gray-800 border border-white/10 rounded-lg p-3 text-xs text-white/80 shadow-lg">
+              <div className="absolute left-6 top-0 z-10 w-56 bg-white border border-slate-200 rounded-lg p-3 text-xs text-slate-700 shadow-lg">
                 {t('charts.quality.tooltip')}
               </div>
             )}
@@ -59,11 +59,11 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
 
         {/* Verification Badge */}
         {verifiedCount > 0 && (
-          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 border border-green-500/20 rounded-lg">
-            <svg className="w-3.5 h-3.5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 rounded-lg">
+            <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span className="text-xs text-green-300 font-medium">
+            <span className="text-xs text-green-700 font-medium">
               {verifiedCount}/{totalCount} verified
             </span>
           </div>
@@ -79,7 +79,7 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
             style={{ left: `calc(${markerPercent}% - 14px)` }}
           >
             <svg width="28" height="18" viewBox="0 0 28 18">
-              <polygon points="14,18 0,0 28,0" fill="white" />
+              <polygon points="14,18 0,0 28,0" fill="#1e293b" />
             </svg>
           </div>
         </div>
@@ -93,7 +93,7 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
         </div>
 
         {/* End labels */}
-        <div className="flex justify-between mt-2 text-xs text-white/50">
+        <div className="flex justify-between mt-2 text-xs text-slate-500">
           <span>{t('charts.quality.ultraProcessed')}</span>
           <span>{t('charts.quality.wholeFoods')}</span>
         </div>
@@ -105,26 +105,26 @@ export function IngredientQuality({ mealData }: IngredientQualityProps) {
       </div>
 
       {/* Legend */}
-      <div className="grid grid-cols-4 gap-2 text-sm border-t border-white/10 pt-4">
+      <div className="grid grid-cols-4 gap-2 text-sm border-t border-slate-200 pt-4">
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-red-500" />
-          <div className="text-white/80 text-xs">{t('charts.quality.ultraProcessed')}</div>
-          <div className="text-white/50 text-xs">{ultraProcessed} {t('charts.quality.item', { count: ultraProcessed })}</div>
+          <div className="text-slate-600 text-xs">{t('charts.quality.ultraProcessed')}</div>
+          <div className="text-slate-400 text-xs">{ultraProcessed} {t('charts.quality.item', { count: ultraProcessed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-orange-500" />
-          <div className="text-white/80 text-xs">{t('charts.quality.processed')}</div>
-          <div className="text-white/50 text-xs">{processed} {t('charts.quality.item', { count: processed })}</div>
+          <div className="text-slate-600 text-xs">{t('charts.quality.processed')}</div>
+          <div className="text-slate-400 text-xs">{processed} {t('charts.quality.item', { count: processed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
-          <div className="text-white/80 text-xs">{t('charts.quality.lightlyProcessed')}</div>
-          <div className="text-white/50 text-xs">{lightlyProcessed} {t('charts.quality.item', { count: lightlyProcessed })}</div>
+          <div className="text-slate-600 text-xs">{t('charts.quality.lightlyProcessed')}</div>
+          <div className="text-slate-400 text-xs">{lightlyProcessed} {t('charts.quality.item', { count: lightlyProcessed })}</div>
         </div>
         <div className="flex flex-col items-center gap-1 text-center">
           <div className="w-3 h-3 rounded-full bg-green-500" />
-          <div className="text-white/80 text-xs">{t('charts.quality.wholeFoods')}</div>
-          <div className="text-white/50 text-xs">{wholeFoods} {t('charts.quality.item', { count: wholeFoods })}</div>
+          <div className="text-slate-600 text-xs">{t('charts.quality.wholeFoods')}</div>
+          <div className="text-slate-400 text-xs">{wholeFoods} {t('charts.quality.item', { count: wholeFoods })}</div>
         </div>
       </div>
     </div>

@@ -46,12 +46,12 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-neutral-900 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-xl">
         {/* Header */}
-        <div className="sticky top-0 bg-neutral-900 border-b border-white/10 p-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold">{t('editFoodModal.title')}</h2>
-          <button onClick={onClose} className="text-white/60 hover:text-white">
+        <div className="sticky top-0 bg-white border-b border-slate-200 p-6 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-slate-800">{t('editFoodModal.title')}</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -62,19 +62,19 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
         <div className="p-6 space-y-4">
           {/* Food Name */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.foodName')}</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">{t('editFoodModal.foodName')}</label>
             <input
               type="text"
               value={editedFood.name}
               onChange={(e) => setEditedFood({ ...editedFood, name: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 focus:border-green-500 focus:outline-none"
               placeholder={t('editFoodModal.foodNamePlaceholder')}
             />
           </div>
 
           {/* Portion Size */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.portionSize')}</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">{t('editFoodModal.portionSize')}</label>
             {/* S/M/L quick select */}
             {originalGrams && (
               <div className="flex gap-2 mb-2">
@@ -85,7 +85,7 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
                     className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${
                       selectedSize === size
                         ? 'bg-green-500 text-white'
-                        : 'bg-white/10 hover:bg-white/20 text-white/80'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
                     }`}
                   >
                     {size}
@@ -97,18 +97,18 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
               type="number"
               value={editedFood.estimated_grams}
               onChange={(e) => { setEditedFood({ ...editedFood, estimated_grams: parseInt(e.target.value) || 0 }); setSelectedSize(null) }}
-              className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 focus:border-green-500 focus:outline-none"
               min="0"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.category')}</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">{t('editFoodModal.category')}</label>
             <select
               value={editedFood.category}
               onChange={(e) => setEditedFood({ ...editedFood, category: e.target.value })}
-              className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 focus:border-green-500 focus:outline-none"
             >
               <option value="protein">{t('editFoodModal.categories.protein')}</option>
               <option value="carb">{t('editFoodModal.categories.carb')}</option>
@@ -122,11 +122,11 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
 
           {/* Processing Level */}
           <div>
-            <label className="block text-sm font-medium text-white/80 mb-2">{t('editFoodModal.processingLevel')}</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">{t('editFoodModal.processingLevel')}</label>
             <select
               value={editedFood.nova_level}
               onChange={(e) => setEditedFood({ ...editedFood, nova_level: parseInt(e.target.value) })}
-              className="w-full px-4 py-2 bg-neutral-800 border border-white/10 rounded-lg text-white focus:border-green-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-800 focus:border-green-500 focus:outline-none"
             >
               <option value={1}>{t('editFoodModal.processingLevels.1')}</option>
               <option value={2}>{t('editFoodModal.processingLevels.2')}</option>
@@ -138,41 +138,41 @@ export function EditFoodModal({ food, index, originalGrams, portionSize, onSave,
           {/* AI Accuracy */}
           {food.confidence !== undefined && (
             <div className={`rounded-lg p-3 border ${
-              food.confidence >= 0.85 ? 'bg-green-500/10 border-green-500/20' :
-              food.confidence >= 0.6  ? 'bg-yellow-500/10 border-yellow-500/20' :
-                                        'bg-red-500/10 border-red-500/20'
+              food.confidence >= 0.85 ? 'bg-green-50 border-green-200' :
+              food.confidence >= 0.6  ? 'bg-yellow-50 border-yellow-200' :
+                                        'bg-red-50 border-red-200'
             }`}>
-              <p className="text-xs text-white/60 mb-1">AI Accuracy</p>
+              <p className="text-xs text-slate-500 mb-1">AI Accuracy</p>
               <p className={`text-lg font-bold ${
-                food.confidence >= 0.85 ? 'text-green-400' :
-                food.confidence >= 0.6  ? 'text-yellow-400' :
-                                          'text-red-400'
+                food.confidence >= 0.85 ? 'text-green-600' :
+                food.confidence >= 0.6  ? 'text-yellow-600' :
+                                          'text-red-600'
               }`}>
                 {Math.round(food.confidence * 100)}%
               </p>
-              <p className="text-xs text-white/40 mt-0.5">Editing this item will remove the accuracy reading</p>
+              <p className="text-xs text-slate-400 mt-0.5">Editing this item will remove the accuracy reading</p>
             </div>
           )}
 
           {/* Info Note */}
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-            <p className="text-xs text-blue-200">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-xs text-blue-600">
               {t('editFoodModal.infoNote')}
             </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="sticky bottom-0 bg-neutral-900 border-t border-white/10 p-6 flex gap-3">
+        <div className="sticky bottom-0 bg-white border-t border-slate-200 p-6 flex gap-3">
           <button
             onClick={handleDelete}
-            className="px-4 py-2 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all"
+            className="px-4 py-2 rounded-lg border border-red-400 text-red-500 hover:bg-red-50 transition-all"
           >
             {t('editFoodModal.delete')}
           </button>
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2 rounded-lg border border-white/10 text-white/80 hover:bg-white/5 transition-all"
+            className="flex-1 px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-600 hover:bg-slate-50 transition-all"
           >
             {t('editFoodModal.cancel')}
           </button>
