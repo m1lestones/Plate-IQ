@@ -154,7 +154,7 @@ export function Scanner({ onCapture }: ScannerProps) {
 
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="w-full py-3 rounded-xl border border-slate-200 hover:bg-slate-50 active:scale-95 text-slate-600 font-medium transition-all"
+          className="w-full py-3 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-600 font-medium transition-all"
         >
           {t('scan.uploadPhoto')}
         </button>

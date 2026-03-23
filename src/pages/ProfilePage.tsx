@@ -200,7 +200,7 @@ export function ProfilePage() {
       {activeSection === 'profile' && (
         <div className="flex flex-col gap-4">
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Full Name</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Full Name</label>
             <input
               type="text" value={fullName} onChange={e => setFullName(e.target.value)}
               placeholder="Your name"
@@ -208,14 +208,14 @@ export function ProfilePage() {
             />
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Email</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Email</label>
             <input
               type="email" value={user?.email || ''} disabled
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"
             />
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Phone Number</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Phone Number</label>
             <input
               type="tel" value={phone} onChange={e => setPhone(e.target.value)}
               placeholder="+1 (555) 000-0000"
@@ -224,7 +224,7 @@ export function ProfilePage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-white/50 mb-1.5 block">Gender</label>
+              <label className="text-xs text-slate-500 mb-1.5 block">Gender</label>
               <select
                 value={gender} onChange={e => setGender(e.target.value)}
                 className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
@@ -234,7 +234,7 @@ export function ProfilePage() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-white/50 mb-1.5 block">Date of Birth</label>
+              <label className="text-xs text-slate-500 mb-1.5 block">Date of Birth</label>
               <input
                 type="date" value={dob} onChange={e => setDob(e.target.value)}
                 className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
@@ -242,10 +242,10 @@ export function ProfilePage() {
             </div>
           </div>
           <div>
-            <label className="text-xs text-white/50 mb-1.5 block">Country</label>
+            <label className="text-xs text-slate-500 mb-1.5 block">Country</label>
             <select
               value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-green-500/60"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
             >
               <option value="">Select country</option>
               {COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -395,7 +395,7 @@ export function ProfilePage() {
           {!showResetConfirm ? (
             <button
               onClick={() => setShowResetConfirm(true)}
-              className="w-full py-3 rounded-xl border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 text-sm font-medium transition-all"
+              className="w-full py-3 rounded-xl border border-yellow-400 text-yellow-600 hover:bg-yellow-50 bg-white text-sm font-medium transition-all"
             >
               Reset App Data
             </button>
@@ -423,7 +423,7 @@ export function ProfilePage() {
           {!showDeleteConfirm ? (
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="w-full py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm font-medium transition-all"
+              className="w-full py-3 rounded-xl border border-red-400 text-red-500 hover:bg-red-50 bg-white text-sm font-medium transition-all"
             >
               Delete Account
             </button>

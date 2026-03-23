@@ -214,9 +214,6 @@ export function DashboardPage() {
         </button>
       </div>
 
-      {/* Condition Verdict — first, matching Stitch design */}
-      {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
-
       {/* Meal Image with Visual Segmentation Overlay */}
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         {/* Meal subtitle */}
@@ -235,6 +232,9 @@ export function DashboardPage() {
           />
         </div>
       </div>
+
+      {/* Condition Verdict — below meal image */}
+      {mealData.verdict && <VerdictCard verdict={mealData.verdict} />}
 
       {/* Reference Object Detection Badge */}
       {mealData.reference_object_detected && mealData.reference_object_detected !== 'none' && (
